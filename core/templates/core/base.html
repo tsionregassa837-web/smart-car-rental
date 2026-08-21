@@ -1,0 +1,486 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<meta name="description"
+content="Smart Car Rental offers affordable, reliable, and secure vehicle rental services with online booking and fleet management.">
+
+
+<meta name="keywords"
+content="Car Rental, Smart Car Rental, Addis Ababa Car Rental, Vehicle Rental, Fleet Management">
+
+
+<meta name="author"
+content="Smart Car Rental">
+
+
+<meta name="theme-color"
+content="#0B1F3A">
+
+
+
+<title>
+
+{% block title %}
+Smart Car Rental
+{% endblock %}
+
+</title>
+
+
+
+<!-- Google Font -->
+
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
+
+
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
+
+
+
+<!-- Font Awesome -->
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+
+
+<!-- Favicon -->
+
+<link rel="icon"
+type="image/png"
+href="{% static 'core/images/favicon.png' %}">
+
+
+
+
+<!-- Global CSS -->
+
+<link rel="stylesheet" href="{% static 'core/css/base.css' %}">
+<link rel="stylesheet" href="{% static 'core/css/responsive.css' %}">
+
+
+{% block extra_css %}{% endblock %}
+</head>
+
+
+
+<body>
+
+
+
+<header class="site-header">
+
+
+
+<div class="header-top">
+
+
+
+    <!-- BRAND AREA -->
+
+    <div class="brand">
+
+
+        <a href="{% url 'home' %}"
+           class="logo">
+
+
+            <img src="{% static 'core/images/logo.png' %}"
+            alt="Smart Car Rental Logo"
+            class="company-logo">
+
+
+            <span>
+                Smart Car Rental
+            </span>
+
+
+        </a>
+
+
+
+        <button class="menu-toggle"
+        type="button">
+
+            <i class="fa-solid fa-bars"></i>
+
+
+        </button>
+
+
+
+
+        <button class="search-btn"
+        type="button">
+
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+
+        </button>
+
+
+
+    </div>
+
+
+
+
+
+    <!-- USER AREA -->
+
+
+    <div class="user-menu">
+
+
+
+{% if user.is_authenticated %}
+
+
+
+        <button class="profile-btn"
+        id="profileButton"
+        type="button">
+
+
+            <i class="fa-solid fa-circle-user"></i>
+
+
+            {{ user.username }}
+
+
+            <i class="fa-solid fa-chevron-down"></i>
+
+
+        </button>
+
+
+
+
+        <div class="profile-dropdown" id="profileDropdown">
+
+
+
+            <a href="{% url 'my_bookings' %}">
+
+                <i class="fa-solid fa-list-check"></i>
+
+                My Bookings
+
+            </a>
+
+
+
+
+            <a href="{% url 'profile' %}">
+
+                <i class="fa-solid fa-user"></i>
+
+                My Profile
+
+            </a>
+
+
+
+
+
+            <a href="{% url 'payment_history' %}">
+
+                <i class="fa-solid fa-credit-card"></i>
+
+                Payment History
+
+            </a>
+
+
+
+
+
+            <a href="{% url 'notifications' %}">
+
+                <i class="fa-solid fa-bell"></i>
+
+                Notifications
+
+            </a>
+
+
+
+
+
+            <a href="{% url 'account_settings' %}">
+
+                <i class="fa-solid fa-gear"></i>
+
+                Account Settings
+
+            </a>
+
+
+
+
+
+            <hr>
+
+
+
+
+            <a href="{% url 'logout' %}">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+                Logout
+
+            </a>
+
+
+
+
+        </div>
+
+
+
+
+{% else %}
+
+
+
+
+        <a href="{% url 'login' %}"
+        class="login-btn">
+
+
+            <i class="fa-solid fa-right-to-bracket"></i>
+
+            Login
+
+
+        </a>
+
+
+
+
+
+        <a href="{% url 'register' %}"
+        class="register-btn">
+
+
+            <i class="fa-solid fa-user-plus"></i>
+
+            Register
+
+
+        </a>
+
+
+
+
+{% endif %}
+
+
+
+    </div>
+
+
+
+</div>
+
+
+
+
+
+
+<!-- NAVIGATION -->
+
+<nav class="navbar" id="main-navbar">
+
+
+<a href="{% url 'home' %}"
+class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+
+<i class="fa-solid fa-house"></i>
+
+<span>
+Home
+</span>
+
+</a>
+
+
+
+<a href="{% url 'cars' %}"
+class="nav-link {% if request.resolver_match.url_name == 'cars' %}active{% endif %}">
+
+<i class="fa-solid fa-car-side"></i>
+
+<span>
+Cars
+</span>
+
+</a>
+
+
+
+
+<a href="{% url 'booking' %}"
+class="nav-link {% if request.resolver_match.url_name == 'booking' %}active{% endif %}">
+
+<i class="fa-solid fa-calendar-check"></i>
+
+<span>
+Booking
+</span>
+
+</a>
+
+
+
+
+<a href="{% url 'about' %}"
+class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}">
+
+<i class="fa-solid fa-circle-info"></i>
+
+<span>
+About
+</span>
+
+</a>
+
+
+
+
+<a href="{% url 'contact' %}"
+class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}">
+
+<i class="fa-solid fa-envelope"></i>
+
+<span>
+Contact
+</span>
+
+</a>
+
+
+
+{% if user.is_authenticated %}
+
+<a href="{% url 'my_bookings' %}"
+class="nav-link {% if request.resolver_match.url_name == 'my_bookings' %}active{% endif %}">
+
+<i class="fa-solid fa-list-check"></i>
+
+<span>
+My Bookings
+</span>
+
+</a>
+
+
+{% endif %}
+
+
+
+</nav>
+
+
+</header>
+
+
+
+
+
+
+
+
+<!-- PAGE CONTENT -->
+
+
+<main>
+
+{% if messages %}
+
+<div class="messages-container">
+
+    {% for message in messages %}
+
+    <div class="message {{ message.tags }}">
+
+        {{ message }}
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% endif %}
+
+{% block content %}
+
+{% endblock %}
+
+</main>
+
+
+
+
+
+
+<!-- FOOTER -->
+
+
+<footer>
+
+
+<p>
+
+© 2025 Smart Car Rental. All rights reserved.
+
+</p>
+
+
+</footer>
+
+
+
+
+
+
+
+
+<!-- JAVASCRIPT -->
+
+<script src="{% static 'core/js/script.js' %}"></script>
+
+<script>
+setTimeout(function () {
+    document.querySelectorAll(".message").forEach(function (message) {
+        message.style.transition = "opacity 0.5s ease";
+        message.style.opacity = "0";
+        setTimeout(function () {
+            message.remove();
+        }, 500);
+    });
+}, 4000);
+</script>
+
+</body>
+
+</html>

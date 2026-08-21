@@ -1,0 +1,268 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/home.css' %}">
+{% endblock %}
+
+{% block title %}
+Cars - Smart Car Rental
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<section id="car-inventory">
+
+
+    <h2>
+        Our Available Rental Fleet
+    </h2>
+
+
+
+    <!-- ===============================
+         FLEET FILTER
+    ================================= -->
+
+
+    <div class="fleet-filter">
+
+
+        <input 
+            type="text"
+            id="carSearch"
+            placeholder="Search car..."
+        >
+
+
+
+        <select id="availabilityFilter">
+
+
+            <option value="all">
+                All Cars
+            </option>
+
+
+            <option value="available">
+                Available
+            </option>
+
+
+            <option value="unavailable">
+                Unavailable
+            </option>
+
+
+        </select>
+
+
+
+
+        <select id="priceFilter">
+
+
+            <option value="default">
+                Sort By Price
+            </option>
+
+
+            <option value="low">
+                Price Low → High
+            </option>
+
+
+            <option value="high">
+                Price High → Low
+            </option>
+
+
+        </select>
+
+
+    </div>
+
+
+
+
+
+    <!-- ===============================
+         CAR GRID
+    ================================= -->
+
+
+    <div class="car-grid">
+
+
+        {% for car in cars %}
+
+
+
+        <article 
+            class="car-card"
+
+            data-name="{{ car.name|lower }}"
+
+            data-price="{{ car.price_per_day }}"
+
+            data-status="{% if car.available_quantity > 0 %}available{% else %}unavailable{% endif %}"
+
+        >
+
+
+
+            <img
+
+                src="{{ car.image.url }}"
+
+                alt="{{ car.name }}"
+
+                class="car-image"
+
+            >
+
+
+
+
+
+            <div class="card-content">
+
+
+
+                <h3>
+
+                    {{ car.name }}
+
+                </h3>
+
+
+
+
+                <p class="rent-price">
+
+                    ${{ car.price_per_day }}
+
+                    <span>
+                        / day
+                    </span>
+
+                </p>
+
+
+
+
+
+                {% if car.available_quantity > 0 %}
+
+
+                    <p class="available">
+
+                        ✓ Available Now
+
+                    </p>
+
+
+
+                {% else %}
+
+
+
+                    <p class="unavailable">
+
+                        ✗ Currently Unavailable
+
+                    </p>
+
+
+
+                {% endif %}
+
+
+
+
+
+
+                <div class="card-buttons">
+
+
+
+                    <a 
+
+                    href="{% url 'car_details' car.id %}"
+
+                    class="view-details-button"
+
+                    >
+
+                        View Details
+
+                    </a>
+
+
+
+
+
+                    {% if car.available_quantity > 0 %}
+
+
+
+                    <a
+
+                    href="{% url 'booking' %}?car={{ car.name }}"
+
+                    class="book-now-button"
+
+                    >
+
+                        Book Now
+
+                    </a>
+
+
+
+                    {% endif %}
+
+
+
+
+                </div>
+
+
+
+            </div>
+
+
+
+
+        </article>
+
+
+
+
+        {% empty %}
+
+
+
+            <p>
+                No cars available.
+            </p>
+
+
+
+        {% endfor %}
+
+
+
+
+    </div>
+
+
+
+</section>
+
+
+
+{% endblock %}

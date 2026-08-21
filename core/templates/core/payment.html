@@ -1,0 +1,556 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/payment.css' %}">
+{% endblock %}
+
+{% block title %}
+Payment - Smart Car Rental
+{% endblock %}
+
+{% block content %}
+
+<section class="payment-page">
+
+    <!-- =====================================================
+         PAGE HEADER
+         ===================================================== -->
+
+    <div class="payment-header">
+
+        <div class="payment-header-icon">
+            <i class="fa-solid fa-shield-halved"></i>
+        </div>
+
+        <h1>Complete Your Payment</h1>
+
+        <p>
+            Secure your rental by completing the payment below.
+        </p>
+
+    </div>
+
+
+    <!-- =====================================================
+         CASH PAYMENT NOTICE
+         This is ONLY a notice.
+         It does NOT replace the payment methods.
+         ===================================================== -->
+
+    {% if booking.payment_method == "Cash" and booking.payment_status == "Pending" %}
+
+        <div class="cash-notice" id="cashPaymentNotice">
+
+            <div class="cash-notice-content">
+
+                <div class="cash-notice-icon">
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                </div>
+
+                <div class="cash-notice-text">
+
+                    <div class="cash-notice-title-row">
+
+                        <h3>
+                            Cash payment selected
+                        </h3>
+
+                        <span class="cash-status-badge">
+                            Pending
+                        </span>
+
+                    </div>
+
+                    <p>
+                        Please pay
+                        <strong>{{ booking.total_price }} ETB</strong>
+                        at the Smart Car Rental office.
+                    </p>
+
+                    <small>
+                        Staff will confirm your payment after receiving the cash.
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- REAL CLOSE BUTTON -->
+            <button
+                type="button"
+                class="cash-notice-close"
+                onclick="closeCashNotice()"
+            >
+                Close
+            </button>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- =====================================================
+         PAYMENT CARD
+         Always displayed.
+         Closing the cash notice does NOT hide this.
+         ===================================================== -->
+
+    <div class="payment-card">
+
+
+        <!-- =================================================
+             CAR SUMMARY
+             ================================================= -->
+
+        <div class="payment-car-summary">
+
+            <div class="car-summary-icon">
+                <i class="fa-solid fa-car"></i>
+            </div>
+
+            <div class="car-summary-info">
+
+                <span class="summary-label">
+                    Rental Vehicle
+                </span>
+
+                <h2>
+                    {{ booking.car.name }}
+                </h2>
+
+                <span class="booking-number">
+                    Booking #{{ booking.id }}
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             RENTAL DETAILS
+             ================================================= -->
+
+        <div class="booking-summary">
+
+            <div class="summary-item">
+
+                <div class="summary-icon">
+                    <i class="fa-solid fa-calendar-days"></i>
+                </div>
+
+                <div>
+
+                    <span>
+                        Pickup Date
+                    </span>
+
+                    <strong>
+                        {{ booking.pickup_date }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="summary-item">
+
+                <div class="summary-icon">
+                    <i class="fa-solid fa-calendar-check"></i>
+                </div>
+
+                <div>
+
+                    <span>
+                        Return Date
+                    </span>
+
+                    <strong>
+                        {{ booking.dropoff_date }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="summary-item">
+
+                <div class="summary-icon">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+
+                <div>
+
+                    <span>
+                        Rental Duration
+                    </span>
+
+                    <strong>
+                        {{ booking.rental_days }} day(s)
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             TOTAL
+             ================================================= -->
+
+        <div class="payment-total">
+
+            <div>
+
+                <span>
+                    Total Amount
+                </span>
+
+                <small>
+                    Rental payment
+                </small>
+
+            </div>
+
+            <strong>
+                {{ booking.total_price }} ETB
+            </strong>
+
+        </div>
+
+
+        <!-- =================================================
+             PAYMENT STATUS
+             ================================================= -->
+
+        {% if booking.payment_status != "Paid" %}
+
+
+            <!-- =============================================
+                 PAYMENT FORM
+                 ============================================= -->
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+
+                <div class="payment-method-section">
+
+
+                    <!-- SECTION HEADER -->
+
+                    <div class="section-heading">
+
+                        <h2>
+                            Choose Payment Method
+                        </h2>
+
+                        <p>
+                            Select your preferred payment method.
+                        </p>
+
+                    </div>
+
+
+                    <!-- =====================================
+                         PAYMENT METHODS
+                         ===================================== -->
+
+                    <div class="payment-methods">
+
+
+                        <!-- =================================
+                             CHAPA
+                             ================================= -->
+
+                        <label class="payment-method">
+
+                            <input
+                                type="radio"
+                                name="payment_method"
+                                value="Chapa"
+                                required
+                            >
+
+                            <div class="payment-logo">
+
+                                <img
+                                    src="{% static 'core/images/chapa.png' %}"
+                                    alt="Chapa"
+                                >
+
+                            </div>
+
+                            <div class="payment-method-info">
+
+                                <strong>
+                                    Chapa
+                                </strong>
+
+                                <span>
+                                    Pay securely with Chapa
+                                </span>
+
+                            </div>
+
+                            <div class="payment-radio">
+                                <span></span>
+                            </div>
+
+                        </label>
+
+
+                        <!-- =================================
+                             TELEBIRR
+                             ================================= -->
+
+                        <label class="payment-method">
+
+                            <input
+                                type="radio"
+                                name="payment_method"
+                                value="Telebirr"
+                            >
+
+                            <div class="payment-logo">
+
+                                <img
+                                    src="{% static 'core/images/telebirr.png' %}"
+                                    alt="Telebirr"
+                                >
+
+                            </div>
+
+                            <div class="payment-method-info">
+
+                                <strong>
+                                    Telebirr
+                                </strong>
+
+                                <span>
+                                    Pay using Telebirr
+                                </span>
+
+                            </div>
+
+                            <div class="payment-radio">
+                                <span></span>
+                            </div>
+
+                        </label>
+
+
+                        <!-- =================================
+                             CASH
+                             ================================= -->
+
+                        <label class="payment-method">
+
+                            <input
+                                type="radio"
+                                name="payment_method"
+                                value="Cash"
+                            >
+
+                            <div class="payment-logo cash-logo">
+
+                                <i class="fa-solid fa-money-bill-wave"></i>
+
+                            </div>
+
+                            <div class="payment-method-info">
+
+                                <strong>
+                                    Cash Payment
+                                </strong>
+
+                                <span>
+                                    Pay at the rental office
+                                </span>
+
+                            </div>
+
+                            <div class="payment-radio">
+                                <span></span>
+                            </div>
+
+                        </label>
+
+                    </div>
+
+
+                    <!-- =====================================
+                         SUBMIT BUTTON
+                         ===================================== -->
+
+                    <button
+                        type="submit"
+                        class="payment-submit-btn"
+                    >
+
+                        <span>
+
+                            <i class="fa-solid fa-lock"></i>
+
+                            Continue Secure Payment
+
+                        </span>
+
+                        <i class="fa-solid fa-arrow-right"></i>
+
+                    </button>
+
+
+                    <!-- =====================================
+                         SECURITY MESSAGE
+                         ===================================== -->
+
+                    <div class="secure-payment">
+
+                        <i class="fa-solid fa-shield-halved"></i>
+
+                        <span>
+                            Your payment information is securely processed.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+
+        {% else %}
+
+
+            <!-- =============================================
+                 PAYMENT SUCCESS
+                 ============================================= -->
+
+            <div class="payment-success">
+
+                <div class="success-icon">
+
+                    <i class="fa-solid fa-check"></i>
+
+                </div>
+
+
+                <h2>
+                    Payment Completed
+                </h2>
+
+
+                <p>
+                    Your payment has been successfully received.
+                </p>
+
+
+                <div class="success-details">
+
+
+                    <!-- PAYMENT METHOD -->
+
+                    <div>
+
+                        <span>
+                            Payment Method
+                        </span>
+
+                        <strong>
+                            {{ booking.payment_method }}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- PAYMENT REFERENCE -->
+
+                    <div>
+
+                        <span>
+                            Payment Reference
+                        </span>
+
+                        <strong>
+                            {{ booking.payment_reference }}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- AMOUNT -->
+
+                    <div>
+
+                        <span>
+                            Amount Paid
+                        </span>
+
+                        <strong>
+                            {{ booking.total_price }} ETB
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- BACK TO BOOKINGS -->
+
+                <a
+                    href="{% url 'my_bookings' %}"
+                    class="back-bookings-btn"
+                >
+
+                    <i class="fa-solid fa-arrow-left"></i>
+
+                    Back to My Bookings
+
+                </a>
+
+            </div>
+
+        {% endif %}
+
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     CLOSE CASH NOTICE
+     ========================================================= -->
+
+<script>
+
+function closeCashNotice() {
+
+    const notice = document.getElementById("cashPaymentNotice");
+
+    if (!notice) {
+        return;
+    }
+
+    notice.style.opacity = "0";
+    notice.style.transform = "translateY(-8px)";
+
+    setTimeout(function () {
+
+        notice.style.display = "none";
+
+    }, 200);
+
+}
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,318 @@
+
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/about.css' %}">
+{% endblock %}
+
+{% block title %}
+About - Smart Car Rental
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="about-page">
+
+
+
+    <!-- HERO SECTION -->
+
+    <section class="about-hero">
+
+
+        <div class="about-hero-content">
+
+
+            <h1>
+                About Smart Car Rental
+            </h1>
+
+
+            <p>
+                Reliable vehicles, simple booking, and a smarter way
+                to travel across Addis Ababa.
+            </p>
+
+
+        </div>
+
+
+    </section>
+
+
+
+
+
+
+
+    <!-- STORY SECTION -->
+
+
+    <section class="about-section">
+
+
+        <div class="about-card">
+
+
+            <div class="about-icon">
+
+                <i class="fa-solid fa-car"></i>
+
+            </div>
+
+
+
+            <h2>
+                Our Story
+            </h2>
+
+
+
+            <p>
+                Smart Car Rental was founded in 2020 with a simple mission:
+                to provide reliable, affordable, and quality car rental services.
+                We started with a small number of vehicles and have grown into
+                a trusted rental company serving customers across Addis Ababa.
+            </p>
+
+
+        </div>
+
+
+    </section>
+
+
+
+
+
+
+
+
+
+    <!-- MISSION VISION -->
+
+
+    <section class="about-grid">
+
+
+
+        <div class="info-card">
+
+
+            <i class="fa-solid fa-bullseye"></i>
+
+
+            <h2>
+                Our Mission
+            </h2>
+
+
+            <p>
+                To make car rental effortless and enjoyable by providing
+                safe vehicles, transparent pricing, and excellent customer service.
+            </p>
+
+
+        </div>
+
+
+
+
+
+
+        <div class="info-card">
+
+
+            <i class="fa-solid fa-eye"></i>
+
+
+            <h2>
+                Our Vision
+            </h2>
+
+
+            <p>
+                To become the most trusted and innovative car rental platform
+                in Ethiopia.
+            </p>
+
+
+        </div>
+
+
+
+    </section>
+
+
+
+
+
+
+
+
+
+    <!-- WHY CHOOSE US -->
+
+
+    <section class="why-section">
+
+
+        <h2>
+            Why Choose Smart Car Rental?
+        </h2>
+
+
+
+
+        <div class="features">
+
+
+
+            <div class="feature-card">
+
+
+                <i class="fa-solid fa-shield-halved"></i>
+
+
+                <h3>
+                    Reliable Vehicles
+                </h3>
+
+
+                <p>
+                    Well-maintained cars ready for your journey.
+                </p>
+
+
+            </div>
+
+
+
+
+
+
+            <div class="feature-card">
+
+
+                <i class="fa-solid fa-money-bill-wave"></i>
+
+
+                <h3>
+                    Affordable Prices
+                </h3>
+
+
+                <p>
+                    Competitive daily rental rates with no hidden fees.
+                </p>
+
+
+            </div>
+
+
+
+
+
+
+            <div class="feature-card">
+
+
+                <i class="fa-solid fa-headset"></i>
+
+
+                <h3>
+                    Customer Support
+                </h3>
+
+
+                <p>
+                    Friendly assistance whenever you need help.
+                </p>
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+    </section>
+
+
+
+
+
+
+
+
+
+    <!-- TEAM SECTION -->
+
+
+    <section class="team-section">
+
+
+        <div class="team-card">
+
+
+            <i class="fa-solid fa-users"></i>
+
+
+            <h2>
+                Meet Our Team
+            </h2>
+
+
+            <p>
+                Our dedicated team is passionate about customer service
+                and helping you find the perfect vehicle for your needs.
+            </p>
+
+
+        </div>
+
+
+    </section>
+
+
+
+
+
+
+
+
+
+    <!-- CALL TO ACTION -->
+
+
+    <section class="about-cta">
+
+
+        <h2>
+            Ready to Start Your Journey?
+        </h2>
+
+
+        <p>
+            Choose your vehicle and experience smarter car rental today.
+        </p>
+
+
+        <a href="{% url 'cars' %}">
+            Explore Cars
+        </a>
+
+
+    </section>
+
+
+
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,251 @@
+/* ==========================
+   RESPONSIVE
+========================== */
+
+/* Header */
+
+@media(max-width:768px){
+
+.header-top{
+    padding:15px 20px;
+}
+
+.menu-toggle{
+    display:flex;
+}
+
+.navbar{
+    display:none;
+    flex-direction:column;
+    width:100%;
+    background:var(--primary);
+}
+
+.navbar.active{
+    display:flex;
+}
+
+.nav-link{
+    width:100%;
+    padding:15px;
+}
+
+.company-logo{
+    width:45px;
+    height:45px;
+}
+
+.logo span{
+    font-size:17px;
+}
+
+}
+
+@media(max-width:480px){
+
+.logo span{
+    display:none;
+}
+
+.search-btn{
+    display:none;
+}
+
+}
+
+/* Home */
+
+@media(max-width:1024px){
+
+.car-grid{
+    grid-template-columns:repeat(2,1fr);
+}
+
+}
+
+@media(max-width:768px){
+
+#hero{
+    margin:40px 15px;
+    padding:50px 20px;
+}
+
+#hero h2{
+    font-size:30px;
+}
+
+.car-grid{
+    grid-template-columns:1fr;
+}
+
+.car-details-container{
+    grid-template-columns:1fr;
+}
+
+.details-car-image{
+    height:260px;
+}
+
+.details-buttons{
+    flex-direction:column;
+}
+
+}
+
+@media(max-width:480px){
+
+.cta-button,
+.btn,
+.book-now-button{
+    width:100%;
+}
+
+}
+
+/* Booking */
+
+@media(max-width:992px){
+
+.booking-container{
+    grid-template-columns:1fr;
+}
+
+.booking-summary{
+    position:static;
+}
+
+}
+
+@media(max-width:768px){
+
+.booking-form-card{
+    padding:25px;
+}
+
+.booking-header{
+    flex-direction:column;
+    gap:12px;
+    text-align:center;
+}
+
+.booking-grid{
+    grid-template-columns:1fr;
+}
+
+.cancel-booking-btn{
+    width:100%;
+}
+
+}
+
+/* Admin */
+
+@media(max-width:768px){
+
+.dashboard-title{
+    font-size:30px;
+}
+
+.dashboard-cards{
+    grid-template-columns:1fr;
+}
+
+.recent-bookings{
+    overflow-x:auto;
+}
+
+.recent-bookings table{
+    min-width:700px;
+}
+
+.notification-card{
+    flex-direction:column;
+}
+
+}
+
+/* Payment */
+
+@media(max-width:600px){
+
+.payment-card{
+    padding:20px;
+}
+
+}
+
+/* Global */
+
+@media(max-width:768px){
+
+.container{
+    width:95%;
+}
+
+.page-header h1{
+    font-size:30px;
+}
+
+.dashboard-card h2{
+    font-size:34px;
+}
+
+.car-card{
+    max-width:380px;
+    margin:auto;
+}
+
+input,
+select,
+textarea{
+    font-size:16px;
+}
+
+}
+
+@media(max-width:480px){
+
+body{
+    font-size:15px;
+}
+
+.page-header h1{
+    font-size:26px;
+}
+
+.booking-form-card,
+.booking-summary,
+.car-info-box,
+.car-image-box{
+    padding:20px;
+}
+
+}
+@media(max-width:768px){
+
+
+.user-menu{
+
+    position:relative;
+
+}
+
+
+.profile-dropdown{
+
+    right:-20px;
+
+    width:230px;
+
+}
+
+
+
+.profile-btn{
+
+    font-size:14px;
+
+}
+
+
+}

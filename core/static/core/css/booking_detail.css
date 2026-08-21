@@ -1,0 +1,239 @@
+/* ================================
+   Booking Detail Page
+================================ */
+
+.booking-detail-page {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 20px;
+}
+
+
+.booking-detail-page h1 {
+    text-align: center;
+    margin-bottom: 35px;
+    color: #222;
+    font-size: 32px;
+}
+
+
+/* Main Card */
+
+.booking-card {
+    background: white;
+    border-radius: 15px;
+    padding: 35px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+
+/* Information Rows */
+
+.booking-card p {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0;
+    margin: 0;
+    border-bottom: 1px solid #eee;
+    font-size: 17px;
+    color: #444;
+}
+
+
+.booking-card p:last-child {
+    border-bottom: none;
+}
+
+
+.booking-card strong {
+    color: #111;
+}
+
+
+/* Status */
+
+.booking-card p:nth-child(5) {
+    font-weight: bold;
+}
+
+
+/* Back Button */
+
+.booking-detail-page a {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 12px 25px;
+    background: #111827;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+
+.booking-detail-page a:hover {
+    background: #2563eb;
+}
+
+
+/* Mobile */
+
+@media(max-width:600px){
+
+    .booking-detail-page {
+        margin: 20px auto;
+        padding: 15px;
+    }
+
+
+    .booking-card {
+        padding: 20px;
+    }
+
+
+    .booking-card p {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+}
+/* ================================
+   Status Badges
+================================ */
+
+.status-badge {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+
+/* Pending */
+
+.status-badge.pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+
+/* Approved */
+
+.status-badge.approved {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+
+/* Active Rental */
+
+.status-badge.active {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+
+/* Completed */
+
+.status-badge.completed {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+
+/* Cancelled */
+
+.status-badge.cancelled {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+
+/* Rejected */
+
+.status-badge.rejected {
+    background: #f3e8ff;
+    color: #6b21a8;
+}
+/* ================================
+   Document Status
+================================ */
+
+.document-section {
+    margin-top: 30px;
+    padding: 25px;
+    background: #f8fafc;
+    border-radius: 12px;
+}
+
+.document-section h2 {
+    margin-bottom: 20px;
+}
+
+.document-section p {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.document-section a {
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.document-section a:hover {
+    text-decoration: underline;
+}
+
+.document-status {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.document-status.verified {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.document-status.pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.document-status.rejected {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* Buttons */
+
+.payment-btn {
+
+background:#16a34a !important;
+
+}
+
+
+.payment-btn:hover {
+
+background:#15803d !important;
+
+}
+
+
+.cancel-btn {
+
+background:#dc2626 !important;
+
+}
+
+
+.cancel-btn:hover {
+
+background:#b91c1c !important;
+
+}

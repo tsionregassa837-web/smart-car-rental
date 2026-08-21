@@ -1,0 +1,293 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/home.css' %}">
+{% endblock %}
+
+{% block title %}
+{{ car.name }} - Smart Car Rental
+{% endblock %}
+
+{% block content %}
+
+<section class="car-details-section">
+
+    <div class="car-details-container">
+
+        <!-- ==================================================
+             CAR IMAGE
+        ================================================== -->
+
+        <div class="car-image-box">
+
+            {% if car.image %}
+                <img
+                    src="{{ car.image.url }}"
+                    alt="{{ car.name }}"
+                    class="details-car-image"
+                >
+            {% else %}
+                <div class="no-car-image">
+                    No Image Available
+                </div>
+            {% endif %}
+
+        </div>
+
+
+        <!-- ==================================================
+             CAR INFORMATION
+        ================================================== -->
+
+        <div class="car-info-box">
+
+            <h1>{{ car.name|upper }}</h1>
+
+
+            <!-- PRICE -->
+
+            <div class="price-box">
+
+                {{ car.price_per_day }} ETB
+
+                <span>/ day</span>
+
+            </div>
+
+
+            <!-- ==================================================
+                 CUSTOMER-FACING AVAILABILITY
+
+                 Customers only see:
+                 Available Now
+                 OR
+                 Currently Unavailable
+
+                 Internal fleet statuses such as Maintenance
+                 and Inactive are intentionally hidden.
+            ================================================== -->
+
+            {% if car.fleet_status == "Available" and car.available_quantity > 0 %}
+
+                <div class="availability available">
+
+                    ✓ Available Now
+
+                </div>
+
+            {% else %}
+
+                <div class="availability unavailable">
+
+                    ✗ Currently Unavailable
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- ==================================================
+                 VEHICLE SPECIFICATIONS
+            ================================================== -->
+
+            <div class="specifications">
+
+                <h2>Vehicle Information</h2>
+
+
+                <!-- MODEL YEAR -->
+
+                <div class="spec-row">
+
+                    <span>📅 Model Year</span>
+
+                    <strong>
+                        {{ car.model_year }}
+                    </strong>
+
+                </div>
+
+
+                <!-- TRANSMISSION -->
+
+                <div class="spec-row">
+
+                    <span>⚙️ Transmission</span>
+
+                    <strong>
+                        {{ car.transmission }}
+                    </strong>
+
+                </div>
+
+
+                <!-- FUEL TYPE -->
+
+                <div class="spec-row">
+
+                    <span>⛽ Fuel Type</span>
+
+                    <strong>
+                        {{ car.fuel_type }}
+                    </strong>
+
+                </div>
+
+
+                <!-- SEATS -->
+
+                <div class="spec-row">
+
+                    <span>💺 Seats</span>
+
+                    <strong>
+                        {{ car.seats }}
+                    </strong>
+
+                </div>
+
+
+                <!-- DOORS -->
+
+                <div class="spec-row">
+
+                    <span>🚪 Doors</span>
+
+                    <strong>
+                        {{ car.doors }}
+                    </strong>
+
+                </div>
+
+
+                <!-- LUGGAGE CAPACITY -->
+
+                {% if car.luggage_capacity %}
+
+                    <div class="spec-row">
+
+                        <span>🧳 Luggage Capacity</span>
+
+                        <strong>
+                            {{ car.luggage_capacity }}
+                        </strong>
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- AIR CONDITIONING -->
+
+                <div class="spec-row">
+
+                    <span>❄️ Air Conditioning</span>
+
+                    <strong>
+
+                        {% if car.air_conditioning %}
+
+                            Yes
+
+                        {% else %}
+
+                            No
+
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+
+                <!-- AVAILABLE UNITS -->
+
+                <div class="spec-row">
+
+                    <span>🚗 Available Units</span>
+
+                    <strong>
+                        {{ car.available_quantity }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==================================================
+     FEATURES & AMENITIES
+================================================== -->
+
+{% if car.feature_list %}
+
+<div class="vehicle-features">
+
+    <div class="section-heading">
+
+        <span class="section-icon">✨</span>
+
+        <div>
+            <h2>Features & Amenities</h2>
+            <p>Included with this vehicle</p>
+        </div>
+
+    </div>
+
+
+    <div class="features-card">
+
+        {% for feature in car.feature_list %}
+
+            <div class="feature-item">
+
+                <span class="feature-check">✓</span>
+
+                <span class="feature-name">
+                    {{ feature|upper }}
+                </span>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endif %}
+            <!-- ==================================================
+                 ACTION BUTTONS
+            ================================================== -->
+
+            <div class="details-buttons">
+
+                {% if car.fleet_status == "Available" and car.available_quantity > 0 %}
+
+                    <a
+                        href="{% url 'booking' %}?car={{ car.name }}"
+                        class="book-now-button"
+                    >
+                        Book Now
+                    </a>
+
+                {% endif %}
+
+
+                <a
+                    href="{% url 'cars' %}"
+                    class="view-details-button"
+                >
+                    ← Back to Fleet
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

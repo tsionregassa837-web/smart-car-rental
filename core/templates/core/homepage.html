@@ -1,0 +1,30 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}
+Home - Smart Car Rental
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/home.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section id="hero">
+
+    <h2>
+        Drive Your Adventure. Rent a Car Today!
+    </h2>
+
+    <p>
+        The best selection of vehicles for your next journey.
+    </p>
+
+    <a href="{% url 'booking' %}" class="cta-button">
+        Book Now
+    </a>
+
+</section>
+
+{% endblock %}

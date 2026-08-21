@@ -1,0 +1,198 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/booking_detail.css' %}">
+{% endblock %}
+
+{% block title %}
+Booking Details
+{% endblock %}
+
+{% block content %}
+
+<section class="booking-detail-page">
+
+<h1>Booking Details</h1>
+
+<div class="booking-card">
+
+<p><strong>Booking ID:</strong> #{{ booking.id }}</p>
+
+<p>
+<strong>Car:</strong>
+{{ booking.car.name }}
+</p>
+
+<p>
+<strong>Pickup Date:</strong>
+{{ booking.pickup_date }}
+</p>
+
+<p>
+<strong>Return Date:</strong>
+{{ booking.dropoff_date }}
+</p>
+
+<p>
+<strong>Status:</strong>
+
+{% if booking.status == "Pending" %}
+<span class="status-badge pending">
+Pending
+</span>
+
+{% elif booking.status == "Approved" %}
+<span class="status-badge approved">
+Approved
+</span>
+
+{% elif booking.status == "Active" %}
+<span class="status-badge active">
+Active Rental
+</span>
+
+{% elif booking.status == "Completed" %}
+<span class="status-badge completed">
+Completed
+</span>
+
+{% elif booking.status == "Cancelled" %}
+<span class="status-badge cancelled">
+Cancelled
+</span>
+
+{% else %}
+<span class="status-badge rejected">
+Rejected
+</span>
+
+{% endif %}
+
+</p>
+
+<p>
+<strong>Payment:</strong>
+{{ booking.payment_status }}
+</p>
+<div class="document-section">
+
+<h2>Documents</h2>
+
+<p>
+<strong>Driver License:</strong>
+
+{% if booking.driver_license %}
+
+
+<a
+    href="{% url 'booking_document' booking.id 'license' %}"
+    target="_blank"
+>
+    View Driver License
+</a>
+
+{% else %}
+
+Not uploaded
+
+{% endif %}
+
+</p>
+
+
+<p>
+<strong>National ID:</strong>
+
+{% if booking.national_id %}
+
+<a
+    href="{% url 'booking_document' booking.id 'national-id' %}"
+    target="_blank"
+>
+    View National ID
+</a>
+
+{% else %}
+
+Not uploaded
+
+{% endif %}
+
+</p>
+
+
+<p>
+<strong>Document Status:</strong>
+
+{% if booking.document_status == "Verified" %}
+
+<span class="document-status verified">
+    Verified ✓
+</span>
+
+{% elif booking.document_status == "Pending" %}
+
+<span class="document-status pending">
+    Pending
+</span>
+
+{% elif booking.document_status == "Rejected" %}
+
+<span class="document-status rejected">
+    Rejected
+</span>
+
+{% endif %}
+
+</p>
+
+</div>
+{% if booking.status == "Approved" and booking.payment_status == "Pending" %}
+
+<a href="{% url 'payment' booking.id %}" class="payment-btn">
+    <i class="fa-solid fa-credit-card"></i>
+    Make Payment
+</a>
+{% elif booking.payment_status == "Paid" %}
+
+    <a
+        href="{% url 'payment_receipt' booking.id %}"
+        class="view-btn"
+    >
+        <i class="fa-solid fa-receipt"></i>
+        View Payment Receipt
+    </a>
+    
+
+{% endif %}
+
+<p>
+<strong>Total Price:</strong>
+{{ booking.total_price }}
+</p>
+
+</div>
+
+<a href="{% url 'my_bookings' %}">
+Back to My Bookings
+</a>
+
+{% if booking.status == "Pending" %}
+
+<a href="{% url 'cancel_booking' booking.id %}"
+class="cancel-btn"
+onclick="return confirm('Cancel this booking?');">
+
+<i class="fa-solid fa-xmark"></i>
+
+Cancel Booking
+
+</a>
+
+{% endif %}
+
+</section>
+
+{% endblock %}

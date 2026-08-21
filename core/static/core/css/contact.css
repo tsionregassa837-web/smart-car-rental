@@ -1,0 +1,462 @@
+
+/* =====================================
+CONTACT PAGE
+SMART CAR RENTAL
+===================================== */
+
+
+.contact-page{
+
+    max-width:1200px;
+
+    margin:auto;
+
+    padding:40px 20px;
+
+}
+
+
+
+
+/* =========================
+HERO
+========================= */
+
+
+.contact-hero{
+
+
+    min-height:320px;
+
+    border-radius:25px;
+
+    background:
+
+    linear-gradient(
+        rgba(11,31,58,.85),
+        rgba(11,31,58,.85)
+    );
+
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+
+    color:white;
+
+    margin-bottom:50px;
+
+
+}
+
+
+
+.contact-hero i{
+
+
+    font-size:60px;
+
+    margin-bottom:20px;
+
+    color:var(--accent);
+
+
+}
+
+
+
+.contact-hero h1{
+
+
+    font-size:48px;
+
+    margin-bottom:15px;
+
+
+}
+
+
+
+.contact-hero p{
+
+
+    font-size:18px;
+
+    opacity:.9;
+
+
+}
+
+
+
+
+
+
+
+/* =========================
+CONTACT LAYOUT
+========================= */
+
+
+.contact-container{
+
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:40px;
+
+
+}
+
+
+
+
+
+
+
+/* =========================
+CONTACT INFO
+========================= */
+
+
+.contact-info h2,
+
+
+.contact-form-card h2{
+
+
+    color:var(--primary);
+
+    font-size:30px;
+
+    margin-bottom:15px;
+
+
+}
+
+
+
+.contact-info>p{
+
+
+    color:var(--muted);
+
+    margin-bottom:30px;
+
+}
+
+
+
+
+
+
+.contact-card{
+
+
+    background:white;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:20px;
+
+
+    padding:25px;
+
+    border-radius:var(--radius);
+
+    box-shadow:var(--shadow);
+
+
+    margin-bottom:20px;
+
+
+    transition:.3s;
+
+
+}
+
+
+
+.contact-card:hover{
+
+
+    transform:translateY(-5px);
+
+
+}
+
+
+
+.contact-card i{
+
+
+    width:55px;
+
+    height:55px;
+
+
+    border-radius:15px;
+
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+
+    background:#eff6ff;
+
+
+    color:var(--secondary);
+
+
+    font-size:22px;
+
+
+}
+
+
+
+.contact-card h3{
+
+
+    color:var(--dark);
+
+    margin-bottom:5px;
+
+
+}
+
+
+
+.contact-card p{
+
+
+    color:var(--muted);
+
+
+}
+
+
+
+
+
+
+
+
+/* =========================
+FORM CARD
+========================= */
+
+
+.contact-form-card{
+
+
+    background:white;
+
+    padding:35px;
+
+
+    border-radius:var(--radius);
+
+    box-shadow:var(--shadow);
+
+
+}
+
+
+
+
+
+
+
+.form-group{
+
+
+    margin-bottom:20px;
+
+
+}
+
+
+
+.form-group label{
+
+
+    display:block;
+
+    margin-bottom:8px;
+
+
+    color:var(--dark);
+
+    font-weight:600;
+
+
+}
+
+
+
+.form-group input,
+
+.form-group textarea{
+
+
+    width:100%;
+
+    padding:14px 16px;
+
+
+    border:1px solid var(--border);
+
+
+    border-radius:12px;
+
+
+    outline:none;
+
+
+    font-size:15px;
+
+
+    transition:.3s;
+
+
+}
+
+
+
+.form-group input:focus,
+
+.form-group textarea:focus{
+
+
+    border-color:var(--secondary);
+
+
+    box-shadow:
+    0 0 0 3px rgba(37,99,235,.15);
+
+
+}
+
+
+
+.form-group textarea{
+
+
+    resize:none;
+
+
+}
+
+
+
+
+
+
+
+/* =========================
+BUTTON
+========================= */
+
+
+.contact-form-card button{
+
+
+    width:100%;
+
+
+    border:none;
+
+
+    background:var(--secondary);
+
+
+    color:white;
+
+
+    padding:15px;
+
+
+    border-radius:12px;
+
+
+    font-size:16px;
+
+
+    cursor:pointer;
+
+
+    transition:.3s;
+
+
+}
+
+
+
+.contact-form-card button:hover{
+
+
+    background:var(--primary);
+
+
+    transform:translateY(-3px);
+
+
+}
+
+
+
+
+
+
+
+/* =========================
+MOBILE
+========================= */
+
+
+@media(max-width:900px){
+
+
+.contact-container{
+
+
+    grid-template-columns:1fr;
+
+
+}
+
+
+
+.contact-hero h1{
+
+
+    font-size:35px;
+
+
+}
+
+
+
+.contact-hero p{
+
+
+    font-size:16px;
+
+
+}
+
+
+
+}

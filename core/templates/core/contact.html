@@ -1,0 +1,295 @@
+
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/contact.css' %}">
+{% endblock %}
+
+{% block title %}
+Contact - Smart Car Rental
+{% endblock %}
+
+
+{% block content %}
+
+
+
+<div class="contact-page">
+
+
+
+    <!-- HERO -->
+
+    <section class="contact-hero">
+
+
+        <div>
+
+
+            <i class="fa-solid fa-headset"></i>
+
+
+            <h1>
+                Contact Us
+            </h1>
+
+
+            <p>
+                We're here to help with your booking,
+                rental questions, and support needs.
+            </p>
+
+
+        </div>
+
+
+    </section>
+
+
+
+
+
+
+
+    <!-- CONTACT CONTENT -->
+
+
+    <section class="contact-container">
+
+
+
+
+
+        <!-- INFORMATION -->
+
+
+        <div class="contact-info">
+
+
+
+            <h2>
+                Get In Touch
+            </h2>
+
+
+
+            <p>
+                Contact Smart Car Rental and our team will
+                assist you as quickly as possible.
+            </p>
+
+
+
+
+
+            <div class="contact-card">
+
+
+                <i class="fa-solid fa-phone"></i>
+
+
+                <div>
+
+                    <h3>
+                        Phone
+                    </h3>
+
+                    <p>
+                        (555) 123-4567
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+
+
+
+
+
+            <div class="contact-card">
+
+
+                <i class="fa-solid fa-envelope"></i>
+
+
+                <div>
+
+                    <h3>
+                        Email
+                    </h3>
+
+                    <p>
+                        info@smart.com
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+
+
+
+
+
+            <div class="contact-card">
+
+
+                <i class="fa-solid fa-location-dot"></i>
+
+
+                <div>
+
+                    <h3>
+                        Main Office
+                    </h3>
+
+                    <p>
+                        Bole Road, Addis Ababa, Ethiopia
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+        <!-- FORM -->
+
+
+        <div class="contact-form-card">
+
+
+            <h2>
+                Send Us a Message
+            </h2>
+
+
+
+            <form method="POST">
+
+
+                {% csrf_token %}
+
+
+
+                <div class="form-group">
+
+
+                    <label for="name">
+                        Name
+                    </label>
+
+
+                    <input 
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Enter your name"
+                    required>
+
+
+                </div>
+
+
+
+
+
+
+
+                <div class="form-group">
+
+
+                    <label for="email-contact">
+                        Email
+                    </label>
+
+
+                    <input
+                    type="email"
+                    id="email-contact"
+                    name="email"
+                    placeholder="Enter your email"
+                    required>
+
+
+                </div>
+
+
+
+
+
+
+
+                <div class="form-group">
+
+
+                    <label for="message">
+                        Message
+                    </label>
+
+
+                    <textarea
+                    id="message"
+                    name="message"
+                    rows="6"
+                    placeholder="Write your message..."
+                    required></textarea>
+
+
+                </div>
+
+
+
+
+
+
+
+                <button type="submit">
+
+
+                    <i class="fa-solid fa-paper-plane"></i>
+
+                    Send Message
+
+
+                </button>
+
+
+
+            </form>
+
+
+
+        </div>
+
+
+
+
+    </section>
+
+
+
+
+
+</div>
+
+
+
+{% endblock %}

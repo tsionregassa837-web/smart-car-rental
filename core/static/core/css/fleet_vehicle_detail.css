@@ -1,0 +1,879 @@
+/* =========================================================
+   SMART CAR RENTAL
+   FLEET VEHICLE DETAIL
+   Professional Fleet Management Interface
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+
+    --text: #172033;
+    --text-secondary: #64748b;
+    --text-light: #94a3b8;
+
+    --border: #e2e8f0;
+    --background: #f5f7fb;
+    --white: #ffffff;
+
+    --success: #16a34a;
+    --success-bg: #ecfdf3;
+
+    --warning: #d97706;
+    --warning-bg: #fff7ed;
+
+    --danger: #dc2626;
+    --danger-bg: #fef2f2;
+
+    --purple: #7c3aed;
+    --purple-bg: #f5f3ff;
+
+    --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+    --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.07);
+
+    --radius: 14px;
+}
+
+body {
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    background: var(--background);
+    color: var(--text);
+    line-height: 1.5;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+
+/* =========================================================
+   PAGE
+   ========================================================= */
+
+.fleet-detail-page {
+    min-height: 100vh;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.fleet-header {
+    min-height: 86px;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 18px 5%;
+
+    gap: 30px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 600;
+
+    white-space: nowrap;
+
+    transition: color 0.2s ease;
+}
+
+.back-link:hover {
+    color: var(--primary);
+}
+
+.back-link span {
+    font-size: 20px;
+}
+
+.header-title {
+    padding-left: 28px;
+    border-left: 1px solid var(--border);
+}
+
+.eyebrow,
+.section-label {
+    display: block;
+
+    color: var(--primary);
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.header-title h1 {
+    margin-top: 2px;
+
+    font-size: 22px;
+    line-height: 1.2;
+    font-weight: 750;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.btn {
+    min-height: 44px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 20px;
+
+    border-radius: 9px;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    border: 1px solid transparent;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn-primary {
+    color: var(--white);
+    background: var(--primary);
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.18);
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+}
+
+.btn-secondary {
+    color: var(--text);
+    background: var(--white);
+    border-color: var(--border);
+}
+
+.btn-secondary:hover {
+    border-color: #cbd5e1;
+    background: #f8fafc;
+}
+
+
+/* =========================================================
+   CONTAINER
+   ========================================================= */
+
+.fleet-container {
+    width: min(1200px, 90%);
+    margin: 0 auto;
+
+    padding: 34px 0 60px;
+}
+
+
+/* =========================================================
+   VEHICLE HERO
+   ========================================================= */
+
+.vehicle-hero {
+    display: grid;
+    grid-template-columns: minmax(360px, 48%) 1fr;
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    overflow: hidden;
+
+    box-shadow: var(--shadow-md);
+}
+
+.vehicle-image-panel {
+    min-height: 390px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #e2e8f0,
+            #f8fafc
+        );
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+}
+
+.vehicle-image-panel img {
+    width: 100%;
+    height: 100%;
+
+    min-height: 390px;
+
+    object-fit: cover;
+
+    display: block;
+}
+
+.image-placeholder {
+    text-align: center;
+    color: var(--text-light);
+}
+
+.image-placeholder span {
+    display: block;
+    font-size: 64px;
+    margin-bottom: 10px;
+}
+
+.image-placeholder p {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.vehicle-summary {
+    padding: 38px;
+}
+
+.summary-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 24px;
+
+    padding-bottom: 30px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.summary-top h2 {
+    margin-top: 7px;
+
+    font-size: 34px;
+    line-height: 1.15;
+
+    font-weight: 800;
+
+    color: var(--text);
+}
+
+.vehicle-year {
+    margin-top: 7px;
+
+    color: var(--text-secondary);
+
+    font-size: 15px;
+}
+
+.status-badge {
+    flex-shrink: 0;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 8px 13px;
+
+    border-radius: 999px;
+
+    font-size: 12px;
+    font-weight: 750;
+
+    white-space: nowrap;
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: currentColor;
+}
+
+.status-available {
+    color: var(--success);
+    background: var(--success-bg);
+}
+
+.status-rented {
+    color: var(--primary);
+    background: #eff6ff;
+}
+
+.status-maintenance {
+    color: var(--warning);
+    background: var(--warning-bg);
+}
+
+.status-inactive {
+    color: var(--danger);
+    background: var(--danger-bg);
+}
+
+
+/* =========================================================
+   VEHICLE META
+   ========================================================= */
+
+.vehicle-meta-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    margin-top: 28px;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    overflow: hidden;
+}
+
+.meta-item {
+    min-height: 92px;
+
+    padding: 18px 20px;
+
+    background: #fff;
+}
+
+.meta-item:nth-child(odd) {
+    border-right: 1px solid var(--border);
+}
+
+.meta-item:nth-child(-n + 2) {
+    border-bottom: 1px solid var(--border);
+}
+
+.meta-label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: var(--text-secondary);
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.meta-item strong {
+    display: block;
+
+    font-size: 16px;
+    font-weight: 750;
+
+    color: var(--text);
+}
+
+.meta-item .price {
+    color: var(--primary);
+}
+
+
+/* =========================================================
+   CONTENT SECTIONS
+   ========================================================= */
+
+.content-section {
+    margin-top: 34px;
+}
+
+.section-heading {
+    margin-bottom: 16px;
+}
+
+.section-heading h2 {
+    margin-top: 5px;
+
+    font-size: 21px;
+    font-weight: 800;
+}
+
+.section-heading p {
+    margin-top: 4px;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   STAT CARDS
+   ========================================================= */
+
+.stats-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 16px;
+}
+
+.stat-card {
+    min-height: 138px;
+
+    display: flex;
+    align-items: flex-start;
+
+    gap: 15px;
+
+    padding: 21px;
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    box-shadow: var(--shadow-sm);
+}
+
+.stat-icon {
+    width: 43px;
+    height: 43px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #eff6ff;
+
+    font-size: 20px;
+}
+
+.stat-available-card .stat-icon {
+    background: var(--success-bg);
+}
+
+.stat-maintenance-card .stat-icon {
+    background: var(--warning-bg);
+}
+
+.stat-content {
+    min-width: 0;
+}
+
+.stat-content span {
+    display: block;
+
+    color: var(--text-secondary);
+
+    font-size: 12px;
+    font-weight: 650;
+}
+
+.stat-content strong {
+    display: block;
+
+    margin-top: 5px;
+
+    font-size: 27px;
+    line-height: 1.1;
+
+    font-weight: 800;
+}
+
+.stat-content small {
+    display: block;
+
+    margin-top: 7px;
+
+    color: var(--text-light);
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   INFORMATION CARD
+   ========================================================= */
+
+.information-card {
+    background: var(--white);
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    overflow: hidden;
+
+    box-shadow: var(--shadow-sm);
+}
+
+.information-row {
+    min-height: 67px;
+
+    display: grid;
+    grid-template-columns: 240px 1fr;
+
+    align-items: center;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.information-row:last-child {
+    border-bottom: 0;
+}
+
+.information-label {
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+
+    padding: 15px 22px;
+
+    background: #f8fafc;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+    font-weight: 650;
+}
+
+.information-value {
+    padding: 15px 22px;
+
+    color: var(--text);
+
+    font-size: 14px;
+    font-weight: 650;
+}
+
+.price-value {
+    color: var(--primary);
+    font-weight: 800;
+}
+
+.plate-number {
+    display: inline-block;
+
+    padding: 5px 10px;
+
+    background: #f8fafc;
+
+    border: 1px solid var(--border);
+    border-radius: 6px;
+
+    font-family: "Courier New", monospace;
+
+    font-size: 13px;
+    font-weight: 800;
+
+    letter-spacing: 0.05em;
+}
+
+.inline-status {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 5px 10px;
+
+    border-radius: 999px;
+
+    font-size: 11px;
+    font-weight: 750;
+}
+
+.inline-available {
+    color: var(--success);
+    background: var(--success-bg);
+}
+
+.inline-rented {
+    color: var(--primary);
+    background: #eff6ff;
+}
+
+.inline-maintenance {
+    color: var(--warning);
+    background: var(--warning-bg);
+}
+
+.inline-inactive {
+    color: var(--danger);
+    background: var(--danger-bg);
+}
+
+
+/* =========================================================
+   MAINTENANCE CARD
+   ========================================================= */
+
+.maintenance-card {
+    background: var(--white);
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    padding: 24px;
+
+    box-shadow: var(--shadow-sm);
+}
+
+.maintenance-main {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 17px;
+}
+
+.maintenance-icon {
+    width: 45px;
+    height: 45px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: var(--warning-bg);
+
+    font-size: 20px;
+}
+
+.maintenance-main h3 {
+    font-size: 15px;
+    font-weight: 750;
+}
+
+.maintenance-main p {
+    max-width: 800px;
+
+    margin-top: 5px;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+    line-height: 1.65;
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.action-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-top: 38px;
+
+    padding-top: 25px;
+
+    border-top: 1px solid var(--border);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    .vehicle-hero {
+        grid-template-columns: 1fr;
+    }
+
+    .vehicle-image-panel {
+        min-height: 320px;
+    }
+
+    .vehicle-image-panel img {
+        min-height: 320px;
+        max-height: 420px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+@media (max-width: 720px) {
+
+    .fleet-header {
+        padding: 16px 5%;
+
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .header-left {
+        width: 100%;
+
+        align-items: flex-start;
+        flex-direction: column;
+
+        gap: 14px;
+    }
+
+    .header-title {
+        padding-left: 0;
+        border-left: 0;
+    }
+
+    .header-actions {
+        width: 100%;
+    }
+
+    .header-actions .btn {
+        width: 100%;
+    }
+
+    .fleet-container {
+        width: 92%;
+        padding-top: 22px;
+    }
+
+    .vehicle-summary {
+        padding: 24px;
+    }
+
+    .summary-top {
+        flex-direction: column;
+    }
+
+    .summary-top h2 {
+        font-size: 28px;
+    }
+
+    .vehicle-meta-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .meta-item:nth-child(odd) {
+        border-right: 0;
+    }
+
+    .meta-item:nth-child(-n + 2) {
+        border-bottom: 0;
+    }
+
+    .meta-item:not(:last-child) {
+        border-bottom: 1px solid var(--border);
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .information-row {
+        grid-template-columns: 1fr;
+    }
+
+    .information-label {
+        height: auto;
+        padding-bottom: 8px;
+    }
+
+    .information-value {
+        padding-top: 8px;
+    }
+
+    .action-section {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .action-section .btn {
+        width: 100%;
+    }
+}
+
+
+@media (max-width: 480px) {
+
+    .fleet-header {
+        padding-left: 4%;
+        padding-right: 4%;
+    }
+
+    .fleet-container {
+        width: 94%;
+    }
+
+    .vehicle-image-panel {
+        min-height: 240px;
+    }
+
+    .vehicle-image-panel img {
+        min-height: 240px;
+    }
+
+    .vehicle-summary {
+        padding: 20px;
+    }
+
+    .summary-top h2 {
+        font-size: 25px;
+    }
+
+    .stat-card {
+        padding: 17px;
+    }
+
+    .information-label,
+    .information-value {
+        padding-left: 17px;
+        padding-right: 17px;
+    }
+}

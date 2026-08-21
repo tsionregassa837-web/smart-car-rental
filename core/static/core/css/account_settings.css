@@ -1,0 +1,720 @@
+
+/* =====================================
+ACCOUNT SETTINGS PAGE
+SMART CAR RENTAL
+===================================== */
+
+
+.settings-page{
+
+    max-width:1000px;
+    margin:60px auto;
+    padding:20px;
+
+}
+
+
+
+/* =========================
+HEADER
+========================= */
+
+
+.settings-header{
+
+    text-align:center;
+    margin-bottom:45px;
+
+}
+
+
+
+.settings-icon{
+
+    width:80px;
+    height:80px;
+
+    margin:auto;
+    margin-bottom:20px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:50%;
+
+    background:linear-gradient(
+        135deg,
+        var(--secondary),
+        var(--accent)
+    );
+
+    color:white;
+
+    font-size:35px;
+
+}
+
+
+
+.settings-header h1{
+
+    color:var(--primary);
+
+    font-size:40px;
+
+    margin-bottom:10px;
+
+}
+
+
+
+.settings-header p{
+
+    color:var(--muted);
+
+    font-size:17px;
+
+}
+
+
+
+
+
+/* =========================
+MESSAGES
+========================= */
+
+
+.success-message{
+
+
+    background:white;
+
+    border-left:5px solid var(--success);
+
+    padding:15px 20px;
+
+    border-radius:15px;
+
+    box-shadow:var(--shadow);
+
+    margin-bottom:25px;
+
+    color:var(--success);
+
+}
+
+
+
+
+
+
+
+/* =========================
+CARDS
+========================= */
+
+
+.settings-card{
+
+
+    background:white;
+
+    border-radius:var(--radius);
+
+    padding:30px;
+
+    margin-bottom:30px;
+
+    box-shadow:var(--shadow);
+
+    border:1px solid rgba(0,0,0,.05);
+
+    transition:.3s ease;
+
+}
+
+
+
+.settings-card:hover{
+
+    transform:translateY(-4px);
+
+}
+
+
+
+
+
+
+/* =========================
+CARD TITLE
+========================= */
+
+
+.card-title{
+
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    margin-bottom:25px;
+
+
+}
+
+
+
+.card-title i{
+
+
+    color:var(--secondary);
+
+    font-size:24px;
+
+
+}
+
+
+
+.card-title h2{
+
+
+    color:var(--primary);
+
+    font-size:24px;
+
+
+}
+
+
+
+
+
+/* =========================
+PROFILE
+========================= */
+
+
+.profile-info{
+
+
+    display:flex;
+
+    align-items:center;
+
+    gap:25px;
+
+
+}
+
+
+
+.profile-avatar{
+
+
+    width:90px;
+
+    height:90px;
+
+    border-radius:50%;
+
+
+    background:var(--primary);
+
+    color:white;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+
+    font-size:35px;
+
+
+}
+
+
+
+.profile-details h3{
+
+
+    font-size:25px;
+
+    color:var(--dark);
+
+}
+
+
+
+.profile-details p{
+
+    color:var(--muted);
+
+}
+
+
+
+.profile-details span{
+
+
+    display:inline-block;
+
+    margin-top:10px;
+
+    padding:6px 15px;
+
+    border-radius:20px;
+
+    background:#eff6ff;
+
+    color:var(--secondary);
+
+    font-size:14px;
+
+}
+
+
+
+
+
+
+
+/* =========================
+SECURITY ITEMS
+========================= */
+
+
+.settings-item{
+
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:25px 0;
+
+    border-bottom:1px solid var(--border);
+
+
+}
+
+
+
+.settings-item:last-child{
+
+    border:none;
+
+}
+
+
+
+.item-content{
+
+
+    display:flex;
+
+    align-items:center;
+
+    gap:20px;
+
+
+}
+
+
+
+.item-icon{
+
+
+    width:55px;
+
+    height:55px;
+
+    border-radius:15px;
+
+    background:#eff6ff;
+
+    color:var(--secondary);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:22px;
+
+
+}
+
+
+
+.item-content h3{
+
+
+    color:var(--dark);
+
+    margin-bottom:5px;
+
+
+}
+
+
+
+.item-content p{
+
+
+    color:var(--muted);
+
+}
+
+
+
+
+
+/* BUTTON */
+
+
+.secondary-btn{
+
+
+    background:var(--secondary);
+
+    color:white;
+
+    padding:12px 22px;
+
+    border-radius:12px;
+
+    transition:.3s ease;
+
+}
+
+
+
+.secondary-btn:hover{
+
+
+    background:var(--primary);
+
+    transform:translateY(-3px);
+
+
+}
+
+
+
+
+
+
+
+/* =========================
+NOTIFICATIONS
+========================= */
+
+
+.notification-item{
+
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    background:#f8fafc;
+
+    padding:20px;
+
+    border-radius:15px;
+
+    margin-bottom:15px;
+
+
+}
+
+
+
+.notification-left{
+
+
+    display:flex;
+
+    align-items:center;
+
+    gap:20px;
+
+
+}
+
+
+
+.notification-item h3{
+
+
+    color:var(--dark);
+
+
+}
+
+
+
+.notification-item p{
+
+
+    color:var(--muted);
+
+}
+
+
+
+
+
+/* SWITCH */
+
+
+.switch{
+
+
+    position:relative;
+
+    width:55px;
+
+    height:30px;
+
+}
+
+
+
+.switch input{
+
+    display:none;
+
+}
+
+
+
+.slider{
+
+
+    position:absolute;
+
+    inset:0;
+
+    background:#d1d5db;
+
+    border-radius:30px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+
+
+.slider:before{
+
+
+    content:"";
+
+    position:absolute;
+
+    width:24px;
+
+    height:24px;
+
+    left:3px;
+
+    top:3px;
+
+    background:white;
+
+    border-radius:50%;
+
+    transition:.3s;
+
+
+}
+
+
+
+.switch input:checked + .slider{
+
+
+    background:var(--secondary);
+
+
+}
+
+
+
+.switch input:checked + .slider:before{
+
+
+    transform:translateX(25px);
+
+
+}
+
+
+
+
+
+
+
+/* =========================
+DANGER ZONE
+========================= */
+
+
+.danger-card{
+
+
+    border:2px solid rgba(220,38,38,.2);
+
+
+}
+
+
+
+.danger-card .card-title i{
+
+
+    color:var(--danger);
+
+
+}
+
+
+
+.danger-card p{
+
+
+    color:var(--muted);
+
+    margin-bottom:20px;
+
+
+}
+
+
+
+.delete-btn{
+
+
+    background:var(--danger);
+
+    color:white;
+
+    border:none;
+
+    padding:14px 25px;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    font-size:15px;
+
+
+}
+
+
+
+.delete-btn:hover{
+
+
+    background:#991b1b;
+
+
+}
+
+
+
+
+
+
+/* =========================
+MOBILE
+========================= */
+
+
+@media(max-width:768px){
+
+
+.settings-page{
+
+    padding:15px;
+
+}
+
+
+
+.settings-header h1{
+
+    font-size:30px;
+
+}
+
+
+
+.profile-info{
+
+
+    flex-direction:column;
+
+    text-align:center;
+
+}
+
+
+
+.settings-item{
+
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+    gap:20px;
+
+
+}
+
+
+
+.secondary-btn{
+
+
+    width:100%;
+
+    text-align:center;
+
+
+}
+
+
+
+.notification-item{
+
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+    gap:20px;
+
+
+}
+
+
+}

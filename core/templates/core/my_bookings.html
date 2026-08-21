@@ -1,0 +1,362 @@
+
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/my_bookings.css' %}">
+{% endblock %}
+
+{% block title %}
+My Bookings
+{% endblock %}
+
+
+{% block content %}
+
+<section class="my-bookings-page">
+
+
+    <!-- ==================================================
+         PAGE HEADER
+    ================================================== -->
+
+    <div class="page-header">
+
+        <h1>
+            <i class="fa-solid fa-car"></i>
+            My Rentals
+        </h1>
+
+        <p>
+            Manage your car rental bookings
+        </p>
+
+    </div>
+
+
+    <!-- ==================================================
+         BOOKINGS EXIST
+    ================================================== -->
+
+    {% if bookings %}
+
+        <div class="booking-grid">
+
+
+            {% for booking in bookings %}
+
+                <div class="rental-card">
+
+
+                    <!-- ==================================================
+                         RENTAL HEADER
+                    ================================================== -->
+
+                    <div class="rental-header">
+
+                        <div>
+
+                            <h2>
+                                {{ booking.car.name }}
+                            </h2>
+
+                            <p>
+                                Booking ID:
+                                #{{ booking.id }}
+                            </p>
+
+                        </div>
+
+
+                        <!-- ==================================================
+                             BOOKING STATUS
+                        ================================================== -->
+
+                        {% if booking.status == "Approved" %}
+
+                            <span class="status approved">
+                                Approved
+                            </span>
+
+
+                        {% elif booking.status == "Pending" %}
+
+                            <span class="status pending">
+                                Pending
+                            </span>
+
+
+                        {% elif booking.status == "Active" %}
+
+                            <span class="status active">
+                                Active
+                            </span>
+
+
+                        {% elif booking.status == "Completed" %}
+
+                            <span class="status completed">
+                                Completed
+                            </span>
+
+
+                        {% elif booking.status == "Rejected" %}
+
+                            <span class="status cancelled">
+                                Rejected
+                            </span>
+
+
+                        {% elif booking.status == "Cancelled" %}
+
+                            <span class="status cancelled">
+                                Cancelled
+                            </span>
+
+
+                        {% else %}
+
+                            <span class="status cancelled">
+                                {{ booking.status }}
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+
+                    <!-- ==================================================
+                         RENTAL BODY
+                    ================================================== -->
+
+                    <div class="rental-body">
+
+
+                        <div class="rental-info">
+
+
+                            <!-- PICKUP -->
+
+                            <div>
+
+                                <i class="fa-solid fa-calendar-days"></i>
+
+                                <strong>
+                                    Pickup
+                                </strong>
+
+                                <p>
+                                    {{ booking.pickup_date }}
+                                </p>
+
+                            </div>
+
+
+                            <!-- RETURN -->
+
+                            <div>
+
+                                <i class="fa-solid fa-calendar-check"></i>
+
+                                <strong>
+                                    Return
+                                </strong>
+
+                                <p>
+                                    {{ booking.dropoff_date }}
+                                </p>
+
+                            </div>
+
+
+                            <!-- PAYMENT -->
+
+                            <div>
+
+                                <i class="fa-solid fa-money-bill"></i>
+
+                                <strong>
+                                    Payment
+                                </strong>
+
+                                <p>
+
+                                    {% if booking.payment_status == "Paid" %}
+
+                                        <span class="paid">
+                                            Paid
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="unpaid">
+                                            Pending
+                                        </span>
+
+                                    {% endif %}
+
+                                </p>
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <!-- ==================================================
+                             ACTION BUTTONS
+                        ================================================== -->
+
+                        <div class="rental-actions">
+
+
+                            <!-- VIEW DETAILS -->
+
+                            <a
+                                href="{% url 'booking_detail' booking.id %}"
+                                class="view-btn"
+                            >
+
+                                <i class="fa-solid fa-eye"></i>
+
+                                View Details
+
+                            </a>
+
+
+
+                            <!-- ==================================================
+                                 PAYMENT
+                            ================================================== -->
+
+                            {% if booking.status == "Approved" and booking.payment_status == "Pending" %}
+
+                                <a
+                                    href="{% url 'payment' booking.id %}"
+                                    class="payment-btn"
+                                >
+
+                                    <i class="fa-solid fa-credit-card"></i>
+
+                                    Make Payment
+
+                                </a>
+
+
+                            {% elif booking.payment_status == "Paid" %}
+
+                                <span class="paid-payment">
+
+                                    <i class="fa-solid fa-circle-check"></i>
+
+                                    Paid
+
+                                </span>
+
+
+                                <!-- VIEW RECEIPT -->
+
+                                <a
+                                    href="{% url 'payment_receipt' booking.id %}"
+                                    class="view-btn"
+                                >
+
+                                    <i class="fa-solid fa-receipt"></i>
+
+                                    View Receipt
+
+                                </a>
+
+                            {% endif %}
+
+
+
+                            <!-- ==================================================
+                                 CANCEL BOOKING
+
+                                 SECURITY:
+                                 POST request + CSRF protection.
+
+                                 Business rule:
+                                 Customer can cancel only Pending
+                                 bookings from this page.
+                            ================================================== -->
+
+                            {% if booking.status == "Pending" %}
+
+                                <form
+                                    method="post"
+                                    action="{% url 'cancel_booking' booking.id %}"
+                                    class="cancel-form"
+                                    onsubmit="return confirm('Cancel this booking?');"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <button
+                                        type="submit"
+                                        class="cancel-btn"
+                                    >
+
+                                        <i class="fa-solid fa-xmark"></i>
+
+                                        Cancel
+
+                                    </button>
+
+                                </form>
+
+                            {% endif %}
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+            {% endfor %}
+
+
+        </div>
+
+
+    <!-- ==================================================
+         NO BOOKINGS
+    ================================================== -->
+
+    {% else %}
+
+        <div class="empty-booking">
+
+            <i class="fa-solid fa-car-side"></i>
+
+            <h2>
+                No bookings yet
+            </h2>
+
+            <p>
+                You have not rented any vehicle.
+            </p>
+
+            <a
+                href="{% url 'cars' %}"
+                class="dashboard-btn"
+            >
+
+                Browse Cars
+
+            </a>
+
+        </div>
+
+    {% endif %}
+
+
+</section>
+
+{% endblock %}

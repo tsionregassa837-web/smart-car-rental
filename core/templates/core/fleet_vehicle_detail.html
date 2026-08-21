@@ -1,0 +1,354 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ car.name }} | Fleet Vehicle Details</title>
+
+    <link rel="stylesheet" href="{% static 'core/css/fleet_vehicle_detail.css' %}">
+</head>
+
+<body>
+
+<div class="fleet-detail-page">
+
+    <!-- TOP BAR -->
+    <header class="fleet-header">
+        <div class="header-left">
+            <a href="{% url 'fleet_management' %}" class="back-link">
+                <span>←</span>
+                Back to Fleet
+            </a>
+
+            <div class="header-title">
+                <span class="eyebrow">FLEET MANAGEMENT</span>
+                <h1>Vehicle Details</h1>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <a href="{% url 'fleet_vehicle_edit' car.id %}" class="btn btn-primary">
+                Edit Vehicle
+            </a>
+        </div>
+    </header>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="fleet-container">
+
+        <!-- VEHICLE HERO -->
+        <section class="vehicle-hero">
+
+            <div class="vehicle-image-panel">
+                {% if car.image %}
+                    <img src="{{ car.image.url }}" alt="{{ car.name }}">
+                {% else %}
+                    <div class="image-placeholder">
+                        <span>🚗</span>
+                        <p>No vehicle image</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="vehicle-summary">
+
+                <div class="summary-top">
+                    <div>
+                        <span class="section-label">FLEET VEHICLE</span>
+
+                        <h2>{{ car.name }}</h2>
+
+                        {% if car.model_year %}
+                            <p class="vehicle-year">{{ car.model_year }} Model</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="status-badge
+                        {% if car.fleet_status == 'Available' %}
+                            status-available
+                        {% elif car.fleet_status == 'Rented' %}
+                            status-rented
+                        {% elif car.fleet_status == 'Maintenance' %}
+                            status-maintenance
+                        {% else %}
+                            status-inactive
+                        {% endif %}
+                    ">
+                        <span class="status-dot"></span>
+                        {{ car.fleet_status }}
+                    </div>
+                </div>
+
+
+                <div class="vehicle-meta-grid">
+
+                    <div class="meta-item">
+                        <span class="meta-label">Plate Number</span>
+                        <strong>
+                            {% if car.plate_number %}
+                                {{ car.plate_number }}
+                            {% else %}
+                                —
+                            {% endif %}
+                        </strong>
+                    </div>
+
+                    <div class="meta-item">
+                        <span class="meta-label">Price Per Day</span>
+                        <strong class="price">
+                            ETB {{ car.price_per_day|floatformat:2 }}
+                        </strong>
+                    </div>
+
+                    <div class="meta-item">
+                        <span class="meta-label">Model Year</span>
+                        <strong>
+                            {% if car.model_year %}
+                                {{ car.model_year }}
+                            {% else %}
+                                —
+                            {% endif %}
+                        </strong>
+                    </div>
+
+                    <div class="meta-item">
+                        <span class="meta-label">Vehicle ID</span>
+                        <strong>#{{ car.id }}</strong>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- FLEET OVERVIEW -->
+        <section class="content-section">
+
+            <div class="section-heading">
+                <div>
+                    <span class="section-label">OPERATIONS</span>
+                    <h2>Fleet Overview</h2>
+                    <p>Current capacity and operational status of this vehicle group.</p>
+                </div>
+            </div>
+
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-icon">🚘</div>
+
+                    <div class="stat-content">
+                        <span>Total Fleet</span>
+                        <strong>{{ car.total_quantity }}</strong>
+                        <small>Total units</small>
+                    </div>
+                </div>
+
+
+                <div class="stat-card stat-available-card">
+                    <div class="stat-icon">✓</div>
+
+                    <div class="stat-content">
+                        <span>Available</span>
+
+                        <strong>
+                            {{ car.available_quantity }}
+                        </strong>
+
+                        <small>Ready for rental</small>
+                    </div>
+                </div>
+
+
+                <div class="stat-card">
+                    <div class="stat-icon">🔑</div>
+
+                    <div class="stat-content">
+                        <span>Rented</span>
+
+                        <strong>
+                            {% if car.total_quantity > car.available_quantity %}
+                                {{ car.total_quantity|add:car.available_quantity|add:"-" }}
+                            {% else %}
+                                0
+                            {% endif %}
+                        </strong>
+
+                        <small>Currently allocated</small>
+                    </div>
+                </div>
+
+
+                <div class="stat-card stat-maintenance-card">
+                    <div class="stat-icon">🔧</div>
+
+                    <div class="stat-content">
+                        <span>Maintenance</span>
+
+                        <strong>
+                            {{ car.maintenance_count|default:"0" }}
+                        </strong>
+
+                        <small>Units unavailable</small>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- VEHICLE INFORMATION -->
+        <section class="content-section">
+
+            <div class="section-heading">
+                <div>
+                    <span class="section-label">VEHICLE PROFILE</span>
+                    <h2>Vehicle Information</h2>
+                    <p>Registered information for this fleet vehicle.</p>
+                </div>
+            </div>
+
+
+            <div class="information-card">
+
+                <div class="information-row">
+                    <div class="information-label">
+                        Vehicle Name
+                    </div>
+
+                    <div class="information-value">
+                        {{ car.name }}
+                    </div>
+                </div>
+
+
+                <div class="information-row">
+                    <div class="information-label">
+                        Model Year
+                    </div>
+
+                    <div class="information-value">
+                        {% if car.model_year %}
+                            {{ car.model_year }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </div>
+                </div>
+
+
+                <div class="information-row">
+                    <div class="information-label">
+                        Registration Plate
+                    </div>
+
+                    <div class="information-value">
+                        {% if car.plate_number %}
+                            <span class="plate-number">
+                                {{ car.plate_number }}
+                            </span>
+                        {% else %}
+                            —
+                        {% endif %}
+                    </div>
+                </div>
+
+
+                <div class="information-row">
+                    <div class="information-label">
+                        Daily Rental Rate
+                    </div>
+
+                    <div class="information-value price-value">
+                        ETB {{ car.price_per_day|floatformat:2 }}
+                    </div>
+                </div>
+
+
+                <div class="information-row">
+                    <div class="information-label">
+                        Fleet Status
+                    </div>
+
+                    <div class="information-value">
+                        <span class="inline-status
+                            {% if car.fleet_status == 'Available' %}
+                                inline-available
+                            {% elif car.fleet_status == 'Rented' %}
+                                inline-rented
+                            {% elif car.fleet_status == 'Maintenance' %}
+                                inline-maintenance
+                            {% else %}
+                                inline-inactive
+                            {% endif %}
+                        ">
+                            {{ car.fleet_status }}
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- MAINTENANCE -->
+        <section class="content-section">
+
+            <div class="section-heading">
+                <div>
+                    <span class="section-label">SERVICE</span>
+                    <h2>Maintenance Information</h2>
+                    <p>Maintenance status and service notes for this fleet.</p>
+                </div>
+            </div>
+
+
+            <div class="maintenance-card">
+
+                <div class="maintenance-main">
+
+                    <div class="maintenance-icon">
+                        🔧
+                    </div>
+
+                    <div>
+                        <h3>
+                            {% if car.maintenance_count %}
+                                {{ car.maintenance_count }} unit{{ car.maintenance_count|pluralize }} in maintenance
+                            {% else %}
+                                No units currently in maintenance
+                            {% endif %}
+                        </h3>
+
+                        <p>
+                            {% if car.maintenance_reason %}
+                                {{ car.maintenance_reason }}
+                            {% else %}
+                                There are currently no maintenance notes recorded for this fleet.
+                            {% endif %}
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+
+    </main>
+
+</div>
+
+</body>
+</html>
