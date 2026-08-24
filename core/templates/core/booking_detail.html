@@ -1,198 +1,1032 @@
 {% extends "core/base.html" %}
 {% load static %}
 
+{% block title %}
+Booking #{{ booking.id }} | Smart Car Rental
+{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'core/css/booking_detail.css' %}">
 {% endblock %}
 
-{% block title %}
-Booking Details
-{% endblock %}
-
 {% block content %}
 
-<section class="booking-detail-page">
+<div class="booking-detail-page">
 
-<h1>Booking Details</h1>
+    <!-- =========================================================
+         PAGE HEADER
+    ========================================================== -->
 
-<div class="booking-card">
+    <header class="booking-header">
 
-<p><strong>Booking ID:</strong> #{{ booking.id }}</p>
+        <div class="header-left">
 
-<p>
-<strong>Car:</strong>
-{{ booking.car.name }}
-</p>
+            {% if request.user.is_staff %}
+                <a href="{% url 'booking_management' %}" class="back-link">
+                    <span>←</span>
+                    Back to Bookings
+                </a>
+            {% else %}
+                <a href="{% url 'my_bookings' %}" class="back-link">
+                    <span>←</span>
+                    My Bookings
+                </a>
+            {% endif %}
 
-<p>
-<strong>Pickup Date:</strong>
-{{ booking.pickup_date }}
-</p>
+            <div class="booking-title">
 
-<p>
-<strong>Return Date:</strong>
-{{ booking.dropoff_date }}
-</p>
+                <div class="booking-icon">
+                    🚘
+                </div>
 
-<p>
-<strong>Status:</strong>
+                <div>
+                    <div class="eyebrow">
+                        RENTAL BOOKING
+                    </div>
 
-{% if booking.status == "Pending" %}
-<span class="status-badge pending">
-Pending
-</span>
+                    <h1>
+                        Booking #{{ booking.id }}
+                    </h1>
 
-{% elif booking.status == "Approved" %}
-<span class="status-badge approved">
-Approved
-</span>
+                    <p>
+                        Created
+                        {{ booking.created_at|date:"M d, Y • H:i" }}
+                    </p>
+                </div>
 
-{% elif booking.status == "Active" %}
-<span class="status-badge active">
-Active Rental
-</span>
+            </div>
 
-{% elif booking.status == "Completed" %}
-<span class="status-badge completed">
-Completed
-</span>
+        </div>
 
-{% elif booking.status == "Cancelled" %}
-<span class="status-badge cancelled">
-Cancelled
-</span>
+        <!-- STATUS -->
 
-{% else %}
-<span class="status-badge rejected">
-Rejected
-</span>
+        <div class="header-status">
 
-{% endif %}
+            {% if booking.status == "Pending" %}
+                <span class="status-badge pending">
+                    <span class="status-dot"></span>
+                    Pending
+                </span>
 
-</p>
+            {% elif booking.status == "Approved" %}
+                <span class="status-badge approved">
+                    <span class="status-dot"></span>
+                    Approved
+                </span>
 
-<p>
-<strong>Payment:</strong>
-{{ booking.payment_status }}
-</p>
-<div class="document-section">
+            {% elif booking.status == "Active" %}
+                <span class="status-badge active">
+                    <span class="status-dot"></span>
+                    Active Rental
+                </span>
 
-<h2>Documents</h2>
+            {% elif booking.status == "Completed" %}
+                <span class="status-badge completed">
+                    <span class="status-dot"></span>
+                    Completed
+                </span>
 
-<p>
-<strong>Driver License:</strong>
+            {% elif booking.status == "Cancelled" %}
+                <span class="status-badge cancelled">
+                    <span class="status-dot"></span>
+                    Cancelled
+                </span>
 
-{% if booking.driver_license %}
+            {% elif booking.status == "Rejected" %}
+                <span class="status-badge rejected">
+                    <span class="status-dot"></span>
+                    Rejected
+                </span>
 
+            {% else %}
+                <span class="status-badge">
+                    {{ booking.status }}
+                </span>
+            {% endif %}
 
-<a
-    href="{% url 'booking_document' booking.id 'license' %}"
-    target="_blank"
->
-    View Driver License
-</a>
+        </div>
 
-{% else %}
-
-Not uploaded
-
-{% endif %}
-
-</p>
-
-
-<p>
-<strong>National ID:</strong>
-
-{% if booking.national_id %}
-
-<a
-    href="{% url 'booking_document' booking.id 'national-id' %}"
-    target="_blank"
->
-    View National ID
-</a>
-
-{% else %}
-
-Not uploaded
-
-{% endif %}
-
-</p>
+    </header>
 
 
-<p>
-<strong>Document Status:</strong>
+    <!-- =========================================================
+         MESSAGES
+    ========================================================== -->
 
-{% if booking.document_status == "Verified" %}
+    {% if messages %}
 
-<span class="document-status verified">
-    Verified ✓
-</span>
+        <div class="booking-messages">
 
-{% elif booking.document_status == "Pending" %}
+            {% for message in messages %}
 
-<span class="document-status pending">
-    Pending
-</span>
+                <div class="booking-message {{ message.tags }}">
+                    {{ message }}
+                </div>
 
-{% elif booking.document_status == "Rejected" %}
+            {% endfor %}
 
-<span class="document-status rejected">
-    Rejected
-</span>
+        </div>
 
-{% endif %}
+    {% endif %}
 
-</p>
+
+    <!-- =========================================================
+         MAIN LAYOUT
+    ========================================================== -->
+
+    <div class="booking-layout">
+
+
+        <!-- =====================================================
+             MAIN COLUMN
+        ====================================================== -->
+
+        <main class="booking-main">
+
+
+            <!-- =================================================
+                 CUSTOMER INFORMATION
+            ================================================== -->
+
+            <section class="detail-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <span class="card-label">
+                            CUSTOMER
+                        </span>
+
+                        <h2>
+                            Customer Information
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="customer-profile">
+
+                    <div class="customer-avatar">
+
+                        {{ booking.first_name|first|upper }}{{ booking.last_name|first|upper }}
+
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            {{ customer_name }}
+                        </h3>
+
+                        {% if booking.user %}
+
+                            <span class="profile-type">
+                                Registered customer
+                            </span>
+
+                        {% else %}
+
+                            <span class="profile-type">
+                                Guest booking
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <div class="info-grid">
+
+                    <div class="info-item">
+                        <span>Full Name</span>
+                        <strong>{{ customer_name }}</strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span>Email Address</span>
+                        <strong>{{ booking.email }}</strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span>Phone Number</span>
+                        <strong>
+                            {{ booking.phone|default:"Not provided" }}
+                        </strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span>Booking ID</span>
+                        <strong>#{{ booking.id }}</strong>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 VEHICLE
+            ================================================== -->
+
+            <section class="detail-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <span class="card-label">
+                            VEHICLE
+                        </span>
+
+                        <h2>
+                            Reserved Vehicle
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                {% if booking.car %}
+
+                    <div class="vehicle-profile">
+
+                        <div class="vehicle-image">
+
+                            {% if booking.car.image %}
+
+                                <img
+                                    src="{{ booking.car.image.url }}"
+                                    alt="{{ booking.car.name }}"
+                                >
+
+                            {% else %}
+
+                                <span>🚘</span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="vehicle-info">
+
+                            <h3>
+                                {{ booking.car.name }}
+                            </h3>
+
+                            <p>
+                                {{ booking.car.model_year }}
+                            </p>
+
+                            {% if booking.car.plate_number %}
+
+                                <span class="plate-number">
+                                    {{ booking.car.plate_number }}
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-grid">
+
+                        <div class="info-item">
+
+                            <span>Vehicle Type</span>
+
+                            <strong>
+                                {{ booking.car_type }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="info-item">
+
+                            <span>Price / Day</span>
+
+                            <strong>
+                                ETB {{ booking.car.price_per_day|floatformat:2 }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="info-item">
+
+                            <span>Fleet Status</span>
+
+                            <strong>
+                                {{ booking.car.fleet_status }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="info-item">
+
+                            <span>Fleet Quantity</span>
+
+                            <strong>
+                                {{ booking.car.total_quantity }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                {% else %}
+
+                    <div class="empty-state">
+                        No vehicle is assigned to this booking.
+                    </div>
+
+                {% endif %}
+
+            </section>
+
+
+            <!-- =================================================
+                 RENTAL PERIOD
+            ================================================== -->
+
+            <section class="detail-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <span class="card-label">
+                            RENTAL
+                        </span>
+
+                        <h2>
+                            Rental Period
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="rental-route">
+
+                    <div class="rental-location">
+
+                        <span class="route-label">
+                            PICKUP
+                        </span>
+
+                        <strong>
+                            {{ booking.pickup_date|date:"M d, Y" }}
+                        </strong>
+
+                        <small>
+                            {{ booking.pickup_location }}
+                        </small>
+
+                    </div>
+
+
+                    <div class="route-line">
+
+                        <span></span>
+
+                        <strong>→</strong>
+
+                        <span></span>
+
+                    </div>
+
+
+                    <div class="rental-location">
+
+                        <span class="route-label">
+                            RETURN
+                        </span>
+
+                        <strong>
+                            {{ booking.dropoff_date|date:"M d, Y" }}
+                        </strong>
+
+                        <small>
+                            {{ booking.pickup_location }}
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="info-grid">
+
+                    <div class="info-item">
+
+                        <span>Rental Days</span>
+
+                        <strong>
+                            {{ rental_days }} days
+                        </strong>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <span>Pickup Completed</span>
+
+                        <strong>
+
+                            {% if booking.pickup_completed %}
+
+                                {{ booking.pickup_completed|date:"M d, Y • H:i" }}
+
+                            {% else %}
+
+                                Not completed
+
+                            {% endif %}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <span>Return Completed</span>
+
+                        <strong>
+
+                            {% if booking.return_completed %}
+
+                                {{ booking.return_completed|date:"M d, Y • H:i" }}
+
+                            {% else %}
+
+                                Not completed
+
+                            {% endif %}
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 DOCUMENTS
+            ================================================== -->
+
+            <section class="detail-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <span class="card-label">
+                            VERIFICATION
+                        </span>
+
+                        <h2>
+                            Customer Documents
+                        </h2>
+
+                    </div>
+
+
+                    <span class="document-status {{ booking.document_status|lower }}">
+                        {{ booking.document_status }}
+                    </span>
+
+                </div>
+
+
+                <div class="document-list">
+
+
+                    <!-- DRIVER LICENSE -->
+
+                    <div class="document-row">
+
+                        <div class="document-icon">
+                            🪪
+                        </div>
+
+                        <div class="document-info">
+
+                            <strong>
+                                Driver's License
+                            </strong>
+
+                            {% if booking.driver_license %}
+
+                                <span class="document-present">
+                                    Document uploaded
+                                </span>
+
+                            {% else %}
+
+                                <span class="document-missing">
+                                    Document not uploaded
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        {% if booking.driver_license %}
+
+                            <a
+                                href="{% url 'booking_document' booking.id 'license' %}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="document-button"
+                            >
+                                View
+                            </a>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- NATIONAL ID -->
+
+                    <div class="document-row">
+
+                        <div class="document-icon">
+                            🪪
+                        </div>
+
+                        <div class="document-info">
+
+                            <strong>
+                                National ID
+                            </strong>
+
+                            {% if booking.national_id %}
+
+                                <span class="document-present">
+                                    Document uploaded
+                                </span>
+
+                            {% else %}
+
+                                <span class="document-missing">
+                                    Document not uploaded
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        {% if booking.national_id %}
+
+                            <a
+                                href="{% url 'booking_document' booking.id 'national-id' %}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="document-button"
+                            >
+                                View
+                            </a>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+
+        <!-- =====================================================
+             SIDEBAR
+        ====================================================== -->
+
+        <aside class="booking-sidebar">
+
+
+            <!-- =================================================
+                 PAYMENT
+            ================================================== -->
+
+            <section class="detail-card payment-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <span class="card-label">
+                            PAYMENT
+                        </span>
+
+                        <h2>
+                            Payment Summary
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="total-price">
+
+                    <span>
+                        Total Rental
+                    </span>
+
+                    <strong>
+                        ETB {{ booking.total_price|floatformat:2 }}
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-list">
+
+                    <div>
+
+                        <span>
+                            Payment Status
+                        </span>
+
+                        <strong>
+                            {{ booking.payment_status }}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Payment Method
+                        </span>
+
+                        <strong>
+                            {{ booking.payment_method|default:"Not provided" }}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Reference
+                        </span>
+
+                        <strong>
+                            {{ booking.payment_reference|default:"Not provided" }}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Payment Date
+                        </span>
+
+                        <strong>
+
+                            {% if booking.payment_date %}
+
+                                {{ booking.payment_date|date:"M d, Y • H:i" }}
+
+                            {% else %}
+
+                                Not paid
+
+                            {% endif %}
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                {% if request.user.is_staff %}
+
+                    {% if booking.payment_status != "Paid" and booking.payment_method == "Cash" %}
+
+                        <form
+                            method="post"
+                            action="{% url 'mark_payment_paid' booking.id %}"
+                            class="action-form"
+                        >
+
+                            {% csrf_token %}
+
+                            <button
+                                type="submit"
+                                class="action-button payment-button"
+                            >
+                                ✓ Mark Cash as Paid
+                            </button>
+
+                        </form>
+
+                    {% endif %}
+
+                {% endif %}
+
+            </section>
+
+
+            <!-- =================================================
+                 ADMIN OPERATIONS
+            ================================================== -->
+
+            {% if request.user.is_staff %}
+
+                <section class="detail-card operations-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <span class="card-label">
+                                OPERATIONS
+                            </span>
+
+                            <h2>
+                                Booking Actions
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    {% if booking.status == "Pending" %}
+
+
+                        {% if booking.document_status == "Verified" %}
+
+                            <a
+                                href="{% url 'update_booking_status' booking.id 'Approved' %}"
+                                class="action-button approve-button"
+                            >
+                                ✓ Approve Booking
+                            </a>
+
+                        {% else %}
+
+                            <div class="disabled-action">
+                                🔒 Verify documents first
+                            </div>
+
+                        {% endif %}
+
+
+                        <a
+                            href="{% url 'update_booking_status' booking.id 'Rejected' %}"
+                            class="action-button reject-button"
+                        >
+                            × Reject Booking
+                        </a>
+
+
+                        <a
+                            href="{% url 'update_booking_status' booking.id 'Cancelled' %}"
+                            class="action-button cancel-button"
+                        >
+                            ⊘ Cancel Booking
+                        </a>
+
+
+                    {% elif booking.status == "Approved" %}
+
+
+                        <div class="current-state approved-state">
+                            ✓ Booking Approved
+                        </div>
+
+
+                        {% if booking.payment_status == "Paid" and booking.document_status == "Verified" %}
+
+                            <a
+                                href="{% url 'rental_action' booking.id 'start' %}"
+                                class="action-button start-button"
+                            >
+                                🚗 Start Rental
+                            </a>
+
+                        {% else %}
+
+                            <div class="disabled-action">
+
+                                {% if booking.payment_status != "Paid" %}
+
+                                    💳 Payment required
+
+                                {% else %}
+
+                                    🔒 Documents must be verified
+
+                                {% endif %}
+
+                            </div>
+
+                        {% endif %}
+
+
+                    {% elif booking.status == "Active" %}
+
+
+                        <div class="current-state active-state">
+                            ● Rental currently active
+                        </div>
+
+
+                        <a
+                            href="{% url 'rental_action' booking.id 'complete' %}"
+                            class="action-button complete-button"
+                        >
+                            ✓ Complete Rental
+                        </a>
+
+
+                    {% elif booking.status == "Completed" %}
+
+                        <div class="current-state completed-state">
+                            ✓ Rental completed
+                        </div>
+
+
+                    {% elif booking.status == "Cancelled" %}
+
+                        <div class="current-state cancelled-state">
+                            ⊘ Booking cancelled
+                        </div>
+
+
+                    {% elif booking.status == "Rejected" %}
+
+                        <div class="current-state rejected-state">
+                            × Booking rejected
+                        </div>
+
+                    {% endif %}
+
+                </section>
+
+            {% endif %}
+
+
+            <!-- =================================================
+                 CUSTOMER ACTIONS
+            ================================================== -->
+
+            {% if not request.user.is_staff %}
+
+                {% if booking.status == "Pending" or booking.status == "Approved" %}
+
+                    <section class="detail-card customer-actions">
+
+                        <div class="card-header">
+
+                            <div>
+
+                                <span class="card-label">
+                                    ACTIONS
+                                </span>
+
+                                <h2>
+                                    Manage Booking
+                                </h2>
+
+                            </div>
+
+                        </div>
+
+
+                        {% if booking.status == "Approved" %}
+
+                            {% if booking.payment_status != "Paid" %}
+
+                                <a
+                                    href="{% url 'payment' booking.id %}"
+                                    class="action-button payment-button"
+                                >
+                                    💳 Make Payment
+                                </a>
+
+                            {% endif %}
+
+                        {% endif %}
+
+
+                        {% if booking.status == "Pending" %}
+
+                            <a
+                                href="{% url 'cancel_booking' booking.id %}"
+                                class="action-button cancel-button"
+                            >
+                                Cancel Booking
+                            </a>
+
+                        {% endif %}
+
+                    </section>
+
+                {% endif %}
+
+            {% endif %}
+
+
+            <!-- =================================================
+                 BOOKING INFORMATION
+            ================================================== -->
+
+            <section class="detail-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <span class="card-label">
+                            RECORD
+                        </span>
+
+                        <h2>
+                            Booking Information
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="summary-list">
+
+                    <div>
+
+                        <span>
+                            Booking ID
+                        </span>
+
+                        <strong>
+                            #{{ booking.id }}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Created
+                        </span>
+
+                        <strong>
+                            {{ booking.created_at|date:"M d, Y • H:i" }}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Vehicle
+                        </span>
+
+                        <strong>
+                            {{ booking.car_type }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </aside>
+
+    </div>
 
 </div>
-{% if booking.status == "Approved" and booking.payment_status == "Pending" %}
-
-<a href="{% url 'payment' booking.id %}" class="payment-btn">
-    <i class="fa-solid fa-credit-card"></i>
-    Make Payment
-</a>
-{% elif booking.payment_status == "Paid" %}
-
-    <a
-        href="{% url 'payment_receipt' booking.id %}"
-        class="view-btn"
-    >
-        <i class="fa-solid fa-receipt"></i>
-        View Payment Receipt
-    </a>
-    
-
-{% endif %}
-
-<p>
-<strong>Total Price:</strong>
-{{ booking.total_price }}
-</p>
-
-</div>
-
-<a href="{% url 'my_bookings' %}">
-Back to My Bookings
-</a>
-
-{% if booking.status == "Pending" %}
-
-<a href="{% url 'cancel_booking' booking.id %}"
-class="cancel-btn"
-onclick="return confirm('Cancel this booking?');">
-
-<i class="fa-solid fa-xmark"></i>
-
-Cancel Booking
-
-</a>
-
-{% endif %}
-
-</section>
 
 {% endblock %}

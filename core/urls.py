@@ -73,7 +73,9 @@ urlpatterns = [
         "password-change/",
         auth_views.PasswordChangeView.as_view(
             template_name="core/password_change.html",
-            success_url=reverse_lazy("password_change_done"),
+            success_url=reverse_lazy(
+                "password_change_done"
+            ),
         ),
         name="password_change",
     ),
@@ -126,10 +128,11 @@ urlpatterns = [
         name="my_bookings",
     ),
 
+    # Shared booking detail view - CUSTOMER
     path(
-        "my_bookings/<int:id>/",
+        "my_bookings/<int:booking_id>/",
         views.booking_detail,
-        name="booking_detail",
+        name="customer_booking_detail",
     ),
 
     path(
@@ -146,7 +149,7 @@ urlpatterns = [
 
 
     # =========================================================
-    # PAYMENT
+    # CUSTOMER PAYMENT
     # =========================================================
 
     path(
@@ -206,11 +209,13 @@ urlpatterns = [
         views.admin_dashboard,
         name="admin_dashboard",
     ),
+
     path(
         "admin-profile/",
         views.admin_profile,
         name="admin_profile",
     ),
+
     path(
         "admin-settings/",
         views.admin_profile,
@@ -222,43 +227,63 @@ urlpatterns = [
         views.customer_management,
         name="customer_management",
     ),
+    path(
+        "customer-management/<int:user_id>/",
+        views.customer_detail,
+        name="customer_detail",
+    ),
+
+
+    # =========================================================
+    # FLEET MANAGEMENT
+    # =========================================================
 
     path(
         "fleet-management/",
         views.fleet_management,
         name="fleet_management",
     ),
+
     path(
         "fleet-management/add/",
         views.fleet_vehicle_add,
         name="fleet_vehicle_add",
-        ),
+    ),
 
     path(
         "fleet-management/<int:car_id>/",
         views.fleet_vehicle_detail,
         name="fleet_vehicle_detail",
-        ),
+    ),
 
     path(
         "fleet-management/<int:car_id>/edit/",
         views.fleet_vehicle_edit,
         name="fleet_vehicle_edit",
-        ),
+    ),
 
     path(
         "fleet-management/<int:car_id>/delete/",
-        views.fleet_vehicle_delete,
-        name="fleet_vehicle_delete",
-        ),
-    
+        views.fleet_vehicle_archive,
+        name="fleet_vehicle_archive",
+    ),
 
-   
+
+    # =========================================================
+    # BOOKING MANAGEMENT
+    # =========================================================
 
     path(
         "booking-management/",
         views.booking_management,
         name="booking_management",
+    ),
+
+    # Shared booking detail view - STAFF
+    path(
+        "booking-management/<int:booking_id>/",
+        views.booking_detail,
+        name="staff_booking_detail",
     ),
 
     path(
@@ -279,6 +304,11 @@ urlpatterns = [
         name="rental_action",
     ),
 
+
+    # =========================================================
+    # PAYMENT MANAGEMENT
+    # =========================================================
+
     path(
         "payment-management/",
         views.payment_management,
@@ -289,7 +319,12 @@ urlpatterns = [
         "booking/<int:booking_id>/payment/mark-paid/",
         views.mark_payment_paid,
         name="mark_payment_paid",
-        ),
+    ),
+
+
+    # =========================================================
+    # REPORTS
+    # =========================================================
 
     path(
         "reports/",

@@ -8,1548 +8,1542 @@
 
     <title>Admin Dashboard | Smart Car Rental</title>
 
-    <meta
-        name="description"
-        content="Smart Car Rental professional administration dashboard"
-    >
-
-    <link
-        rel="stylesheet"
-        href="{% static 'core/css/admin_dashboard.css' %}"
-    >
-
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{% static 'core/css/admin_dashboard.css' %}">
 </head>
 
 <body>
 
-<div class="dashboard-layout-wrapper">
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
 
-    <!-- =====================================================
-         SIDEBAR
-    ====================================================== -->
-    <aside
-        class="dashboard-sidebar"
-        id="dashboardSidebar"
-    >
+<aside class="sidebar">
 
-        <!-- Logo -->
-        <div class="sidebar-logo">
+    <div class="sidebar-brand">
 
-            <div class="sidebar-logo-icon">
-                🚗
-            </div>
+        <div class="brand-icon">🚗</div>
 
-            <div class="sidebar-logo-text">
-                <strong>SMART CAR RENTAL</strong>
-                <small>ADMINISTRATION</small>
-            </div>
-
+        <div>
+            <h1>Smart Car Rental</h1>
+            <span>Administration</span>
         </div>
-
-
-        <!-- Navigation -->
-        <nav
-            class="sidebar-navigation"
-            aria-label="Admin navigation"
-        >
-
-            <a
-                href="{% url 'admin_dashboard' %}"
-                class="sidebar-link active"
-            >
-                <span class="sidebar-link-icon">▣</span>
-                <span>Dashboard</span>
-            </a>
-
-            <a
-                href="{% url 'fleet_management' %}"
-                class="sidebar-link"
-            >
-                <span class="sidebar-link-icon">🚗</span>
-                <span>Fleet</span>
-            </a>
-
-            <a
-                href="{% url 'booking_management' %}"
-                class="sidebar-link"
-            >
-                <span class="sidebar-link-icon">📋</span>
-                <span>Bookings</span>
-            </a>
-
-            <a
-                href="{% url 'customer_management' %}"
-                class="sidebar-link"
-            >
-                <span class="sidebar-link-icon">👥</span>
-                <span>Customers</span>
-            </a>
-
-            <a
-                href="{% url 'payment_management' %}"
-                class="sidebar-link"
-            >
-                <span class="sidebar-link-icon">💳</span>
-                <span>Payments</span>
-            </a>
-
-            <a
-                href="{% url 'reports_dashboard' %}"
-                class="sidebar-link"
-            >
-                <span class="sidebar-link-icon">📊</span>
-                <span>Reports</span>
-            </a>
-
-            <a
-                href="{% url 'admin_settings' %}"
-                class="sidebar-link"
-            >
-                <span class="sidebar-link-icon">⚙</span>
-                <span>Settings</span>
-            </a>
-
-        </nav>
-
-
-        <!-- Sidebar Footer -->
-        <div class="sidebar-footer">
-
-            <form
-                method="post"
-                action="{% url 'logout' %}"
-                class="logout-form"
-            >
-
-                {% csrf_token %}
-
-                <button
-                    type="submit"
-                    class="sidebar-link logout-link"
-                >
-                    <span class="sidebar-link-icon">↪</span>
-                    <span>Logout</span>
-                </button>
-
-            </form>
-
-        </div>
-
-    </aside>
-
-
-    <!-- =====================================================
-         MAIN CONTENT
-    ====================================================== -->
-    <main class="dashboard-main-content">
-
-        <!-- =================================================
-             TOP NAVBAR
-        ================================================== -->
-        <header class="top-navbar">
-
-            <div class="navbar-left">
-
-                <!-- Mobile Menu -->
-                <button
-                    type="button"
-                    class="mobile-menu-button"
-                    id="mobileMenuButton"
-                    aria-label="Open navigation menu"
-                    aria-expanded="false"
-                    aria-controls="dashboardSidebar"
-                >
-                    ☰
-                </button>
-
-
-                <!-- Search -->
-                <div class="navbar-search">
-
-                    <span class="search-icon">⌕</span>
-
-                    <input
-                        type="search"
-                        id="dashboardSearch"
-                        placeholder="Search dashboard..."
-                        autocomplete="off"
-                        aria-label="Search dashboard"
-                    >
-
-                    <span class="search-shortcut">
-                        Ctrl K
-                    </span>
-
-                    <!-- Search Clear -->
-                    <button
-                        type="button"
-                        id="searchClear"
-                        class="search-clear"
-                        aria-label="Clear search"
-                    >
-                        ×
-                    </button>
-
-
-                    <!-- Search Results -->
-                    <div
-                        class="search-results"
-                        id="searchResults"
-                        aria-live="polite"
-                    >
-
-                        <a
-                            href="{% url 'admin_dashboard' %}"
-                            class="search-result-item"
-                            data-search="dashboard home administration"
-                        >
-                            <span class="search-result-icon">▣</span>
-
-                            <span>
-                                <strong>Dashboard</strong>
-                                <small>Admin dashboard overview</small>
-                            </span>
-                        </a>
-
-                        <a
-                            href="{% url 'booking_management' %}"
-                            class="search-result-item"
-                            data-search="bookings booking reservations"
-                        >
-                            <span class="search-result-icon">📋</span>
-
-                            <span>
-                                <strong>Bookings</strong>
-                                <small>Manage customer bookings</small>
-                            </span>
-                        </a>
-
-                        <a
-                            href="{% url 'fleet_management' %}"
-                            class="search-result-item"
-                            data-search="fleet cars vehicles vehicle management"
-                        >
-                            <span class="search-result-icon">🚗</span>
-
-                            <span>
-                                <strong>Fleet</strong>
-                                <small>Manage rental vehicles</small>
-                            </span>
-                        </a>
-
-                        <a
-                            href="{% url 'customer_management' %}"
-                            class="search-result-item"
-                            data-search="customers users clients"
-                        >
-                            <span class="search-result-icon">👥</span>
-
-                            <span>
-                                <strong>Customers</strong>
-                                <small>Manage customers</small>
-                            </span>
-                        </a>
-
-                        <a
-                            href="{% url 'payment_management' %}"
-                            class="search-result-item"
-                            data-search="payments money transactions revenue"
-                        >
-                            <span class="search-result-icon">💳</span>
-
-                            <span>
-                                <strong>Payments</strong>
-                                <small>Manage payments and revenue</small>
-                            </span>
-                        </a>
-
-                        <a
-                            href="{% url 'reports_dashboard' %}"
-                            class="search-result-item"
-                            data-search="reports analytics statistics"
-                        >
-                            <span class="search-result-icon">📊</span>
-
-                            <span>
-                                <strong>Reports</strong>
-                                <small>View business reports</small>
-                            </span>
-                        </a>
-
-                        <a
-                            href="{% url 'admin_settings' %}"
-                            class="search-result-item"
-                            data-search="settings configuration administration"
-                        >
-                            <span class="search-result-icon">⚙</span>
-
-                            <span>
-                                <strong>Settings</strong>
-                                <small>Configure administration</small>
-                            </span>
-                        </a>
-
-                        <div
-                            class="search-no-results"
-                            id="searchNoResults"
-                        >
-                            No dashboard section found.
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- =================================================
-                 NAVBAR PROFILE
-            ================================================== -->
-            <div class="navbar-profile">
-
-                <!-- Notifications -->
-                <div class="notification-wrapper">
-
-                    <button
-                        type="button"
-                        class="notification-badge"
-                        id="notificationButton"
-                        aria-label="Notifications"
-                        aria-expanded="false"
-                        aria-controls="notificationDropdown"
-                    >
-                        🔔
-
-                        {% if notification_count %}
-                            <span class="notification-count">
-                                {{ notification_count }}
-                            </span>
-                        {% endif %}
-
-                    </button>
-
-
-                    <div
-                        class="notification-dropdown"
-                        id="notificationDropdown"
-                    >
-
-                        <div class="notification-header">
-
-                            <h3>Notifications</h3>
-
-                            <a href="#">
-                                Mark all read
-                            </a>
-
-                        </div>
-
-
-                        <div class="notification-list">
-
-                            {% if notifications %}
-
-                                {% for notification in notifications %}
-
-                                    <a
-                                        href="{{ notification.url|default:'#' }}"
-                                        class="notification-item {% if not notification.is_read %}unread{% endif %} {{ notification.type|default:'info' }}"
-                                    >
-
-                                        <div class="notification-item-icon">
-
-                                            {% if notification.type == 'success' %}
-                                                ✓
-                                            {% elif notification.type == 'warning' %}
-                                                ⚠
-                                            {% elif notification.type == 'danger' %}
-                                                !
-                                            {% else %}
-                                                i
-                                            {% endif %}
-
-                                        </div>
-
-                                        <div class="notification-item-content">
-
-                                            <strong>
-                                                {{ notification.title }}
-                                            </strong>
-
-                                            <p>
-                                                {{ notification.message }}
-                                            </p>
-
-                                            {% if notification.created_at %}
-                                                <time>
-                                                    {{ notification.created_at|timesince }} ago
-                                                </time>
-                                            {% endif %}
-
-                                        </div>
-
-                                    </a>
-
-                                {% endfor %}
-
-                            {% else %}
-
-                                <div class="notification-empty">
-
-                                    <div class="notification-empty-icon">
-                                        🔔
-                                    </div>
-
-                                    <strong>
-                                        No notifications
-                                    </strong>
-
-                                    <span>
-                                        You're all caught up.
-                                    </span>
-
-                                </div>
-
-                            {% endif %}
-
-                        </div>
-
-
-                        <div class="notification-footer">
-
-                            <a href="#">
-                                View all notifications
-                            </a>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-             <!-- =========================================================
-     ADMIN PROFILE
-     ========================================================= -->
-<div class="admin-profile-wrapper">
-
-    <button
-        type="button"
-        class="admin-profile-button"
-        id="adminProfileButton"
-        aria-expanded="false"
-        aria-controls="adminProfileDropdown"
-    >
-
-        <!-- Admin Avatar -->
-        <div class="admin-avatar">
-            {% if request.user.first_name %}
-                {{ request.user.first_name|first|upper }}
-            {% elif request.user.username %}
-                {{ request.user.username|first|upper }}
-            {% else %}
-                A
-            {% endif %}
-        </div>
-
-        <!-- Admin Identity -->
-        <div class="admin-profile-info">
-
-            <strong>
-                {% if request.user.get_full_name %}
-                    {{ request.user.get_full_name }}
-                {% else %}
-                    {{ request.user.username }}
-                {% endif %}
-            </strong>
-
-            <small>
-                {% if request.user.is_superuser %}
-                    Super Administrator
-                {% elif request.user.is_staff %}
-                    Administrator
-                {% else %}
-                    Staff
-                {% endif %}
-            </small>
-
-        </div>
-
-        <span class="profile-chevron" aria-hidden="true">
-            ⌄
-        </span>
-
-    </button>
-
-
-    <!-- =====================================================
-         ADMIN PROFILE DROPDOWN
-         ===================================================== -->
-    <div
-        class="admin-profile-dropdown"
-        id="adminProfileDropdown"
-    >
-
-        <!-- Profile Header -->
-        <div class="profile-dropdown-header">
-
-            <div class="dropdown-avatar">
-
-                {% if request.user.first_name %}
-                    {{ request.user.first_name|first|upper }}
-                {% elif request.user.username %}
-                    {{ request.user.username|first|upper }}
-                {% else %}
-                    A
-                {% endif %}
-
-            </div>
-
-            <div class="profile-header-info">
-
-                <strong>
-                    {% if request.user.get_full_name %}
-                        {{ request.user.get_full_name }}
-                    {% else %}
-                        {{ request.user.username }}
-                    {% endif %}
-                </strong>
-
-                <small>
-                    {{ request.user.email|default:"Administrator account" }}
-                </small>
-
-            </div>
-
-        </div>
-
-
-        <div class="profile-dropdown-divider"></div>
-
-
-        <!-- =================================================
-             ADMIN PROFILE
-             IMPORTANT:
-             This must NOT use the customer profile URL.
-             ================================================= -->
-        <a
-            href="{% url 'admin_profile' %}"
-            class="profile-dropdown-item"
-        >
-
-            <span class="dropdown-icon">
-                👤
-            </span>
-
-            <span>
-                <strong>My Profile</strong>
-
-                <small>
-                    View administrator account
-                </small>
-            </span>
-
-        </a>
-
-
-        <!-- =================================================
-             CHANGE PASSWORD
-             ================================================= -->
-        <a
-            href="{% url 'password_change' %}"
-            class="profile-dropdown-item"
-        >
-
-            <span class="dropdown-icon">
-                🔐
-            </span>
-
-            <span>
-                <strong>Change Password</strong>
-
-                <small>
-                    Update administrator password
-                </small>
-            </span>
-
-        </a>
-
-
-        <div class="profile-dropdown-divider"></div>
-
-
-        <!-- =================================================
-             ADMIN SECURITY / SETTINGS
-             ================================================= -->
-        <a
-            href="{% url 'admin_settings' %}"
-            class="profile-dropdown-item"
-        >
-
-            <span class="dropdown-icon">
-                ⚙️
-            </span>
-
-            <span>
-                <strong>Account Settings</strong>
-
-                <small>
-                    Manage administrator settings
-                </small>
-            </span>
-
-        </a>
-
-
-        <div class="profile-dropdown-divider"></div>
-
-
-        <!-- =================================================
-             LOGOUT
-             ================================================= -->
-        <form
-            method="post"
-            action="{% url 'logout' %}"
-            class="logout-form"
-        >
-
-            {% csrf_token %}
-
-            <button
-                type="submit"
-                class="profile-dropdown-item logout-item"
-            >
-
-                <span class="dropdown-icon">
-                    ↪
-                </span>
-
-                <span>
-                    <strong>Logout</strong>
-
-                    <small>
-                        Sign out of administrator account
-                    </small>
-                </span>
-
-            </button>
-
-        </form>
 
     </div>
 
-</div>             
+
+    <nav class="sidebar-nav">
+
+        <!-- Dashboard -->
+        <a href="{% url 'admin_dashboard' %}"
+           class="nav-item active">
+
+            <span class="nav-icon">📊</span>
+            <span>Dashboard</span>
+
+        </a>
 
 
-        <!-- =================================================
-             DASHBOARD
-        ================================================== -->
-        <div class="admin-dashboard">
+        <!-- Booking Management -->
+        <a href="{% url 'booking_management' %}"
+           class="nav-item">
 
-            <!-- Dashboard Header -->
-            <section class="dashboard-header">
+            <span class="nav-icon">📋</span>
+            <span>Booking Management</span>
 
-                <div class="dashboard-header-decoration"></div>
+        </a>
 
-                <div class="dashboard-header-content">
+        <!-- FLEET MANAGEMENT -->
+        <a href="{% url 'fleet_management' %}"
+           class="nav-item">
+            <span class="nav-icon">🚗</span>
+            <span>Fleet Management</span>
+        </a>
 
-                    <span class="dashboard-eyebrow">
-                        Smart Car Rental
+        <!-- PAYMENT MANAGEMENT -->
+        <a href="{% url 'payment_management' %}"
+           class="nav-item">
+            <span class="nav-icon">💵</span>
+            <span>Payment Management</span>
+        </a>
+        <!-- CUSTOMER MANAGEMENT -->
+        <a href="{% url 'customer_management' %}"
+           class="nav-item">
+            <span class="nav-icon">👥</span>
+            <span>Customer Management</span>
+        </a>
+        <!-- REPORTS DASHBORAD -->
+        <a href="{% url 'reports_dashboard' %}"
+           class="nav-item">
+            <span class="nav-icon">📊</span>
+            <span>Reports</span>
+        </a>
+
+
+
+        <!-- Django Admin -->
+        <a href="{% url 'admin:index' %}"
+           class="nav-item">
+
+            <span class="nav-icon">⚙️</span>
+            <span>Django Admin</span>
+
+        </a>
+
+    </nav>
+
+
+    <div class="sidebar-footer">
+
+        <div class="admin-profile">
+
+            <div class="profile-avatar">
+                {{ request.user.username|first|upper }}
+            </div>
+
+            <div class="profile-info">
+
+                <strong>
+                    {{ request.user.get_full_name|default:request.user.username }}
+                </strong>
+
+                <span>Administrator</span>
+
+            </div>
+
+        </div>
+
+
+        <a href="{% url 'logout' %}"
+           class="logout-button">
+
+            <span>↪</span>
+            Logout
+
+        </a>
+
+    </div>
+
+</aside>
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
+<main class="main-content">
+
+    <!-- HEADER -->
+
+    <header class="topbar">
+
+        <div>
+            <p class="page-label">ADMINISTRATION</p>
+            <h2>Dashboard</h2>
+            <p class="welcome-text">
+                Welcome back, {{ request.user.get_full_name|default:request.user.username }}.
+                Here's what's happening with your rental business.
+            </p>
+        </div>
+
+        <div class="topbar-right">
+
+            <div class="today-card">
+                <span class="today-icon">📅</span>
+
+                <div>
+                    <small>Today</small>
+                    <strong>{{ today|date:"M d, Y" }}</strong>
+                </div>
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         OVERVIEW CARDS
+    ====================================================== -->
+
+    <section class="section">
+
+        <div class="section-heading">
+            <div>
+                <p class="section-label">OVERVIEW</p>
+                <h3>Business Summary</h3>
+            </div>
+        </div>
+
+
+        <div class="stats-grid">
+
+            <!-- TOTAL BOOKINGS -->
+
+            <div class="stat-card blue">
+
+                <div class="stat-card-top">
+                    <div class="stat-icon">📋</div>
+
+                    <span class="stat-status">ALL</span>
+                </div>
+
+                <div class="stat-value">
+                    {{ total_bookings }}
+                </div>
+
+                <div class="stat-title">
+                    Total Bookings
+                </div>
+
+                <div class="stat-description">
+                    All rental bookings
+                </div>
+
+            </div>
+
+
+            <!-- PENDING BOOKINGS -->
+
+            <div class="stat-card orange">
+
+                <div class="stat-card-top">
+                    <div class="stat-icon">⏳</div>
+
+                    {% if pending_bookings > 0 %}
+                        <span class="stat-status warning">ACTION</span>
+                    {% else %}
+                        <span class="stat-status success">CLEAR</span>
+                    {% endif %}
+                </div>
+
+                <div class="stat-value">
+                    {{ pending_bookings }}
+                </div>
+
+                <div class="stat-title">
+                    Pending Bookings
+                </div>
+
+                <div class="stat-description">
+                    Waiting for approval
+                </div>
+
+            </div>
+
+
+            <!-- ACTIVE RENTALS -->
+
+            <div class="stat-card green">
+
+                <div class="stat-card-top">
+                    <div class="stat-icon">🚙</div>
+
+                    <span class="stat-status success">LIVE</span>
+                </div>
+
+                <div class="stat-value">
+                    {{ active_rentals }}
+                </div>
+
+                <div class="stat-title">
+                    Active Rentals
+                </div>
+
+                <div class="stat-description">
+                    Vehicles currently rented
+                </div>
+
+            </div>
+
+
+            <!-- REVENUE -->
+
+            <div class="stat-card purple">
+
+                <div class="stat-card-top">
+                    <div class="stat-icon">💰</div>
+
+                    <span class="stat-status success">PAID</span>
+                </div>
+
+                <div class="stat-value">
+                    {{ paid_revenue|floatformat:2 }}
+                </div>
+
+                <div class="stat-title">
+                    Paid Revenue
+                </div>
+
+                <div class="stat-description">
+                    Total recorded payments
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FLEET SECTION
+    ====================================================== -->
+
+    <section class="section">
+
+        <div class="section-heading">
+
+            <div>
+                <p class="section-label">FLEET MANAGEMENT</p>
+                <h3>Fleet Overview</h3>
+            </div>
+
+            <div class="section-summary">
+                {{ total_fleet_units }} total units
+            </div>
+
+        </div>
+
+
+        <div class="fleet-grid">
+
+            <!-- TOTAL FLEET -->
+
+            <div class="fleet-card">
+
+                <div class="fleet-icon fleet-blue">
+                    🚗
+                </div>
+
+                <div class="fleet-info">
+                    <span>Total Fleet</span>
+                    <strong>{{ total_fleet_units }}</strong>
+                    <small>{{ total_cars }} vehicle types</small>
+                </div>
+
+            </div>
+
+
+            <!-- AVAILABLE -->
+
+            <div class="fleet-card">
+
+                <div class="fleet-icon fleet-green">
+                    ✓
+                </div>
+
+                <div class="fleet-info">
+                    <span>Available</span>
+                    <strong>{{ available_fleet_units }}</strong>
+                    <small>{{ available_cars }} available types</small>
+                </div>
+
+            </div>
+
+
+            <!-- RENTED -->
+
+            <div class="fleet-card">
+
+                <div class="fleet-icon fleet-orange">
+                    🚘
+                </div>
+
+                <div class="fleet-info">
+                    <span>Rented</span>
+                    <strong>{{ rented_fleet_units }}</strong>
+                    <small>Currently in use</small>
+                </div>
+
+            </div>
+
+
+            <!-- MAINTENANCE -->
+
+            <div class="fleet-card">
+
+                <div class="fleet-icon fleet-red">
+                    🔧
+                </div>
+
+                <div class="fleet-info">
+                    <span>Maintenance</span>
+                    <strong>{{ maintenance_fleet_units }}</strong>
+                    <small>{{ maintenance_cars }} vehicle types</small>
+                </div>
+
+            </div>
+
+
+            <!-- INACTIVE -->
+
+            <div class="fleet-card">
+
+                <div class="fleet-icon fleet-gray">
+                    ⛔
+                </div>
+
+                <div class="fleet-info">
+                    <span>Inactive</span>
+                    <strong>{{ inactive_fleet_units }}</strong>
+                    <small>{{ inactive_cars }} vehicle types</small>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- FLEET UTILIZATION -->
+
+        <div class="utilization-card">
+
+            <div class="utilization-header">
+
+                <div>
+                    <span class="utilization-title">
+                        Fleet Utilization
                     </span>
 
-                    <h1>
-                        Admin Dashboard
-                    </h1>
-
-                    <p>
-                        Monitor your rental operations, manage your fleet,
-                        review bookings, track payments, and oversee
-                        customer activity from one central administration
-                        dashboard.
-                    </p>
-
+                    <small>
+                        Percentage of total fleet currently rented
+                    </small>
                 </div>
 
-            </section>
+                <strong>
+                    {{ fleet_utilization }}%
+                </strong>
 
+            </div>
 
-            <!-- =================================================
-                 MANAGEMENT
-            ================================================== -->
-            <section class="management-section">
+            <div class="utilization-track">
 
-                <div class="section-heading">
-
-                    <div>
-
-                        <span class="section-eyebrow">
-                            Operations
-                        </span>
-
-                        <h2>
-                            Management
-                        </h2>
-
+                {% if fleet_utilization >= 90 %}
+                    <div class="utilization-fill utilization-critical">
+                        <span>{{ fleet_utilization }}%</span>
                     </div>
 
-                    <p>
-                        Manage the main areas of your rental business.
-                    </p>
-
-                </div>
-
-
-                <div class="management-grid">
-
-                    <a
-                        href="{% url 'booking_management' %}"
-                        class="management-card"
-                    >
-
-                        <div class="management-icon">
-                            📋
-                        </div>
-
-                        <div class="management-info">
-
-                            <h3>
-                                Booking Management
-                            </h3>
-
-                            <p>
-                                Review, approve, reject and manage
-                                customer reservations.
-                            </p>
-
-                        </div>
-
-                        <span class="management-arrow">
-                            →
-                        </span>
-
-                    </a>
-
-
-                    <a
-                        href="{% url 'fleet_management' %}"
-                        class="management-card"
-                    >
-
-                        <div class="management-icon fleet-management-icon">
-                            🚗
-                        </div>
-
-                        <div class="management-info">
-
-                            <h3>
-                                Fleet Management
-                            </h3>
-
-                            <p>
-                                Manage vehicles, availability,
-                                maintenance and fleet status.
-                            </p>
-
-                        </div>
-
-                        <span class="management-arrow">
-                            →
-                        </span>
-
-                    </a>
-
-
-                    <a
-                        href="{% url 'payment_management' %}"
-                        class="management-card"
-                    >
-
-                        <div class="management-icon payment-management-icon">
-                            💳
-                        </div>
-
-                        <div class="management-info">
-
-                            <h3>
-                                Payment Management
-                            </h3>
-
-                            <p>
-                                Monitor payments, transactions and
-                                rental revenue.
-                            </p>
-
-                        </div>
-
-                        <span class="management-arrow">
-                            →
-                        </span>
-
-                    </a>
-
-
-                    <a
-                        href="{% url 'reports_dashboard' %}"
-                        class="management-card"
-                    >
-
-                        <div class="management-icon reports-management-icon">
-                            📊
-                        </div>
-
-                        <div class="management-info">
-
-                            <h3>
-                                Reports
-                            </h3>
-
-                            <p>
-                                Analyze bookings, revenue, fleet
-                                performance and business activity.
-                            </p>
-
-                        </div>
-
-                        <span class="management-arrow">
-                            →
-                        </span>
-
-                    </a>
-
-                </div>
-
-            </section>
-
-
-            <!-- =================================================
-                 KPI
-            ================================================== -->
-            <section class="kpi-section">
-
-                <div class="section-heading">
-
-                    <div>
-
-                        <span class="section-eyebrow">
-                            Business Overview
-                        </span>
-
-                        <h2>
-                            Key Performance Indicators
-                        </h2>
-
+                {% elif fleet_utilization >= 70 %}
+                    <div class="utilization-fill utilization-high">
+                        <span>{{ fleet_utilization }}%</span>
                     </div>
 
-                    <p>
-                        Current operational statistics.
-                    </p>
+                {% elif fleet_utilization >= 40 %}
+                    <div class="utilization-fill utilization-medium">
+                        <span>{{ fleet_utilization }}%</span>
+                    </div>
+
+                {% else %}
+                    <div class="utilization-fill utilization-low">
+                        <span>{{ fleet_utilization }}%</span>
+                    </div>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         BOOKING STATUS
+    ====================================================== -->
+
+    <section class="section">
+
+        <div class="section-heading">
+
+            <div>
+                <p class="section-label">BOOKINGS</p>
+                <h3>Booking Status</h3>
+            </div>
+
+        </div>
+
+
+        <div class="booking-status-grid">
+
+            <div class="status-box pending">
+                <span class="status-icon">⏳</span>
+                <strong>{{ pending_bookings }}</strong>
+                <span>Pending</span>
+            </div>
+
+            <div class="status-box approved">
+                <span class="status-icon">✓</span>
+                <strong>{{ approved_bookings }}</strong>
+                <span>Approved</span>
+            </div>
+
+            <div class="status-box active">
+                <span class="status-icon">🚗</span>
+                <strong>{{ active_rentals }}</strong>
+                <span>Active</span>
+            </div>
+
+            <div class="status-box completed">
+                <span class="status-icon">✓</span>
+                <strong>{{ completed_bookings }}</strong>
+                <span>Completed</span>
+            </div>
+
+            <div class="status-box cancelled">
+                <span class="status-icon">×</span>
+                <strong>{{ cancelled_bookings }}</strong>
+                <span>Cancelled</span>
+            </div>
+
+            <div class="status-box rejected">
+                <span class="status-icon">!</span>
+                <strong>{{ rejected_bookings }}</strong>
+                <span>Rejected</span>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         TODAY'S OPERATIONS
+    ====================================================== -->
+
+    <section class="section">
+
+        <div class="section-heading">
+
+            <div>
+                <p class="section-label">OPERATIONS</p>
+                <h3>Today's Operations</h3>
+            </div>
+
+            <div class="date-badge">
+                {{ today|date:"F d, Y" }}
+            </div>
+
+        </div>
+
+
+        <div class="operations-grid">
+
+            <div class="operation-card pickup">
+
+                <div class="operation-icon">
+                    🚙
+                </div>
+
+                <div>
+                    <span>Today's Pickups</span>
+                    <strong>{{ today_pickups }}</strong>
+                    <small>{{ completed_pickups_today }} completed</small>
+                </div>
+
+            </div>
+
+
+            <div class="operation-card return">
+
+                <div class="operation-icon">
+                    ↩
+                </div>
+
+                <div>
+                    <span>Today's Returns</span>
+                    <strong>{{ today_returns }}</strong>
+                    <small>{{ completed_returns_today }} completed</small>
+                </div>
+
+            </div>
+
+
+            <div class="operation-card overdue">
+
+                <div class="operation-icon">
+                    ⚠
+                </div>
+
+                <div>
+                    <span>Overdue Rentals</span>
+                    <strong>{{ overdue_rentals }}</strong>
+
+                    {% if overdue_rentals > 0 %}
+                        <small class="danger-text">
+                            Attention required
+                        </small>
+                    {% else %}
+                        <small>
+                            No overdue rentals
+                        </small>
+                    {% endif %}
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         TODAY PICKUPS / RETURNS / OVERDUE
+    ====================================================== -->
+
+    <section class="section">
+
+        <div class="three-column-layout">
+
+            <!-- TODAY PICKUPS -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <span class="panel-label">TODAY</span>
+                        <h3>Pickups</h3>
+                    </div>
+
+                    <span class="panel-count">
+                        {{ today_pickups }}
+                    </span>
 
                 </div>
 
 
-                <div class="kpi-grid">
+                <div class="panel-body">
 
-                    <!-- Total Fleet -->
-                    <div class="kpi-card">
+                    {% for booking in today_pickup_list %}
 
-                        <div class="kpi-icon fleet-icon">
-                            🚗
-                        </div>
+                        <div class="booking-row">
 
-                        <div class="kpi-content">
+                            <div class="booking-avatar">
+                                {{ booking.user.username|first|upper }}
+                            </div>
 
-                            <span>
-                                Total Fleet
+                            <div class="booking-info">
+
+                                <strong>
+                                    {{ booking.user.get_full_name|default:booking.user.username }}
+                                </strong>
+
+                                <span>
+                                    {{ booking.car.name }}
+                                </span>
+
+                                <small>
+                                    Pickup:
+                                    {{ booking.pickup_date|date:"M d, Y" }}
+                                </small>
+
+                            </div>
+
+                            <span class="mini-status approved">
+                                {{ booking.status }}
                             </span>
 
+                        </div>
+
+                    {% empty %}
+
+                        <div class="empty-state">
+                            <span>✓</span>
+                            <p>No pickups scheduled today.</p>
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+
+            <!-- TODAY RETURNS -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <span class="panel-label">TODAY</span>
+                        <h3>Returns</h3>
+                    </div>
+
+                    <span class="panel-count">
+                        {{ today_returns }}
+                    </span>
+
+                </div>
+
+
+                <div class="panel-body">
+
+                    {% for booking in today_return_list %}
+
+                        <div class="booking-row">
+
+                            <div class="booking-avatar">
+                                {{ booking.user.username|first|upper }}
+                            </div>
+
+                            <div class="booking-info">
+
+                                <strong>
+                                    {{ booking.user.get_full_name|default:booking.user.username }}
+                                </strong>
+
+                                <span>
+                                    {{ booking.car.name }}
+                                </span>
+
+                                <small>
+                                    Return:
+                                    {{ booking.dropoff_date|date:"M d, Y" }}
+                                </small>
+
+                            </div>
+
+                            <span class="mini-status active">
+                                Active
+                            </span>
+
+                        </div>
+
+                    {% empty %}
+
+                        <div class="empty-state">
+                            <span>✓</span>
+                            <p>No returns scheduled today.</p>
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+
+            <!-- OVERDUE -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <span class="panel-label danger-label">ATTENTION</span>
+                        <h3>Overdue</h3>
+                    </div>
+
+                    <span class="panel-count danger-count">
+                        {{ overdue_rentals }}
+                    </span>
+
+                </div>
+
+
+                <div class="panel-body">
+
+                    {% for booking in overdue_rental_list %}
+
+                        <div class="booking-row overdue-row">
+
+                            <div class="booking-avatar danger-avatar">
+                                {{ booking.user.username|first|upper }}
+                            </div>
+
+                            <div class="booking-info">
+
+                                <strong>
+                                    {{ booking.user.get_full_name|default:booking.user.username }}
+                                </strong>
+
+                                <span>
+                                    {{ booking.car.name }}
+                                </span>
+
+                                <small class="danger-text">
+                                    Due:
+                                    {{ booking.dropoff_date|date:"M d, Y" }}
+                                </small>
+
+                            </div>
+
+                            <span class="mini-status rejected">
+                                OVERDUE
+                            </span>
+
+                        </div>
+
+                    {% empty %}
+
+                        <div class="empty-state success-empty">
+                            <span>✓</span>
+                            <p>No overdue rentals.</p>
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         DOCUMENT VERIFICATION
+    ====================================================== -->
+
+    <section class="section">
+
+        <div class="section-heading">
+
+            <div>
+                <p class="section-label">DOCUMENT VERIFICATION</p>
+                <h3>Customer Documents</h3>
+            </div>
+
+        </div>
+
+
+        <div class="document-grid">
+
+            <div class="document-card pending-document">
+
+                <div class="document-icon">
+                    📄
+                </div>
+
+                <div>
+                    <span>Pending</span>
+                    <strong>{{ pending_documents }}</strong>
+                    <small>Need verification</small>
+                </div>
+
+            </div>
+
+
+            <div class="document-card verified-document">
+
+                <div class="document-icon">
+                    ✓
+                </div>
+
+                <div>
+                    <span>Verified</span>
+                    <strong>{{ verified_documents }}</strong>
+                    <small>Approved documents</small>
+                </div>
+
+            </div>
+
+
+            <div class="document-card rejected-document">
+
+                <div class="document-icon">
+                    !
+                </div>
+
+                <div>
+                    <span>Rejected</span>
+                    <strong>{{ rejected_documents }}</strong>
+                    <small>Require attention</small>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- PENDING DOCUMENT LIST -->
+
+        <div class="panel full-width-panel">
+
+            <div class="panel-header">
+
+                <div>
+                    <span class="panel-label">REVIEW QUEUE</span>
+                    <h3>Pending Documents</h3>
+                </div>
+
+                <span class="panel-count">
+                    {{ pending_documents }}
+                </span>
+
+            </div>
+
+
+            <div class="panel-body">
+
+                {% for booking in pending_document_list %}
+
+                    <div class="document-row">
+
+                        <div class="booking-avatar">
+                            {{ booking.user.username|first|upper }}
+                        </div>
+
+                        <div class="document-info">
+
                             <strong>
-                                {{ total_fleet|default:0 }}
+                                {{ booking.user.get_full_name|default:booking.user.username }}
                             </strong>
 
+                            <span>
+                                {{ booking.car.name }}
+                            </span>
+
                             <small>
-                                Vehicles in fleet
+                                Booking #{{ booking.id }}
                             </small>
 
                         </div>
 
+                        <span class="mini-status pending">
+                            Pending
+                        </span>
+
                     </div>
 
+                {% empty %}
 
-                    <!-- Available -->
-                    <div class="kpi-card">
+                    <div class="empty-state">
+                        <span>✓</span>
+                        <p>No documents waiting for verification.</p>
+                    </div>
 
-                        <div class="kpi-icon available-icon">
-                            ✓
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         CUSTOMERS / STAFF
+    ====================================================== -->
+
+    <section class="section">
+
+        <div class="section-heading">
+
+            <div>
+                <p class="section-label">USERS</p>
+                <h3>Customer & Staff Overview</h3>
+            </div>
+
+        </div>
+
+
+        <div class="user-stat-grid">
+
+            <div class="user-stat-card">
+
+                <div class="user-stat-icon">
+                    👥
+                </div>
+
+                <div>
+                    <span>Customers</span>
+                    <strong>{{ total_customers }}</strong>
+                    <small>Registered customers</small>
+                </div>
+
+            </div>
+
+
+            <div class="user-stat-card">
+
+                <div class="user-stat-icon">
+                    👤
+                </div>
+
+                <div>
+                    <span>Staff Members</span>
+                    <strong>{{ staff_users }}</strong>
+                    <small>Staff accounts</small>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PAYMENT OVERVIEW
+    ====================================================== -->
+
+    <section class="section">
+
+        <div class="section-heading">
+
+            <div>
+                <p class="section-label">PAYMENTS</p>
+                <h3>Payment Overview</h3>
+            </div>
+
+        </div>
+
+
+        <div class="payment-grid">
+
+            <div class="payment-card revenue-card">
+
+                <div class="payment-icon">
+                    💰
+                </div>
+
+                <div>
+                    <span>Paid Revenue</span>
+                    <strong>{{ paid_revenue|floatformat:2 }}</strong>
+                    <small>{{ paid_payment_count }} paid payments</small>
+                </div>
+
+            </div>
+
+
+            <div class="payment-card completed-revenue-card">
+
+                <div class="payment-icon">
+                    📈
+                </div>
+
+                <div>
+                    <span>Completed Revenue</span>
+                    <strong>{{ total_revenue|floatformat:2 }}</strong>
+                    <small>Completed paid rentals</small>
+                </div>
+
+            </div>
+
+
+            <div class="payment-card pending-payment-card">
+
+                <div class="payment-icon">
+                    ⏳
+                </div>
+
+                <div>
+                    <span>Pending Payments</span>
+                    <strong>{{ pending_payment_count }}</strong>
+                    <small>Awaiting payment</small>
+                </div>
+
+            </div>
+
+
+            <div class="payment-card failed-payment-card">
+
+                <div class="payment-icon">
+                    !
+                </div>
+
+                <div>
+                    <span>Failed Payments</span>
+                    <strong>{{ failed_payment_count }}</strong>
+                    <small>Payment failures</small>
+                </div>
+
+            </div>
+
+
+            <div class="payment-card refunded-payment-card">
+
+                <div class="payment-icon">
+                    ↩
+                </div>
+
+                <div>
+                    <span>Refunded Payments</span>
+                    <strong>{{ refunded_payment_count }}</strong>
+                    <small>Refund transactions</small>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- PENDING PAYMENTS -->
+
+        <div class="panel full-width-panel">
+
+            <div class="panel-header">
+
+                <div>
+                    <span class="panel-label">PAYMENT QUEUE</span>
+                    <h3>Pending Payments</h3>
+                </div>
+
+                <span class="panel-count">
+                    {{ pending_payment_count }}
+                </span>
+
+            </div>
+
+
+            <div class="panel-body">
+
+                {% for booking in pending_payment_list %}
+
+                    <div class="payment-row">
+
+                        <div class="booking-avatar">
+                            {{ booking.user.username|first|upper }}
                         </div>
 
-                        <div class="kpi-content">
+                        <div class="payment-info">
+
+                            <strong>
+                                {{ booking.user.get_full_name|default:booking.user.username }}
+                            </strong>
+
+                            <span>
+                                {{ booking.car.name }}
+                            </span>
+
+                            <small>
+                                Booking #{{ booking.id }}
+                            </small>
+
+                        </div>
+
+                        <strong class="payment-amount">
+                            {{ booking.total_price|floatformat:2 }}
+                        </strong>
+
+                        <span class="mini-status pending">
+                            Pending
+                        </span>
+
+                    </div>
+
+                {% empty %}
+
+                    <div class="empty-state">
+                        <span>✓</span>
+                        <p>No pending payments.</p>
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         POPULAR CAR
+    ====================================================== -->
+
+    <section class="section">
+
+        <div class="section-heading">
+
+            <div>
+                <p class="section-label">ANALYTICS</p>
+                <h3>Popular Vehicle</h3>
+            </div>
+
+        </div>
+
+
+        {% if popular_car %}
+
+            <div class="popular-car-card">
+
+                <div class="popular-car-image">
+
+                    {% if popular_car.image %}
+                        <img src="{{ popular_car.image.url }}"
+                             alt="{{ popular_car.name }}">
+                    {% else %}
+                        <div class="no-car-image">
+                            🚗
+                        </div>
+                    {% endif %}
+
+                </div>
+
+
+                <div class="popular-car-info">
+
+                    <span class="popular-label">
+                        MOST BOOKED VEHICLE
+                    </span>
+
+                    <h3>
+                        {{ popular_car.name }}
+                    </h3>
+
+                    {% if popular_car.model_year %}
+                        <p>
+                            Model year: {{ popular_car.model_year }}
+                        </p>
+                    {% endif %}
+
+                    <div class="popular-car-stats">
+
+                        <div>
+                            <strong>
+                                {{ popular_car.booking_count }}
+                            </strong>
+
+                            <span>
+                                Bookings
+                            </span>
+                        </div>
+
+                        <div>
+                            <strong>
+                                {{ popular_car.total_quantity }}
+                            </strong>
+
+                            <span>
+                                Fleet Units
+                            </span>
+                        </div>
+
+                        <div>
+                            <strong>
+                                {{ popular_car.available_quantity }}
+                            </strong>
 
                             <span>
                                 Available
                             </span>
-
-                            <strong>
-                                {{ available_cars|default:0 }}
-                            </strong>
-
-                            <small>
-                                Ready for rental
-                            </small>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- Maintenance -->
-                    <div class="kpi-card">
-
-                        <div class="kpi-icon maintenance-icon">
-                            🔧
-                        </div>
-
-                        <div class="kpi-content">
-
-                            <span>
-                                Maintenance
-                            </span>
-
-                            <strong>
-                                {{ maintenance_cars|default:0 }}
-                            </strong>
-
-                            <small>
-                                Currently in maintenance
-                            </small>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- Inactive -->
-                    <div class="kpi-card">
-
-                        <div class="kpi-icon inactive-icon">
-                            !
-                        </div>
-
-                        <div class="kpi-content">
-
-                            <span>
-                                Inactive
-                            </span>
-
-                            <strong>
-                                {{ inactive_cars|default:0 }}
-                            </strong>
-
-                            <small>
-                                Not active in fleet
-                            </small>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- Pending Bookings -->
-                    <div class="kpi-card">
-
-                        <div class="kpi-icon pending-icon">
-                            ⏳
-                        </div>
-
-                        <div class="kpi-content">
-
-                            <span>
-                                Pending Bookings
-                            </span>
-
-                            <strong>
-                                {{ pending_bookings|default:0 }}
-                            </strong>
-
-                            <small>
-                                Awaiting approval
-                            </small>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- Active Rentals -->
-                    <div class="kpi-card">
-
-                        <div class="kpi-icon active-icon">
-                            ▶
-                        </div>
-
-                        <div class="kpi-content">
-
-                            <span>
-                                Active Rentals
-                            </span>
-
-                            <strong>
-                                {{ active_rentals|default:0 }}
-                            </strong>
-
-                            <small>
-                                Currently rented
-                            </small>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- Customers -->
-                    <div class="kpi-card">
-
-                        <div class="kpi-icon customer-icon">
-                            👥
-                        </div>
-
-                        <div class="kpi-content">
-
-                            <span>
-                                Customers
-                            </span>
-
-                            <strong>
-                                {{ total_customers|default:0 }}
-                            </strong>
-
-                            <small>
-                                Registered customers
-                            </small>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- Revenue -->
-                    <div class="kpi-card">
-
-                        <div class="kpi-icon revenue-icon">
-                            $
-                        </div>
-
-                        <div class="kpi-content">
-
-                            <span>
-                                Revenue
-                            </span>
-
-                            <strong>
-                                {{ total_revenue|default:"0.00" }}
-                            </strong>
-
-                            <small>
-                                Total recorded revenue
-                            </small>
-
                         </div>
 
                     </div>
 
                 </div>
 
-            </section>
+            </div>
 
+        {% else %}
 
-            <!-- =================================================
-                 SUMMARY
-            ================================================== -->
-            <section class="summary-section">
+            <div class="empty-large">
+                <span>🚗</span>
+                <h3>No vehicle data available</h3>
+                <p>Add vehicles and bookings to see analytics here.</p>
+            </div>
 
-                <!-- Booking Summary -->
-                <div class="summary-card">
+        {% endif %}
 
-                    <div class="summary-card-header">
+    </section>
 
-                        <div>
 
-                            <span class="section-eyebrow">
-                                Reservations
-                            </span>
+    <!-- =====================================================
+         RECENT BOOKINGS
+    ====================================================== -->
 
-                            <h2>
-                                Booking Summary
-                            </h2>
+    <section class="section">
 
-                        </div>
+        <div class="section-heading">
 
-                        <a
-                            href="{% url 'booking_management' %}"
-                            class="summary-header-link"
-                        >
-                            View all
-                        </a>
+            <div>
+                <p class="section-label">RECENT ACTIVITY</p>
+                <h3>Recent Bookings</h3>
+            </div>
 
-                    </div>
-
-
-                    <div class="summary-list">
-
-                        <div class="summary-row">
-                            <span>Total Bookings</span>
-                            <strong>
-                                {{ total_bookings|default:0 }}
-                            </strong>
-                        </div>
-
-                        <div class="summary-row">
-                            <span>Pending</span>
-                            <strong class="summary-warning">
-                                {{ pending_bookings|default:0 }}
-                            </strong>
-                        </div>
-
-                        <div class="summary-row">
-                            <span>Approved</span>
-                            <strong class="summary-primary">
-                                {{ approved_bookings|default:0 }}
-                            </strong>
-                        </div>
-
-                        <div class="summary-row">
-                            <span>Active</span>
-                            <strong class="summary-success">
-                                {{ active_rentals|default:0 }}
-                            </strong>
-                        </div>
-
-                        <div class="summary-row">
-                            <span>Completed</span>
-                            <strong>
-                                {{ completed_bookings|default:0 }}
-                            </strong>
-                        </div>
-
-                        <div class="summary-row">
-                            <span>Cancelled</span>
-                            <strong class="summary-danger">
-                                {{ cancelled_bookings|default:0 }}
-                            </strong>
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Fleet Summary -->
-                <div class="summary-card">
-
-                    <div class="summary-card-header">
-
-                        <div>
-
-                            <span class="section-eyebrow">
-                                Vehicles
-                            </span>
-
-                            <h2>
-                                Fleet Summary
-                            </h2>
-
-                        </div>
-
-                        <a
-                            href="{% url 'fleet_management' %}"
-                            class="summary-header-link"
-                        >
-                            Manage fleet
-                        </a>
-
-                    </div>
-
-
-                    <div class="business-summary">
-
-                        <div class="business-metric">
-                            <span>Total Fleet</span>
-                            <strong>{{ total_fleet|default:0 }}</strong>
-                            <small>Total vehicles</small>
-                        </div>
-
-                        <div class="business-metric">
-                            <span>Available</span>
-                            <strong>{{ available_cars|default:0 }}</strong>
-                            <small>Ready for rental</small>
-                        </div>
-
-                        <div class="business-metric">
-                            <span>Rented</span>
-                            <strong>{{ rented_cars|default:0 }}</strong>
-                            <small>Currently rented</small>
-                        </div>
-
-                        <div class="business-metric">
-                            <span>Maintenance</span>
-                            <strong>{{ maintenance_cars|default:0 }}</strong>
-                            <small>Under maintenance</small>
-                        </div>
-
-                        <div class="business-metric">
-                            <span>Inactive</span>
-                            <strong>{{ inactive_cars|default:0 }}</strong>
-                            <small>Inactive vehicles</small>
-                        </div>
-
-                        <div class="business-metric">
-                            <span>Utilization</span>
-                            <strong>{{ fleet_utilization|default:0 }}%</strong>
-                            <small>Fleet utilization</small>
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- =================================================
-                 CHARTS
-            ================================================== -->
-            <section class="analytics-section">
-
-                <div class="section-heading">
-
-                    <div>
-
-                        <span class="section-eyebrow">
-                            Analytics
-                        </span>
-
-                        <h2>
-                            Business Analytics
-                        </h2>
-
-                    </div>
-
-                    <p>
-                        Visual overview of your rental operations.
-                    </p>
-
-                </div>
-
-
-                <div class="charts-grid">
-
-                    <!-- Booking Chart -->
-                    <div class="chart-card">
-
-                        <div class="chart-header">
-
-                            <div>
-
-                                <h3>
-                                    Booking Overview
-                                </h3>
-
-                                <p>
-                                    Current booking distribution
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                        <div class="chart-wrapper">
-                            <canvas id="bookingChart"></canvas>
-                        </div>
-
-                    </div>
-
-
-                    <!-- Fleet Chart -->
-                    <div class="chart-card">
-
-                        <div class="chart-header">
-
-                            <div>
-
-                                <h3>
-                                    Fleet Status
-                                </h3>
-
-                                <p>
-                                    Current vehicle status distribution
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                        <div class="chart-wrapper">
-                            <canvas id="fleetChart"></canvas>
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- =================================================
-                 RECENT BOOKINGS
-            ================================================== -->
-            <section class="recent-bookings-section">
-
-                <div class="section-heading">
-
-                    <div>
-
-                        <span class="section-eyebrow">
-                            Latest Activity
-                        </span>
-
-                        <h2>
-                            Recent Bookings
-                        </h2>
-
-                    </div>
-
-                    <a
-                        href="{% url 'booking_management' %}"
-                        class="section-action"
-                    >
-                        View all bookings →
-                    </a>
-
-                </div>
-
-
-                <div class="recent-bookings-card">
-
-                    <div class="table-wrapper">
-
-                        <table class="recent-bookings-table">
-
-                            <thead>
-
-                                <tr>
-                                    <th>Customer</th>
-                                    <th>Vehicle</th>
-                                    <th>Pickup</th>
-                                    <th>Return</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                </tr>
-
-                            </thead>
-
-
-                            <tbody>
-
-                                {% if recent_bookings %}
-
-                                    {% for booking in recent_bookings %}
-
-                                        <tr>
-
-                                            <!-- Customer -->
-                                            <td>
-
-                                                <div class="customer-cell">
-
-                                                    <div class="customer-avatar">
-
-                                                        {% if booking.user.first_name %}
-                                                            {{ booking.user.first_name|first|upper }}
-                                                        {% elif booking.user.username %}
-                                                            {{ booking.user.username|first|upper }}
-                                                        {% else %}
-                                                            C
-                                                        {% endif %}
-
-                                                    </div>
-
-                                                    <strong>
-
-                                                        {% if booking.user.get_full_name %}
-                                                            {{ booking.user.get_full_name }}
-                                                        {% elif booking.user.username %}
-                                                            {{ booking.user.username }}
-                                                        {% else %}
-                                                            Customer
-                                                        {% endif %}
-
-                                                    </strong>
-
-                                                </div>
-
-                                            </td>
-
-
-                                            <!-- Vehicle -->
-                                            <td>
-
-                                                <span class="vehicle-name">
-
-                                                    {% if booking.car %}
-                                                        {{ booking.car.name }}
-                                                    {% else %}
-                                                        Vehicle
-                                                    {% endif %}
-
-                                                </span>
-
-                                            </td>
-
-
-                                            <!-- Pickup -->
-                                            <td>
-
-                                                <span class="booking-date">
-
-                                                    {% if booking.pickup_date %}
-                                                        {{ booking.pickup_date|date:"M d, Y" }}
-                                                    {% else %}
-                                                        —
-                                                    {% endif %}
-
-                                                </span>
-
-                                            </td>
-
-
-                                            <!-- Return -->
-                                            <td>
-
-                                                <span class="booking-date">
-
-                                                    {% if booking.dropoff_date %}
-                                                        {{ booking.dropoff_date|date:"M d, Y" }}
-                                                    {% elif booking.return_date %}
-                                                        {{ booking.return_date|date:"M d, Y" }}
-                                                    {% else %}
-                                                        —
-                                                    {% endif %}
-
-                                                </span>
-
-                                            </td>
-
-
-                                            <!-- Amount -->
-                                            <td>
-
-                                                {% if booking.total_price %}
-                                                    {{ booking.total_price }}
-                                                {% elif booking.total_amount %}
-                                                    {{ booking.total_amount }}
-                                                {% else %}
-                                                    —
-                                                {% endif %}
-
-                                            </td>
-
-
-                                            <!-- Status -->
-                                            <td>
-
-                                                {% with status=booking.status|default:"Pending" %}
-
-                                                    <span class="status-badge
-                                                        {% if status == 'Pending' %}
-                                                            status-pending
-                                                        {% elif status == 'Approved' %}
-                                                            status-approved
-                                                        {% elif status == 'Active' %}
-                                                            status-active
-                                                        {% elif status == 'Completed' %}
-                                                            status-completed
-                                                        {% elif status == 'Cancelled' or status == 'Rejected' %}
-                                                            status-cancelled
-                                                        {% endif %}
-                                                    ">
-
-                                                        {{ status }}
-
-                                                    </span>
-
-                                                {% endwith %}
-
-                                            </td>
-
-                                        </tr>
-
-                                    {% endfor %}
-
-                                {% else %}
-
-                                    <tr>
-
-                                        <td
-                                            colspan="6"
-                                            class="empty-state"
-                                        >
-
-                                            <div class="empty-state-icon">
-                                                📋
-                                            </div>
-
-                                            <strong>
-                                                No recent bookings
-                                            </strong>
-
-                                            <span>
-                                                New customer bookings will appear here.
-                                            </span>
-
-                                        </td>
-
-                                    </tr>
-
-                                {% endif %}
-
-                            </tbody>
-
-                        </table>
-
-                    </div>
-
-                </div>
-
-            </section>
+            <span class="section-summary">
+                Latest 10 bookings
+            </span>
 
         </div>
 
-    </main>
 
-</div>
-<!-- =========================================================
-     DJANGO CHART DATA
-     json_script safely transfers Django values to JavaScript.
-========================================================== -->
+        <div class="table-panel">
 
-{{ pending_bookings|default:0|json_script:"pendingBookingsData" }}
-{{ approved_bookings|default:0|json_script:"approvedBookingsData" }}
-{{ active_rentals|default:0|json_script:"activeRentalsData" }}
-{{ completed_bookings|default:0|json_script:"completedBookingsData" }}
-{{ cancelled_bookings|default:0|json_script:"cancelledBookingsData" }}
+            <div class="table-wrapper">
 
-{{ available_cars|default:0|json_script:"availableCarsData" }}
-{{ rented_cars|default:0|json_script:"rentedCarsData" }}
-{{ maintenance_cars|default:0|json_script:"maintenanceCarsData" }}
-{{ inactive_cars|default:0|json_script:"inactiveCarsData" }}
+                <table class="dashboard-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Booking</th>
+                            <th>Customer</th>
+                            <th>Vehicle</th>
+                            <th>Pickup</th>
+                            <th>Return</th>
+                            <th>Status</th>
+                            <th>Payment</th>
+                            <th>Total</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for booking in recent_bookings %}
+
+                            <tr>
+
+                                <td>
+                                    <strong>
+                                        #{{ booking.id }}
+                                    </strong>
+                                </td>
+
+                                <td>
+
+                                    <div class="table-user">
+
+                                        <div class="table-avatar">
+                                            {{ booking.user.username|first|upper }}
+                                        </div>
+
+                                        <span>
+                                            {{ booking.user.get_full_name|default:booking.user.username }}
+                                        </span>
+
+                                    </div>
+
+                                </td>
+
+                                <td>
+                                    {{ booking.car.name }}
+                                </td>
+
+                                <td>
+                                    {{ booking.pickup_date|date:"M d, Y" }}
+                                </td>
+
+                                <td>
+                                    {{ booking.dropoff_date|date:"M d, Y" }}
+                                </td>
+
+                                <td>
+
+                                    {% if booking.status == "Pending" %}
+                                        <span class="table-status pending">
+                                            Pending
+                                        </span>
+
+                                    {% elif booking.status == "Approved" %}
+                                        <span class="table-status approved">
+                                            Approved
+                                        </span>
+
+                                    {% elif booking.status == "Active" %}
+                                        <span class="table-status active">
+                                            Active
+                                        </span>
+
+                                    {% elif booking.status == "Completed" %}
+                                        <span class="table-status completed">
+                                            Completed
+                                        </span>
+
+                                    {% elif booking.status == "Cancelled" %}
+                                        <span class="table-status cancelled">
+                                            Cancelled
+                                        </span>
+
+                                    {% elif booking.status == "Rejected" %}
+                                        <span class="table-status rejected">
+                                            Rejected
+                                        </span>
+
+                                    {% else %}
+                                        <span class="table-status">
+                                            {{ booking.status }}
+                                        </span>
+                                    {% endif %}
+
+                                </td>
+
+                                <td>
+
+                                    {% if booking.payment_status == "Paid" %}
+                                        <span class="table-status paid">
+                                            Paid
+                                        </span>
+
+                                    {% elif booking.payment_status == "Pending" %}
+                                        <span class="table-status pending">
+                                            Pending
+                                        </span>
+
+                                    {% elif booking.payment_status == "Failed" %}
+                                        <span class="table-status rejected">
+                                            Failed
+                                        </span>
+
+                                    {% elif booking.payment_status == "Refunded" %}
+                                        <span class="table-status cancelled">
+                                            Refunded
+                                        </span>
+
+                                    {% else %}
+                                        <span class="table-status">
+                                            {{ booking.payment_status }}
+                                        </span>
+                                    {% endif %}
+
+                                </td>
+
+                                <td>
+                                    <strong>
+                                        {{ booking.total_price|floatformat:2 }}
+                                    </strong>
+                                </td>
+
+                            </tr>
+
+                        {% empty %}
+
+                            <tr>
+
+                                <td colspan="8">
+
+                                    <div class="table-empty">
+                                        <span>📋</span>
+                                        <p>No bookings found.</p>
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
 
 
-<!-- =========================================================
-     ADMIN DASHBOARD JAVASCRIPT
-========================================================== -->
+    <!-- =====================================================
+         PENDING BOOKINGS
+    ====================================================== -->
 
-<script src="{% static 'core/js/admin_dashboard.js' %}"></script>
+    <section class="section">
+
+        <div class="section-heading">
+
+            <div>
+                <p class="section-label">ACTION REQUIRED</p>
+                <h3>Pending Bookings</h3>
+            </div>
+
+            <span class="section-summary">
+                {{ pending_bookings }} pending
+            </span>
+
+        </div>
+
+
+        <div class="pending-booking-list">
+
+            {% for booking in pending_booking_list %}
+
+                <div class="pending-booking-card">
+
+                    <div class="pending-booking-user">
+
+                        <div class="large-avatar">
+                            {{ booking.user.username|first|upper }}
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                {{ booking.user.get_full_name|default:booking.user.username }}
+                            </strong>
+
+                            <span>
+                                Booking #{{ booking.id }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="pending-booking-details">
+
+                        <div>
+                            <small>Vehicle</small>
+                            <strong>{{ booking.car.name }}</strong>
+                        </div>
+
+                        <div>
+                            <small>Pickup</small>
+                            <strong>
+                                {{ booking.pickup_date|date:"M d, Y" }}
+                            </strong>
+                        </div>
+
+                        <div>
+                            <small>Return</small>
+                            <strong>
+                                {{ booking.dropoff_date|date:"M d, Y" }}
+                            </strong>
+                        </div>
+
+                        <div>
+                            <small>Total</small>
+                            <strong>
+                                {{ booking.total_price|floatformat:2 }}
+                            </strong>
+                        </div>
+
+                    </div>
+
+
+                    <span class="pending-label">
+                        PENDING
+                    </span>
+
+                </div>
+
+            {% empty %}
+
+                <div class="empty-large">
+                    <span>✓</span>
+                    <h3>No pending bookings</h3>
+                    <p>All bookings are currently processed.</p>
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer class="dashboard-footer">
+
+        <div>
+            <strong>Smart Car Rental</strong>
+            <span>Administration Dashboard</span>
+        </div>
+
+        <span>
+            © {% now "Y" %} Smart Car Rental. All rights reserved.
+        </span>
+
+    </footer>
+
+</main>
 
 </body>
 </html>

@@ -617,25 +617,46 @@ class Booking(models.Model):
                 )
 
         # =================================================
-        # PAYMENT VALIDATION
-        # =================================================
+# PAYMENT VALIDATION
+# =================================================
 
         if self.payment_status == "Paid":
 
-            if not self.payment_reference:
-
-                errors["payment_reference"] = (
-                    "A payment reference is required "
-                    "for a paid booking."
-                )
-
+    # A payment method is always required
             if not self.payment_method:
-
                 errors["payment_method"] = (
                     "A payment method is required "
                     "for a paid booking."
-                )
+                    )
 
+    # -------------------------------------------------
+    # ONLINE PAYMENTS
+    # -------------------------------------------------
+    # Chapa and Telebirr must have a transaction
+    # reference.
+    #
+    # Cash does NOT need an online transaction reference.
+    # -------------------------------------------------
+
+            if self.payment_method in ["Chapa", "Telebirr"]:
+                if not self.payment_reference:
+                    errors["payment_reference"] = (
+                        "A payment reference is required "
+                        "for online payments."
+                    )
+
+    # -------------------------------------------------
+    # CASH PAYMENT
+    # -------------------------------------------------
+    # For cash, create an internal reference so the
+    # payment is still properly recorded.
+    # -------------------------------------------------
+
+        if self.payment_method == "Cash":
+            if not self.payment_reference:
+                self.payment_reference = (
+                    f"CASH-{self.id or 'NEW'}"
+                    )
         # =================================================
         # OVERLAPPING BOOKING VALIDATION
         # =================================================

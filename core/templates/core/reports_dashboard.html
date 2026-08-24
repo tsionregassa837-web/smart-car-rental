@@ -1,62 +1,1271 @@
 {% extends "core/base.html" %}
+{% load static %}
 
 {% block title %}
-Reports Dashboard
+Reports & Analytics | Smart Car Rental
 {% endblock %}
 
 {% block content %}
 
-<section class="reports-dashboard">
+<link
+    rel="stylesheet"
+    href="{% static 'core/css/reports_dashboard.css' %}"
+>
 
-    <div class="page-header">
-        <h1>Reports Dashboard</h1>
-        <p>Smart Car Rental Business Overview</p>
-    </div>
+<div class="reports-page">
 
-    <div class="dashboard-grid">
+    <!-- =========================================================
+         REPORT HEADER
+    ========================================================== -->
 
-        <div class="dashboard-card">
-            <h3>Total Bookings</h3>
-            <h2>{{ total_bookings }}</h2>
+    <section class="reports-header">
+
+        <div class="reports-header-left">
+
+            <div class="reports-icon">
+                <span>▥</span>
+            </div>
+
+            <div>
+
+                <div class="reports-breadcrumb">
+                    Administration
+                    <span>›</span>
+                    Reports & Analytics
+                </div>
+
+                <h1>
+                    Reports & Analytics
+                </h1>
+
+                <p>
+                    Monitor rental performance, revenue, fleet utilization,
+                    customer activity and booking trends.
+                </p>
+
+            </div>
+
         </div>
 
-        <div class="dashboard-card">
-            <h3>Total Customers</h3>
-            <h2>{{ total_customers }}</h2>
+
+        <div class="reports-header-meta">
+
+            <span class="report-status-dot"></span>
+
+            <div>
+                <strong>Live Business Data</strong>
+
+                <small>
+                    Updated {{ report_date|date:"M d, Y • H:i" }}
+                </small>
+            </div>
+
         </div>
 
-        <div class="dashboard-card">
-            <h3>Total Cars</h3>
-            <h2>{{ total_cars }}</h2>
+    </section>
+
+
+    <!-- =========================================================
+         REVENUE SUMMARY
+    ========================================================== -->
+
+    <section class="report-section">
+
+        <div class="section-heading">
+
+            <div>
+                <span class="section-eyebrow">
+                    FINANCIAL PERFORMANCE
+                </span>
+
+                <h2>
+                    Revenue Overview
+                </h2>
+            </div>
+
+            <span class="section-description">
+                Payment performance and rental income
+            </span>
+
         </div>
 
-        <div class="dashboard-card">
-            <h3>Available Cars</h3>
-            <h2>{{ available_cars }}</h2>
+
+        <div class="revenue-kpi-grid">
+
+            <div class="revenue-card primary">
+
+                <div class="revenue-card-top">
+
+                    <span class="revenue-card-icon">
+                        $
+                    </span>
+
+                    <span class="revenue-card-label">
+                        Total Revenue
+                    </span>
+
+                </div>
+
+                <strong>
+                    ${{ total_revenue|floatformat:2 }}
+                </strong>
+
+                <small>
+                    From paid bookings
+                </small>
+
+            </div>
+
+
+            <div class="revenue-card">
+
+                <div class="revenue-card-top">
+
+                    <span class="revenue-card-icon">
+                        ✓
+                    </span>
+
+                    <span class="revenue-card-label">
+                        Paid Transactions
+                    </span>
+
+                </div>
+
+                <strong>
+                    {{ paid_payment_count }}
+                </strong>
+
+                <small>
+                    Successfully paid
+                </small>
+
+            </div>
+
+
+            <div class="revenue-card">
+
+                <div class="revenue-card-top">
+
+                    <span class="revenue-card-icon">
+                        ◷
+                    </span>
+
+                    <span class="revenue-card-label">
+                        Pending Revenue
+                    </span>
+
+                </div>
+
+                <strong>
+                    ${{ pending_revenue|floatformat:2 }}
+                </strong>
+
+                <small>
+                    Awaiting payment
+                </small>
+
+            </div>
+
+
+            <div class="revenue-card">
+
+                <div class="revenue-card-top">
+
+                    <span class="revenue-card-icon">
+                        ∅
+                    </span>
+
+                    <span class="revenue-card-label">
+                        Refunded
+                    </span>
+
+                </div>
+
+                <strong>
+                    ${{ refunded_amount|floatformat:2 }}
+                </strong>
+
+                <small>
+                    Refunded bookings
+                </small>
+
+            </div>
+
+
+            <div class="revenue-card">
+
+                <div class="revenue-card-top">
+
+                    <span class="revenue-card-icon">
+                        ≈
+                    </span>
+
+                    <span class="revenue-card-label">
+                        Average Booking
+                    </span>
+
+                </div>
+
+                <strong>
+                    ${{ average_booking_value|floatformat:2 }}
+                </strong>
+
+                <small>
+                    Average paid rental
+                </small>
+
+            </div>
+
         </div>
 
-        <div class="dashboard-card">
-            <h3>Active Rentals</h3>
-            <h2>{{ active_rentals }}</h2>
+    </section>
+
+
+    <!-- =========================================================
+         OPERATIONAL KPIs
+    ========================================================== -->
+
+    <section class="report-section">
+
+        <div class="section-heading">
+
+            <div>
+                <span class="section-eyebrow">
+                    OPERATIONS
+                </span>
+
+                <h2>
+                    Rental Performance
+                </h2>
+            </div>
+
+            <span class="section-description">
+                Current operational position
+            </span>
+
         </div>
 
-        <div class="dashboard-card">
-            <h3>Completed Rentals</h3>
-            <h2>{{ completed_rentals }}</h2>
+
+        <div class="operations-grid">
+
+            <div class="operation-card">
+
+                <span class="operation-icon">
+                    ▣
+                </span>
+
+                <div>
+                    <small>Total Bookings</small>
+                    <strong>{{ total_bookings }}</strong>
+                    <span>All reservations</span>
+                </div>
+
+            </div>
+
+
+            <div class="operation-card">
+
+                <span class="operation-icon">
+                    ⏳
+                </span>
+
+                <div>
+                    <small>Pending</small>
+                    <strong>{{ pending_bookings }}</strong>
+                    <span>Awaiting approval</span>
+                </div>
+
+            </div>
+
+
+            <div class="operation-card">
+
+                <span class="operation-icon">
+                    🚗
+                </span>
+
+                <div>
+                    <small>Active Rentals</small>
+                    <strong>{{ active_rentals }}</strong>
+                    <span>Currently rented</span>
+                </div>
+
+            </div>
+
+
+            <div class="operation-card">
+
+                <span class="operation-icon">
+                    ✓
+                </span>
+
+                <div>
+                    <small>Completed</small>
+                    <strong>{{ completed_rentals }}</strong>
+                    <span>Successfully returned</span>
+                </div>
+
+            </div>
+
+
+            <div class="operation-card">
+
+                <span class="operation-icon">
+                    ×
+                </span>
+
+                <div>
+                    <small>Cancelled</small>
+                    <strong>{{ cancelled_bookings }}</strong>
+                    <span>Cancelled reservations</span>
+                </div>
+
+            </div>
+
+
+            <div class="operation-card">
+
+                <span class="operation-icon">
+                    !
+                </span>
+
+                <div>
+                    <small>Rejected</small>
+                    <strong>{{ rejected_bookings }}</strong>
+                    <span>Rejected reservations</span>
+                </div>
+
+            </div>
+
         </div>
 
-        <div class="dashboard-card">
-            <h3>Cancelled Bookings</h3>
-            <h2>{{ cancelled_bookings }}</h2>
+    </section>
+
+
+    <!-- =========================================================
+         CHARTS
+    ========================================================== -->
+
+    <section class="charts-section">
+
+        <div class="section-heading">
+
+            <div>
+                <span class="section-eyebrow">
+                    BUSINESS ANALYTICS
+                </span>
+
+                <h2>
+                    Performance Trends
+                </h2>
+            </div>
+
+            <span class="section-description">
+                Visual analysis of rental activity
+            </span>
+
         </div>
 
-        <div class="dashboard-card">
-            <h3>Total Revenue</h3>
-            <h2>${{ total_revenue }}</h2>
+
+        <div class="charts-grid">
+
+
+            <!-- REVENUE TREND -->
+
+            <div class="chart-card chart-large">
+
+                <div class="chart-card-header">
+
+                    <div>
+                        <h3>Revenue Trend</h3>
+
+                        <p>
+                            Monthly paid rental revenue
+                        </p>
+                    </div>
+
+                    <span class="chart-badge">
+                        Revenue
+                    </span>
+
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+
+            </div>
+
+
+            <!-- BOOKING TREND -->
+
+            <div class="chart-card chart-large">
+
+                <div class="chart-card-header">
+
+                    <div>
+                        <h3>Booking Trend</h3>
+
+                        <p>
+                            Monthly reservation activity
+                        </p>
+                    </div>
+
+                    <span class="chart-badge">
+                        Bookings
+                    </span>
+
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="bookingChart"></canvas>
+                </div>
+
+            </div>
+
+
+            <!-- BOOKING STATUS -->
+
+            <div class="chart-card">
+
+                <div class="chart-card-header">
+
+                    <div>
+                        <h3>Booking Status</h3>
+
+                        <p>
+                            Current reservation distribution
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="chart-container chart-doughnut">
+                    <canvas id="bookingStatusChart"></canvas>
+                </div>
+
+            </div>
+
+
+            <!-- PAYMENT STATUS -->
+
+            <div class="chart-card">
+
+                <div class="chart-card-header">
+
+                    <div>
+                        <h3>Payment Status</h3>
+
+                        <p>
+                            Payment transaction distribution
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="chart-container chart-doughnut">
+                    <canvas id="paymentStatusChart"></canvas>
+                </div>
+
+            </div>
+
+
+            <!-- FLEET STATUS -->
+
+            <div class="chart-card">
+
+                <div class="chart-card-header">
+
+                    <div>
+                        <h3>Fleet Utilization</h3>
+
+                        <p>
+                            Vehicle unit status
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="chart-container chart-doughnut">
+                    <canvas id="fleetStatusChart"></canvas>
+                </div>
+
+            </div>
+
         </div>
 
-    </div>
+    </section>
 
-</section>
+
+    <!-- =========================================================
+         FLEET & CUSTOMER SUMMARY
+    ========================================================== -->
+
+    <section class="report-section">
+
+        <div class="section-heading">
+
+            <div>
+                <span class="section-eyebrow">
+                    BUSINESS RESOURCES
+                </span>
+
+                <h2>
+                    Fleet & Customer Summary
+                </h2>
+            </div>
+
+        </div>
+
+
+        <div class="summary-grid">
+
+
+            <!-- FLEET -->
+
+            <div class="summary-card">
+
+                <div class="summary-card-header">
+
+                    <div>
+                        <span class="summary-icon">
+                            🚗
+                        </span>
+
+                        <div>
+                            <h3>Fleet Overview</h3>
+                            <p>Vehicle availability</p>
+                        </div>
+                    </div>
+
+                    <a href="{% url 'fleet_management' %}">
+                        Manage Fleet →
+                    </a>
+
+                </div>
+
+
+                <div class="summary-list">
+
+                    <div>
+                        <span>Total Fleet Units</span>
+                        <strong>{{ total_fleet_units }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Vehicle Types</span>
+                        <strong>{{ total_vehicle_types }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Available</span>
+                        <strong>{{ available_cars }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Rented</span>
+                        <strong>{{ rented_cars }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Maintenance</span>
+                        <strong>{{ maintenance_cars }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Inactive</span>
+                        <strong>{{ inactive_cars }}</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- CUSTOMERS -->
+
+            <div class="summary-card">
+
+                <div class="summary-card-header">
+
+                    <div>
+                        <span class="summary-icon">
+                            ♙
+                        </span>
+
+                        <div>
+                            <h3>Customer Overview</h3>
+                            <p>Customer activity</p>
+                        </div>
+                    </div>
+
+                    <a href="{% url 'customer_management' %}">
+                        Manage Customers →
+                    </a>
+
+                </div>
+
+
+                <div class="summary-list">
+
+                    <div>
+                        <span>Total Customers</span>
+                        <strong>{{ total_customers }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Active Accounts</span>
+                        <strong>{{ active_customers }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Inactive Accounts</span>
+                        <strong>{{ inactive_customers }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Customers With Rentals</span>
+                        <strong>{{ customers_with_bookings }}</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================================
+         TOP VEHICLES
+    ========================================================== -->
+
+    <section class="report-section">
+
+        <div class="section-heading">
+
+            <div>
+                <span class="section-eyebrow">
+                    FLEET PERFORMANCE
+                </span>
+
+                <h2>
+                    Top Performing Vehicles
+                </h2>
+            </div>
+
+            <span class="section-description">
+                Vehicles with the highest booking activity
+            </span>
+
+        </div>
+
+
+        <div class="data-card">
+
+            <div class="table-scroll">
+
+                <table class="report-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Vehicle</th>
+                            <th>Plate Number</th>
+                            <th>Fleet Status</th>
+                            <th>Total Units</th>
+                            <th>Available</th>
+                            <th>Bookings</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for car in top_cars %}
+
+                            <tr>
+
+                                <td>
+
+                                    <div class="vehicle-cell">
+
+                                        <div class="vehicle-avatar">
+                                            🚗
+                                        </div>
+
+                                        <div>
+                                            <strong>
+                                                {{ car.name }}
+                                            </strong>
+
+                                            <span>
+                                                {{ car.model_year }}
+                                            </span>
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+                                <td>
+                                    {{ car.plate_number|default:"—" }}
+                                </td>
+
+                                <td>
+
+                                    <span class="status-badge
+                                        {% if car.fleet_status == 'Available' %}
+                                            status-available
+                                        {% elif car.fleet_status == 'Rented' %}
+                                            status-rented
+                                        {% elif car.fleet_status == 'Maintenance' %}
+                                            status-maintenance
+                                        {% else %}
+                                            status-inactive
+                                        {% endif %}
+                                    ">
+                                        {{ car.fleet_status }}
+                                    </span>
+
+                                </td>
+
+                                <td>
+                                    {{ car.total_quantity }}
+                                </td>
+
+                                <td>
+                                    {{ car.available_quantity }}
+                                </td>
+
+                                <td>
+                                    <strong>
+                                        {{ car.booking_count }}
+                                    </strong>
+                                </td>
+
+                            </tr>
+
+                        {% empty %}
+
+                            <tr>
+                                <td colspan="6" class="table-empty">
+                                    No vehicle data available.
+                                </td>
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================================
+         RECENT BOOKINGS
+    ========================================================== -->
+
+    <section class="report-section">
+
+        <div class="section-heading">
+
+            <div>
+                <span class="section-eyebrow">
+                    RECENT ACTIVITY
+                </span>
+
+                <h2>
+                    Recent Bookings
+                </h2>
+            </div>
+
+            <a
+                href="{% url 'booking_management' %}"
+                class="section-action"
+            >
+                View All Bookings →
+            </a>
+
+        </div>
+
+
+        <div class="data-card">
+
+            <div class="table-scroll">
+
+                <table class="report-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Customer</th>
+                            <th>Vehicle</th>
+                            <th>Rental Period</th>
+                            <th>Booking Status</th>
+                            <th>Payment</th>
+                            <th>Total</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for booking in recent_bookings %}
+
+                            <tr>
+
+                                <td>
+
+                                    <div class="customer-cell">
+
+                                        <div class="customer-avatar">
+                                            {{ booking.first_name|first|upper }}
+                                        </div>
+
+                                        <div>
+                                            <strong>
+                                                {{ booking.first_name }}
+                                                {{ booking.last_name }}
+                                            </strong>
+
+                                            <span>
+                                                {{ booking.email }}
+                                            </span>
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <td>
+                                    {{ booking.car.name|default:booking.car_type }}
+                                </td>
+
+
+                                <td>
+
+                                    <div class="date-cell">
+
+                                        <span>
+                                            {{ booking.pickup_date|date:"M d, Y" }}
+                                        </span>
+
+                                        <small>
+                                            to
+                                            {{ booking.dropoff_date|date:"M d, Y" }}
+                                        </small>
+
+                                    </div>
+
+                                </td>
+
+
+                                <td>
+
+                                    <span class="status-badge status-{{ booking.status|lower }}">
+                                        {{ booking.status }}
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+                                    <span class="payment-badge payment-{{ booking.payment_status|lower }}">
+                                        {{ booking.payment_status }}
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+                                    <strong>
+                                        ${{ booking.total_price|floatformat:2 }}
+                                    </strong>
+                                </td>
+
+                            </tr>
+
+                        {% empty %}
+
+                            <tr>
+                                <td colspan="6" class="table-empty">
+                                    No booking activity available.
+                                </td>
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================================
+         FOOTER
+    ========================================================== -->
+
+    <footer class="reports-footer">
+
+        <span>
+            Smart Car Rental
+        </span>
+
+        <span>
+            • Reports & Analytics
+        </span>
+
+        <span>
+            • {% now "Y" %}
+        </span>
+
+    </footer>
+
+</div>
+
+
+<!-- =============================================================
+     CHART.JS
+============================================================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{{ monthly_revenue_labels|json_script:"monthlyRevenueLabels" }}
+{{ monthly_revenue_values|json_script:"monthlyRevenueValues" }}
+
+{{ monthly_booking_labels|json_script:"monthlyBookingLabels" }}
+{{ monthly_booking_values|json_script:"monthlyBookingValues" }}
+
+{{ booking_status_data|json_script:"bookingStatusData" }}
+{{ payment_status_data|json_script:"paymentStatusData" }}
+{{ fleet_status_data|json_script:"fleetStatusData" }}
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const revenueLabels =
+        JSON.parse(
+            document.getElementById(
+                "monthlyRevenueLabels"
+            ).textContent
+        );
+
+    const revenueValues =
+        JSON.parse(
+            document.getElementById(
+                "monthlyRevenueValues"
+            ).textContent
+        );
+
+    const bookingLabels =
+        JSON.parse(
+            document.getElementById(
+                "monthlyBookingLabels"
+            ).textContent
+        );
+
+    const bookingValues =
+        JSON.parse(
+            document.getElementById(
+                "monthlyBookingValues"
+            ).textContent
+        );
+
+    const bookingStatus =
+        JSON.parse(
+            document.getElementById(
+                "bookingStatusData"
+            ).textContent
+        );
+
+    const paymentStatus =
+        JSON.parse(
+            document.getElementById(
+                "paymentStatusData"
+            ).textContent
+        );
+
+    const fleetStatus =
+        JSON.parse(
+            document.getElementById(
+                "fleetStatusData"
+            ).textContent
+        );
+
+
+    /* =========================================================
+       REVENUE CHART
+    ========================================================== */
+
+    new Chart(
+        document.getElementById("revenueChart"),
+        {
+            type: "line",
+
+            data: {
+                labels: revenueLabels,
+
+                datasets: [
+                    {
+                        label: "Revenue",
+
+                        data: revenueValues,
+
+                        borderWidth: 3,
+
+                        tension: 0.35,
+
+                        fill: true,
+
+                        pointRadius: 4,
+
+                        pointHoverRadius: 6
+                    }
+                ]
+            },
+
+            options: {
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+
+                scales: {
+
+                    y: {
+                        beginAtZero: true,
+
+                        ticks: {
+                            callback: function(value) {
+                                return "$" + value;
+                            }
+                        }
+                    },
+
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        }
+    );
+
+
+    /* =========================================================
+       BOOKING CHART
+    ========================================================== */
+
+    new Chart(
+        document.getElementById("bookingChart"),
+        {
+            type: "bar",
+
+            data: {
+                labels: bookingLabels,
+
+                datasets: [
+                    {
+                        label: "Bookings",
+
+                        data: bookingValues,
+
+                        borderRadius: 7,
+
+                        borderWidth: 0
+                    }
+                ]
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+
+                scales: {
+
+                    y: {
+                        beginAtZero: true,
+
+                        ticks: {
+                            precision: 0
+                        }
+                    },
+
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        }
+    );
+
+
+    /* =========================================================
+       BOOKING STATUS
+    ========================================================== */
+
+    new Chart(
+        document.getElementById(
+            "bookingStatusChart"
+        ),
+        {
+            type: "doughnut",
+
+            data: {
+                labels: Object.keys(
+                    bookingStatus
+                ),
+
+                datasets: [
+                    {
+                        data: Object.values(
+                            bookingStatus
+                        ),
+
+                        borderWidth: 2
+                    }
+                ]
+            },
+
+            options: {
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                cutout: "68%",
+
+                plugins: {
+                    legend: {
+                        position: "bottom"
+                    }
+                }
+            }
+        }
+    );
+
+
+    /* =========================================================
+       PAYMENT STATUS
+    ========================================================== */
+
+    new Chart(
+        document.getElementById(
+            "paymentStatusChart"
+        ),
+        {
+            type: "doughnut",
+
+            data: {
+                labels: Object.keys(
+                    paymentStatus
+                ),
+
+                datasets: [
+                    {
+                        data: Object.values(
+                            paymentStatus
+                        ),
+
+                        borderWidth: 2
+                    }
+                ]
+            },
+
+            options: {
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                cutout: "68%",
+
+                plugins: {
+                    legend: {
+                        position: "bottom"
+                    }
+                }
+            }
+        }
+    );
+
+
+    /* =========================================================
+       FLEET STATUS
+    ========================================================== */
+
+    new Chart(
+        document.getElementById(
+            "fleetStatusChart"
+        ),
+        {
+            type: "doughnut",
+
+            data: {
+                labels: Object.keys(
+                    fleetStatus
+                ),
+
+                datasets: [
+                    {
+                        data: Object.values(
+                            fleetStatus
+                        ),
+
+                        borderWidth: 2
+                    }
+                ]
+            },
+
+            options: {
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                cutout: "68%",
+
+                plugins: {
+                    legend: {
+                        position: "bottom"
+                    }
+                }
+            }
+        }
+    );
+
+});
+
+</script>
 
 {% endblock %}

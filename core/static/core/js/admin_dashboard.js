@@ -1,958 +1,933 @@
-document.addEventListener("DOMContentLoaded", function () {
+/* ============================================================
+   SMART CAR RENTAL
+   ADMIN DASHBOARD JAVASCRIPT
+   Professional / Production-Ready Frontend Behavior
+   ============================================================ */
 
-    /* =====================================================
-       ELEMENTS
-    ====================================================== */
+(function () {
+    "use strict";
 
-    const notificationButton =
-        document.getElementById("notificationButton");
+    /* =========================================================
+       DOM READY
+       ========================================================= */
 
-    const notificationDropdown =
-        document.getElementById("notificationDropdown");
+    document.addEventListener("DOMContentLoaded", function () {
 
-    const profileButton =
-        document.getElementById("adminProfileButton") ||
-        document.getElementById("profileButton");
+        /* =====================================================
+           ELEMENTS
+           ===================================================== */
 
-    const profileDropdown =
-        document.getElementById("adminProfileDropdown") ||
-        document.getElementById("profileDropdown");
+        const sidebar = document.getElementById("dashboardSidebar");
+        const mobileMenuButton = document.getElementById("mobileMenuButton");
 
-    const searchInput =
-        document.getElementById("dashboardSearch") ||
-        document.getElementById("searchInput");
+        const dashboardSearch = document.getElementById("dashboardSearch");
+        const searchClear = document.getElementById("searchClear");
+        const searchResults = document.getElementById("searchResults");
+        const searchNoResults = document.getElementById("searchNoResults");
 
-    const searchResults =
-        document.getElementById("searchResults");
+        const notificationButton =
+            document.getElementById("notificationButton");
 
-    const searchClear =
-        document.getElementById("searchClear");
+        const notificationDropdown =
+            document.getElementById("notificationDropdown");
 
-    const mobileMenuButton =
-        document.getElementById("mobileMenuButton");
+        const adminProfileButton =
+            document.getElementById("adminProfileButton");
 
-    const sidebar =
-        document.querySelector(".dashboard-sidebar");
+        const adminProfileDropdown =
+            document.getElementById("adminProfileDropdown");
 
 
-    /* =====================================================
-       HELPER FUNCTIONS
-    ====================================================== */
+        /* =====================================================
+           UTILITY FUNCTIONS
+           ===================================================== */
 
-    function closeNotificationDropdown() {
-        if (notificationDropdown) {
-            notificationDropdown.classList.remove("show");
-            notificationDropdown.classList.remove("open");
+        function isOpen(element) {
+            return element && element.classList.contains("open");
         }
 
+
+        function openElement(element) {
+            if (!element) {
+                return;
+            }
+
+            element.classList.add("open");
+        }
+
+
+        function closeElement(element) {
+            if (!element) {
+                return;
+            }
+
+            element.classList.remove("open");
+        }
+
+
+        function toggleElement(element) {
+            if (!element) {
+                return;
+            }
+
+            element.classList.toggle("open");
+        }
+
+
+        function setAriaExpanded(button, expanded) {
+            if (!button) {
+                return;
+            }
+
+            button.setAttribute(
+                "aria-expanded",
+                expanded ? "true" : "false"
+            );
+        }
+
+
+        /* =====================================================
+           SIDEBAR
+           ===================================================== */
+
+        function openSidebar() {
+            if (!sidebar) {
+                return;
+            }
+
+            sidebar.classList.add("open");
+
+            if (mobileMenuButton) {
+                setAriaExpanded(mobileMenuButton, true);
+            }
+
+            document.body.classList.add("sidebar-open");
+        }
+
+
+        function closeSidebar() {
+            if (!sidebar) {
+                return;
+            }
+
+            sidebar.classList.remove("open");
+
+            if (mobileMenuButton) {
+                setAriaExpanded(mobileMenuButton, false);
+            }
+
+            document.body.classList.remove("sidebar-open");
+        }
+
+
+        function toggleSidebar() {
+            if (!sidebar) {
+                return;
+            }
+
+            if (isOpen(sidebar)) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        }
+
+
+        if (mobileMenuButton && sidebar) {
+            mobileMenuButton.addEventListener("click", function (event) {
+                event.stopPropagation();
+                toggleSidebar();
+            });
+        }
+
+
+        /* =====================================================
+           CLOSE SIDEBAR WHEN CLICKING OUTSIDE
+           ===================================================== */
+
+        document.addEventListener("click", function (event) {
+
+            if (!sidebar || !mobileMenuButton) {
+                return;
+            }
+
+            const clickedInsideSidebar =
+                sidebar.contains(event.target);
+
+            const clickedMenuButton =
+                mobileMenuButton.contains(event.target);
+
+            if (
+                window.innerWidth <= 1024 &&
+                isOpen(sidebar) &&
+                !clickedInsideSidebar &&
+                !clickedMenuButton
+            ) {
+                closeSidebar();
+            }
+        });
+
+
+        /* =====================================================
+           RESET SIDEBAR ON DESKTOP
+           ===================================================== */
+
+        window.addEventListener("resize", function () {
+
+            if (window.innerWidth > 1024) {
+                closeSidebar();
+            }
+
+        });
+
+
+        /* =====================================================
+           DASHBOARD SEARCH
+           ===================================================== */
+
+        function getSearchItems() {
+
+            if (!searchResults) {
+                return [];
+            }
+
+            return Array.from(
+                searchResults.querySelectorAll(
+                    ".search-result-item"
+                )
+            );
+
+        }
+
+
+        function normalizeSearchText(value) {
+
+            return String(value || "")
+                .toLowerCase()
+                .trim();
+
+        }
+
+
+        function performSearch() {
+
+            if (!dashboardSearch || !searchResults) {
+                return;
+            }
+
+            const query = normalizeSearchText(
+                dashboardSearch.value
+            );
+
+            const items = getSearchItems();
+
+            let visibleCount = 0;
+
+
+            /* -----------------------------------------------
+               EMPTY SEARCH
+               ----------------------------------------------- */
+
+            if (query === "") {
+
+                items.forEach(function (item) {
+                    item.hidden = false;
+                    item.classList.remove("search-match");
+                });
+
+                if (searchNoResults) {
+                    searchNoResults.hidden = true;
+                }
+
+                searchResults.classList.remove("has-results");
+
+                return;
+            }
+
+
+            /* -----------------------------------------------
+               FILTER RESULTS
+               ----------------------------------------------- */
+
+            items.forEach(function (item) {
+
+                const searchData =
+                    normalizeSearchText(
+                        item.getAttribute("data-search")
+                    );
+
+                const itemText =
+                    normalizeSearchText(
+                        item.textContent
+                    );
+
+                const matches =
+                    searchData.includes(query) ||
+                    itemText.includes(query);
+
+
+                if (matches) {
+
+                    item.hidden = false;
+
+                    item.classList.add(
+                        "search-match"
+                    );
+
+                    visibleCount++;
+
+                } else {
+
+                    item.hidden = true;
+
+                    item.classList.remove(
+                        "search-match"
+                    );
+
+                }
+
+            });
+
+
+            /* -----------------------------------------------
+               NO RESULTS
+               ----------------------------------------------- */
+
+            if (searchNoResults) {
+
+                searchNoResults.hidden =
+                    visibleCount !== 0;
+
+            }
+
+
+            searchResults.classList.add("has-results");
+        }
+
+
+        /* =====================================================
+           OPEN SEARCH
+           ===================================================== */
+
+        function openSearch() {
+
+            if (!dashboardSearch) {
+                return;
+            }
+
+            dashboardSearch.focus();
+
+            if (dashboardSearch.value.trim() !== "") {
+                performSearch();
+            }
+        }
+
+
+        /* =====================================================
+           CLEAR SEARCH
+           ===================================================== */
+
+        function clearSearch() {
+
+            if (!dashboardSearch) {
+                return;
+            }
+
+            dashboardSearch.value = "";
+
+            performSearch();
+
+            dashboardSearch.focus();
+        }
+
+
+        if (dashboardSearch) {
+
+            dashboardSearch.addEventListener(
+                "input",
+                performSearch
+            );
+
+
+            dashboardSearch.addEventListener(
+                "focus",
+                function () {
+
+                    if (
+                        dashboardSearch.value.trim() !== ""
+                    ) {
+                        performSearch();
+                    }
+
+                }
+            );
+
+
+            dashboardSearch.addEventListener(
+                "keydown",
+                function (event) {
+
+                    /* Escape clears search */
+
+                    if (event.key === "Escape") {
+
+                        if (
+                            dashboardSearch.value.trim() !== ""
+                        ) {
+                            clearSearch();
+                        } else {
+                            dashboardSearch.blur();
+                        }
+
+                    }
+
+                }
+            );
+        }
+
+
+        if (searchClear) {
+
+            searchClear.addEventListener(
+                "click",
+                function (event) {
+
+                    event.preventDefault();
+                    clearSearch();
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           CTRL + K / CMD + K
+           ===================================================== */
+
+        document.addEventListener(
+            "keydown",
+            function (event) {
+
+                const modifier =
+                    event.ctrlKey || event.metaKey;
+
+
+                if (
+                    modifier &&
+                    event.key.toLowerCase() === "k"
+                ) {
+
+                    event.preventDefault();
+
+                    openSearch();
+
+                }
+
+            }
+        );
+
+
+        /* =====================================================
+           SEARCH RESULT CLICK
+           ===================================================== */
+
+        if (searchResults) {
+
+            searchResults.addEventListener(
+                "click",
+                function (event) {
+
+                    const result =
+                        event.target.closest(
+                            ".search-result-item"
+                        );
+
+                    if (!result) {
+                        return;
+                    }
+
+                    /*
+                     * Let Django handle navigation normally.
+                     * We only close the search UI.
+                     */
+
+                    searchResults.classList.remove(
+                        "has-results"
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           NOTIFICATION DROPDOWN
+           ===================================================== */
+
+        function openNotifications() {
+
+            if (!notificationDropdown) {
+                return;
+            }
+
+            closeProfileDropdown();
+
+            openElement(notificationDropdown);
+
+            setAriaExpanded(
+                notificationButton,
+                true
+            );
+
+        }
+
+
+        function closeNotifications() {
+
+            if (!notificationDropdown) {
+                return;
+            }
+
+            closeElement(notificationDropdown);
+
+            setAriaExpanded(
+                notificationButton,
+                false
+            );
+
+        }
+
+
+        function toggleNotifications() {
+
+            if (!notificationDropdown) {
+                return;
+            }
+
+            if (isOpen(notificationDropdown)) {
+
+                closeNotifications();
+
+            } else {
+
+                openNotifications();
+
+            }
+
+        }
+
+
         if (notificationButton) {
+
+            notificationButton.addEventListener(
+                "click",
+                function (event) {
+
+                    event.stopPropagation();
+
+                    toggleNotifications();
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           ADMIN PROFILE DROPDOWN
+           ===================================================== */
+
+        function openProfileDropdown() {
+
+            if (!adminProfileDropdown) {
+                return;
+            }
+
+            closeNotifications();
+
+            openElement(adminProfileDropdown);
+
+            setAriaExpanded(
+                adminProfileButton,
+                true
+            );
+
+        }
+
+
+        function closeProfileDropdown() {
+
+            if (!adminProfileDropdown) {
+                return;
+            }
+
+            closeElement(adminProfileDropdown);
+
+            setAriaExpanded(
+                adminProfileButton,
+                false
+            );
+
+        }
+
+
+        function toggleProfileDropdown() {
+
+            if (!adminProfileDropdown) {
+                return;
+            }
+
+            if (isOpen(adminProfileDropdown)) {
+
+                closeProfileDropdown();
+
+            } else {
+
+                openProfileDropdown();
+
+            }
+
+        }
+
+
+        if (adminProfileButton) {
+
+            adminProfileButton.addEventListener(
+                "click",
+                function (event) {
+
+                    event.stopPropagation();
+
+                    toggleProfileDropdown();
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           GLOBAL OUTSIDE CLICK
+           ===================================================== */
+
+        document.addEventListener(
+            "click",
+            function (event) {
+
+                /* ---------------------------------------------
+                   Notifications
+                   --------------------------------------------- */
+
+                if (
+                    notificationDropdown &&
+                    notificationButton
+                ) {
+
+                    const clickedNotification =
+                        notificationDropdown.contains(
+                            event.target
+                        );
+
+                    const clickedNotificationButton =
+                        notificationButton.contains(
+                            event.target
+                        );
+
+
+                    if (
+                        isOpen(notificationDropdown) &&
+                        !clickedNotification &&
+                        !clickedNotificationButton
+                    ) {
+
+                        closeNotifications();
+
+                    }
+
+                }
+
+
+                /* ---------------------------------------------
+                   Admin Profile
+                   --------------------------------------------- */
+
+                if (
+                    adminProfileDropdown &&
+                    adminProfileButton
+                ) {
+
+                    const clickedProfile =
+                        adminProfileDropdown.contains(
+                            event.target
+                        );
+
+                    const clickedProfileButton =
+                        adminProfileButton.contains(
+                            event.target
+                        );
+
+
+                    if (
+                        isOpen(adminProfileDropdown) &&
+                        !clickedProfile &&
+                        !clickedProfileButton
+                    ) {
+
+                        closeProfileDropdown();
+
+                    }
+
+                }
+
+            }
+        );
+
+
+        /* =====================================================
+           ESCAPE KEY
+           ===================================================== */
+
+        document.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (event.key !== "Escape") {
+                    return;
+                }
+
+
+                /* Close notifications */
+
+                if (isOpen(notificationDropdown)) {
+                    closeNotifications();
+                }
+
+
+                /* Close profile */
+
+                if (isOpen(adminProfileDropdown)) {
+                    closeProfileDropdown();
+                }
+
+
+                /* Close sidebar on mobile */
+
+                if (
+                    sidebar &&
+                    window.innerWidth <= 1024 &&
+                    isOpen(sidebar)
+                ) {
+
+                    closeSidebar();
+
+                }
+
+            }
+        );
+
+
+        /* =====================================================
+           ACTIVE SIDEBAR NAVIGATION
+           ===================================================== */
+
+        function updateActiveNavigation() {
+
+            const sidebarLinks =
+                document.querySelectorAll(
+                    ".sidebar-navigation .sidebar-link"
+                );
+
+
+            if (!sidebarLinks.length) {
+                return;
+            }
+
+
+            const currentPath =
+                window.location.pathname;
+
+
+            sidebarLinks.forEach(function (link) {
+
+                const href =
+                    link.getAttribute("href");
+
+
+                if (!href || href === "#") {
+                    return;
+                }
+
+
+                try {
+
+                    const linkURL =
+                        new URL(
+                            href,
+                            window.location.origin
+                        );
+
+
+                    /*
+                     * Exact match first.
+                     */
+
+                    const isExactMatch =
+                        linkURL.pathname === currentPath;
+
+
+                    /*
+                     * For dashboard sections, allow
+                     * nested URLs to remain active.
+                     */
+
+                    const isNestedMatch =
+                        linkURL.pathname !== "/" &&
+                        currentPath.startsWith(
+                            linkURL.pathname
+                        );
+
+
+                    if (
+                        isExactMatch ||
+                        isNestedMatch
+                    ) {
+
+                        link.classList.add("active");
+
+                    } else {
+
+                        /*
+                         * Do not remove the active class from
+                         * explicitly marked dashboard link when
+                         * Django is rendering the dashboard.
+                         */
+
+                        if (
+                            currentPath !== "/" &&
+                            linkURL.pathname !== currentPath
+                        ) {
+
+                            link.classList.remove(
+                                "active"
+                            );
+
+                        }
+
+                    }
+
+                } catch (error) {
+
+                    /*
+                     * Invalid URL should not break
+                     * the rest of dashboard JavaScript.
+                     */
+
+                    console.warn(
+                        "Invalid navigation URL:",
+                        href
+                    );
+
+                }
+
+            });
+
+        }
+
+
+        updateActiveNavigation();
+
+
+        /* =====================================================
+           SEARCH VISIBILITY HELPERS
+           ===================================================== */
+
+        function updateSearchClearButton() {
+
+            if (
+                !dashboardSearch ||
+                !searchClear
+            ) {
+                return;
+            }
+
+            const hasValue =
+                dashboardSearch.value.trim() !== "";
+
+
+            searchClear.classList.toggle(
+                "visible",
+                hasValue
+            );
+
+        }
+
+
+        if (dashboardSearch) {
+
+            dashboardSearch.addEventListener(
+                "input",
+                updateSearchClearButton
+            );
+
+        }
+
+
+        updateSearchClearButton();
+
+
+        /* =====================================================
+           NOTIFICATION COUNT ACCESSIBILITY
+           ===================================================== */
+
+        if (
+            notificationButton &&
+            notificationDropdown
+        ) {
+
             notificationButton.setAttribute(
                 "aria-expanded",
                 "false"
             );
-        }
-    }
 
-
-    function closeProfileDropdown() {
-        if (profileDropdown) {
-            profileDropdown.classList.remove("show");
-            profileDropdown.classList.remove("open");
         }
 
-        if (profileButton) {
-            profileButton.setAttribute(
+
+        /* =====================================================
+           PROFILE ACCESSIBILITY
+           ===================================================== */
+
+        if (
+            adminProfileButton &&
+            adminProfileDropdown
+        ) {
+
+            adminProfileButton.setAttribute(
                 "aria-expanded",
                 "false"
             );
-        }
-    }
 
-
-    function closeSearchResults() {
-        if (searchResults) {
-            searchResults.classList.remove("show");
-        }
-    }
-
-
-    function closeAllDropdowns() {
-        closeNotificationDropdown();
-        closeProfileDropdown();
-        closeSearchResults();
-    }
-
-
-    /* =====================================================
-       NOTIFICATIONS
-    ====================================================== */
-
-    if (notificationButton) {
-
-        notificationButton.addEventListener(
-            "click",
-            function (event) {
-
-                event.preventDefault();
-                event.stopPropagation();
-
-                closeProfileDropdown();
-                closeSearchResults();
-
-                if (!notificationDropdown) {
-                    window.location.href = "/booking-management/";
-                    return;
-                }
-
-                const isOpen =
-                    notificationDropdown.classList.contains("show") ||
-                    notificationDropdown.classList.contains("open");
-
-                if (isOpen) {
-
-                    closeNotificationDropdown();
-
-                } else {
-
-                    notificationDropdown.classList.add("show");
-
-                    notificationButton.setAttribute(
-                        "aria-expanded",
-                        "true"
-                    );
-                }
-            }
-        );
-    }
-
-
-    /* =====================================================
-       ADMIN PROFILE
-    ====================================================== */
-
-    if (profileButton) {
-
-        profileButton.addEventListener(
-            "click",
-            function (event) {
-
-                event.preventDefault();
-                event.stopPropagation();
-
-                closeNotificationDropdown();
-                closeSearchResults();
-
-                if (!profileDropdown) {
-                    return;
-                }
-
-                const isOpen =
-                    profileDropdown.classList.contains("show") ||
-                    profileDropdown.classList.contains("open");
-
-                if (isOpen) {
-
-                    closeProfileDropdown();
-
-                } else {
-
-                    profileDropdown.classList.add("show");
-                    profileDropdown.classList.add("open");
-
-                    profileButton.setAttribute(
-                        "aria-expanded",
-                        "true"
-                    );
-                }
-            }
-        );
-    }
-
-
-    /* =====================================================
-       CLOSE DROPDOWNS WHEN CLICKING OUTSIDE
-    ====================================================== */
-
-    document.addEventListener(
-        "click",
-        function (event) {
-
-            if (
-                notificationDropdown &&
-                notificationButton &&
-                !notificationDropdown.contains(event.target) &&
-                !notificationButton.contains(event.target)
-            ) {
-                closeNotificationDropdown();
-            }
-
-
-            if (
-                profileDropdown &&
-                profileButton &&
-                !profileDropdown.contains(event.target) &&
-                !profileButton.contains(event.target)
-            ) {
-                closeProfileDropdown();
-            }
-
-
-            if (
-                searchResults &&
-                searchInput &&
-                !searchResults.contains(event.target) &&
-                !searchInput.contains(event.target)
-            ) {
-                closeSearchResults();
-            }
-        }
-    );
-
-
-    /* =====================================================
-       SEARCH DATA
-    ====================================================== */
-
-    const searchableItems = [
-
-        {
-            title: "Dashboard",
-            type: "Navigation",
-            icon: "▦",
-            url: "/admin-dashboard/"
-        },
-
-        {
-            title: "Fleet Management",
-            type: "Navigation",
-            icon: "🚗",
-            url: "/fleet-management/"
-        },
-
-        {
-            title: "Booking Management",
-            type: "Navigation",
-            icon: "📋",
-            url: "/booking-management/"
-        },
-
-        {
-            title: "Customer Management",
-            type: "Navigation",
-            icon: "👥",
-            url: "/customer-management/"
-        },
-
-        {
-            title: "Payment Management",
-            type: "Navigation",
-            icon: "💳",
-            url: "/payment-management/"
-        },
-
-        {
-            title: "Reports",
-            type: "Navigation",
-            icon: "📈",
-            url: "/reports/"
-        },
-
-        {
-            title: "Settings",
-            type: "Navigation",
-            icon: "⚙️",
-            url: "/admin-settings/"
-        }
-    ];
-
-
-    /* =====================================================
-       ESCAPE HTML
-    ====================================================== */
-
-    function escapeHTML(value) {
-
-        return String(value)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-    }
-
-
-    /* =====================================================
-       RENDER SEARCH RESULTS
-    ====================================================== */
-
-    function renderSearchResults(query) {
-
-        if (!searchResults) {
-            return;
-        }
-
-        const normalizedQuery =
-            String(query || "")
-                .trim()
-                .toLowerCase();
-
-
-        if (!normalizedQuery) {
-
-            searchResults.innerHTML = "";
-            searchResults.classList.remove("show");
-
-            return;
         }
 
 
-        const results =
-            searchableItems.filter(function (item) {
+        /* =====================================================
+           INITIAL STATE
+           ===================================================== */
 
-                return (
-                    item.title
-                        .toLowerCase()
-                        .includes(normalizedQuery)
-
-                    ||
-
-                    item.type
-                        .toLowerCase()
-                        .includes(normalizedQuery)
-                );
-            });
-
-
-        searchResults.innerHTML = "";
-
-
-        if (results.length === 0) {
-
-            const empty =
-                document.createElement("div");
-
-            empty.className =
-                "search-no-results";
-
-            empty.textContent =
-                "No dashboard section found.";
-
-            searchResults.appendChild(empty);
-
-        } else {
-
-            results.forEach(function (item) {
-
-                const link =
-                    document.createElement("a");
-
-                link.className =
-                    "search-result-item";
-
-                link.href =
-                    item.url;
-
-                link.innerHTML = `
-                    <span class="search-result-icon">
-                        ${escapeHTML(item.icon)}
-                    </span>
-
-                    <span>
-                        <strong>
-                            ${escapeHTML(item.title)}
-                        </strong>
-
-                        <small>
-                            ${escapeHTML(item.type)}
-                        </small>
-                    </span>
-                `;
-
-                searchResults.appendChild(link);
-            });
+        if (searchNoResults) {
+            searchNoResults.hidden = true;
         }
 
 
-        searchResults.classList.add("show");
-    }
+        /* =====================================================
+           DEBUG / DEVELOPMENT
+           ===================================================== */
 
-
-    /* =====================================================
-       SEARCH INPUT
-    ====================================================== */
-
-    if (searchInput) {
-
-        searchInput.addEventListener(
-            "input",
-            function () {
-
-                renderSearchResults(
-                    searchInput.value
-                );
-            }
+        console.info(
+            "Smart Car Rental Admin Dashboard initialized."
         );
 
+    });
 
-        searchInput.addEventListener(
-            "focus",
-            function () {
-
-                if (
-                    searchInput.value.trim()
-                ) {
-
-                    renderSearchResults(
-                        searchInput.value
-                    );
-                }
-            }
-        );
-    }
-
-
-    /* =====================================================
-       SEARCH CLEAR BUTTON
-    ====================================================== */
-
-    if (searchClear && searchInput) {
-
-        searchClear.addEventListener(
-            "click",
-            function (event) {
-
-                event.preventDefault();
-                event.stopPropagation();
-
-                searchInput.value = "";
-
-                closeSearchResults();
-
-                searchInput.focus();
-            }
-        );
-    }
-
-
-    /* =====================================================
-       CTRL + K / CMD + K
-    ====================================================== */
-
-    document.addEventListener(
-        "keydown",
-        function (event) {
-
-            if (
-                (event.ctrlKey || event.metaKey) &&
-                event.key.toLowerCase() === "k"
-            ) {
-
-                event.preventDefault();
-
-                if (searchInput) {
-
-                    searchInput.focus();
-                    searchInput.select();
-                }
-            }
-        }
-    );
-
-
-    /* =====================================================
-       ESCAPE KEY
-    ====================================================== */
-
-    document.addEventListener(
-        "keydown",
-        function (event) {
-
-            if (event.key === "Escape") {
-
-                closeAllDropdowns();
-
-
-                if (sidebar) {
-
-                    sidebar.classList.remove(
-                        "mobile-open"
-                    );
-                }
-
-
-                if (mobileMenuButton) {
-
-                    mobileMenuButton.setAttribute(
-                        "aria-expanded",
-                        "false"
-                    );
-                }
-            }
-        }
-    );
-
-
-    /* =====================================================
-       MOBILE SIDEBAR
-    ====================================================== */
-
-    if (mobileMenuButton && sidebar) {
-
-        mobileMenuButton.addEventListener(
-            "click",
-            function (event) {
-
-                event.preventDefault();
-                event.stopPropagation();
-
-                const isOpen =
-                    sidebar.classList.toggle(
-                        "mobile-open"
-                    );
-
-                mobileMenuButton.setAttribute(
-                    "aria-expanded",
-                    isOpen ? "true" : "false"
-                );
-            }
-        );
-    }
-
-
-    /* =====================================================
-       CLOSE MOBILE SIDEBAR AFTER NAVIGATION
-    ====================================================== */
-
-    if (sidebar) {
-
-        const sidebarLinks =
-            sidebar.querySelectorAll(
-                "a.sidebar-link"
-            );
-
-
-        sidebarLinks.forEach(
-            function (link) {
-
-                link.addEventListener(
-                    "click",
-                    function () {
-
-                        if (
-                            window.innerWidth <= 750
-                        ) {
-
-                            sidebar.classList.remove(
-                                "mobile-open"
-                            );
-
-
-                            if (mobileMenuButton) {
-
-                                mobileMenuButton.setAttribute(
-                                    "aria-expanded",
-                                    "false"
-                                );
-                            }
-                        }
-                    }
-                );
-            }
-        );
-    }
-
-
-    /* =====================================================
-       CLOSE MOBILE SIDEBAR OUTSIDE
-    ====================================================== */
-
-    document.addEventListener(
-        "click",
-        function (event) {
-
-            if (
-                window.innerWidth <= 750 &&
-                sidebar &&
-                mobileMenuButton &&
-                sidebar.classList.contains("mobile-open") &&
-                !sidebar.contains(event.target) &&
-                !mobileMenuButton.contains(event.target)
-            ) {
-
-                sidebar.classList.remove(
-                    "mobile-open"
-                );
-
-
-                mobileMenuButton.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
-            }
-        }
-    );
-
-
-    /* =====================================================
-       DJANGO CHART DATA
-    ====================================================== */
-
-    function getJSONData(id, fallback) {
-
-        const element =
-            document.getElementById(id);
-
-        if (!element) {
-            return fallback;
-        }
-
-
-        try {
-
-            return JSON.parse(
-                element.textContent
-            );
-
-        } catch (error) {
-
-            console.error(
-                "Unable to read dashboard data:",
-                id,
-                error
-            );
-
-            return fallback;
-        }
-    }
-
-
-    const bookingStatusData = {
-
-        pending:
-            Number(
-                getJSONData(
-                    "pendingBookingsData",
-                    0
-                )
-            ) || 0,
-
-        approved:
-            Number(
-                getJSONData(
-                    "approvedBookingsData",
-                    0
-                )
-            ) || 0,
-
-        active:
-            Number(
-                getJSONData(
-                    "activeRentalsData",
-                    0
-                )
-            ) || 0,
-
-        completed:
-            Number(
-                getJSONData(
-                    "completedBookingsData",
-                    0
-                )
-            ) || 0,
-
-        cancelled:
-            Number(
-                getJSONData(
-                    "cancelledBookingsData",
-                    0
-                )
-            ) || 0
-    };
-
-
-    const fleetStatusData = {
-
-        available:
-            Number(
-                getJSONData(
-                    "availableCarsData",
-                    0
-                )
-            ) || 0,
-
-        rented:
-            Number(
-                getJSONData(
-                    "rentedCarsData",
-                    0
-                )
-            ) || 0,
-
-        maintenance:
-            Number(
-                getJSONData(
-                    "maintenanceCarsData",
-                    0
-                )
-            ) || 0,
-
-        inactive:
-            Number(
-                getJSONData(
-                    "inactiveCarsData",
-                    0
-                )
-            ) || 0
-    };
-
-
-    /* =====================================================
-       BOOKING CHART
-    ====================================================== */
-
-    const bookingCanvas =
-        document.getElementById(
-            "bookingChart"
-        );
-
-
-    if (
-        bookingCanvas &&
-        typeof Chart !== "undefined"
-    ) {
-
-        const existingBookingChart =
-            Chart.getChart(bookingCanvas);
-
-
-        if (existingBookingChart) {
-            existingBookingChart.destroy();
-        }
-
-
-        new Chart(
-            bookingCanvas,
-            {
-                type: "doughnut",
-
-                data: {
-
-                    labels: [
-                        "Pending",
-                        "Approved",
-                        "Active",
-                        "Completed",
-                        "Cancelled"
-                    ],
-
-                    datasets: [
-                        {
-                            label: "Bookings",
-
-                            data: [
-                                bookingStatusData.pending,
-                                bookingStatusData.approved,
-                                bookingStatusData.active,
-                                bookingStatusData.completed,
-                                bookingStatusData.cancelled
-                            ],
-
-                            borderWidth: 0,
-                            hoverOffset: 6
-                        }
-                    ]
-                },
-
-                options: {
-
-                    responsive: true,
-                    maintainAspectRatio: false,
-
-                    cutout: "68%",
-
-                    plugins: {
-
-                        legend: {
-
-                            position: "bottom",
-
-                            labels: {
-
-                                usePointStyle: true,
-                                padding: 18,
-
-                                font: {
-                                    size: 11
-                                }
-                            }
-                        },
-
-                        tooltip: {
-                            enabled: true
-                        }
-                    }
-                }
-            }
-        );
-    }
-
-
-    /* =====================================================
-       FLEET CHART
-    ====================================================== */
-
-    const fleetCanvas =
-        document.getElementById(
-            "fleetChart"
-        );
-
-
-    if (
-        fleetCanvas &&
-        typeof Chart !== "undefined"
-    ) {
-
-        const existingFleetChart =
-            Chart.getChart(fleetCanvas);
-
-
-        if (existingFleetChart) {
-            existingFleetChart.destroy();
-        }
-
-
-        new Chart(
-            fleetCanvas,
-            {
-                type: "doughnut",
-
-                data: {
-
-                    labels: [
-                        "Available",
-                        "Rented",
-                        "Maintenance",
-                        "Inactive"
-                    ],
-
-                    datasets: [
-                        {
-                            label: "Fleet",
-
-                            data: [
-                                fleetStatusData.available,
-                                fleetStatusData.rented,
-                                fleetStatusData.maintenance,
-                                fleetStatusData.inactive
-                            ],
-
-                            borderWidth: 0,
-                            hoverOffset: 6
-                        }
-                    ]
-                },
-
-                options: {
-
-                    responsive: true,
-                    maintainAspectRatio: false,
-
-                    cutout: "68%",
-
-                    plugins: {
-
-                        legend: {
-
-                            position: "bottom",
-
-                            labels: {
-
-                                usePointStyle: true,
-                                padding: 18,
-
-                                font: {
-                                    size: 11
-                                }
-                            }
-                        },
-
-                        tooltip: {
-                            enabled: true
-                        }
-                    }
-                }
-            }
-        );
-    }
-
-
-    /* =====================================================
-       WINDOW RESIZE
-    ====================================================== */
-
-    window.addEventListener(
-        "resize",
-        function () {
-
-            if (
-                window.innerWidth > 750 &&
-                sidebar
-            ) {
-
-                sidebar.classList.remove(
-                    "mobile-open"
-                );
-
-
-                if (mobileMenuButton) {
-
-                    mobileMenuButton.setAttribute(
-                        "aria-expanded",
-                        "false"
-                    );
-                }
-            }
-        }
-    );
-
-
-    /* =====================================================
-       INITIAL ACCESSIBILITY STATE
-    ====================================================== */
-
-    if (profileButton) {
-
-        profileButton.setAttribute(
-            "aria-expanded",
-            "false"
-        );
-    }
-
-
-    if (notificationButton) {
-
-        notificationButton.setAttribute(
-            "aria-expanded",
-            "false"
-        );
-    }
-
-
-    if (mobileMenuButton) {
-
-        mobileMenuButton.setAttribute(
-            "aria-expanded",
-            "false"
-        );
-    }
-
-
-    /* =====================================================
-       DEBUG
-    ====================================================== */
-
-    console.log(
-        "Smart Car Rental Admin Dashboard JS loaded successfully."
-    );
-
-});
+})();

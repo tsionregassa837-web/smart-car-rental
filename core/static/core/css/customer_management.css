@@ -1,626 +1,512 @@
-/* =========================================================
+/* ============================================================
    SMART CAR RENTAL
    CUSTOMER MANAGEMENT
-   PROFESSIONAL STAFF OPERATIONS UI
-========================================================= */
+   Professional Admin Interface
+============================================================ */
 
 
-/* =========================================================
-   GLOBAL
-========================================================= */
+/* ============================================================
+   PAGE
+============================================================ */
 
-* {
-    box-sizing: border-box;
-}
-
-body {
-    margin: 0;
-
-    background: #f5f7fa;
-
-    color: #172033;
-
-    font-family:
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Arial,
-        sans-serif;
-}
-
-
-/* =========================================================
-   MAIN WRAPPER
-========================================================= */
-
-.customer-management {
+.customer-management-page {
     width: 100%;
-    max-width: 1680px;
-
+    max-width: 1600px;
     margin: 0 auto;
-
-    padding: 34px 32px 70px;
+    padding: 28px 32px 40px;
+    box-sizing: border-box;
+    color: #172033;
 }
 
 
-/* =========================================================
-   HERO
-========================================================= */
+/* ============================================================
+   PAGE HEADER
+============================================================ */
 
-.customer-hero {
+.customer-page-header {
     display: flex;
-
-    align-items: stretch;
+    align-items: center;
     justify-content: space-between;
-
     gap: 30px;
-
     margin-bottom: 28px;
 }
 
-.customer-hero-left {
+.customer-page-title {
     display: flex;
-
-    align-items: flex-start;
-
+    align-items: center;
     gap: 18px;
-
-    flex: 1;
 }
 
-
-/* =========================================================
-   HERO ICON
-========================================================= */
-
-.customer-hero-icon {
+.customer-title-icon {
     width: 58px;
     height: 58px;
-
-    flex: 0 0 58px;
+    border-radius: 14px;
+    background: #eef4ff;
+    border: 1px solid #dce7fb;
 
     display: flex;
-
     align-items: center;
     justify-content: center;
 
-    color: #ffffff;
-
-    background:
-        linear-gradient(
-            135deg,
-            #0b1f3a,
-            #1d4e89
-        );
-
-    border-radius: 15px;
-
-    box-shadow:
-        0 10px 25px rgba(11, 31, 58, 0.18);
-}
-
-.customer-hero-icon span {
     font-size: 25px;
-
-    line-height: 1;
+    flex-shrink: 0;
 }
-
-
-/* =========================================================
-   BREADCRUMB
-========================================================= */
 
 .customer-breadcrumb {
     display: flex;
-
     align-items: center;
-
     gap: 8px;
 
-    margin-bottom: 7px;
+    margin-bottom: 5px;
 
-    color: #98a2b3;
+    color: #8a94a6;
+    font-size: 12px;
+    font-weight: 600;
+}
 
-    font-size: 11px;
+.customer-breadcrumb span {
+    color: #b5bdc9;
+    font-size: 16px;
+}
 
+.customer-page-title h1 {
+    margin: 0;
+
+    color: #172033;
+    font-size: 29px;
+    font-weight: 750;
+    letter-spacing: -0.6px;
+}
+
+.customer-page-title p {
+    margin: 6px 0 0;
+
+    color: #737d8f;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.customer-header-meta {
+    display: flex;
+    align-items: center;
+}
+
+.customer-system-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 9px 14px;
+
+    background: #f8fafc;
+    border: 1px solid #e6eaf0;
+    border-radius: 8px;
+
+    color: #697386;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-pulse {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #20a36a;
+    box-shadow: 0 0 0 4px rgba(32, 163, 106, 0.10);
+}
+
+
+/* ============================================================
+   STATISTICS
+============================================================ */
+
+.customer-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.customer-stat-card {
+    position: relative;
+
+    min-height: 145px;
+    padding: 20px;
+
+    background: #ffffff;
+    border: 1px solid #e7eaf0;
+    border-radius: 13px;
+
+    box-shadow: 0 2px 8px rgba(20, 30, 50, 0.035);
+
+    box-sizing: border-box;
+    overflow: hidden;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.customer-stat-card:hover {
+    transform: translateY(-2px);
+
+    border-color: #dce2eb;
+
+    box-shadow:
+        0 8px 22px rgba(20, 30, 50, 0.07);
+}
+
+.customer-stat-top {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.customer-stat-icon {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    font-size: 17px;
     font-weight: 700;
 }
 
-.customer-breadcrumb-arrow {
-    color: #c7ced8;
+.total-icon {
+    background: #eef4ff;
 }
 
-.customer-breadcrumb strong {
-    color: #475467;
+.active-icon {
+    background: #eaf8f1;
+    color: #1b8c5a;
 }
 
-
-/* =========================================================
-   HERO TEXT
-========================================================= */
-
-.customer-hero h1 {
-    margin: 0;
-
-    color: #101828;
-
-    font-size: 32px;
-
-    line-height: 1.2;
-
-    font-weight: 800;
-
-    letter-spacing: -0.8px;
+.inactive-icon {
+    background: #f3f4f6;
+    color: #7b8492;
 }
 
-.customer-hero p {
-    max-width: 700px;
-
-    margin: 9px 0 0;
-
-    color: #667085;
-
-    font-size: 13px;
-
-    line-height: 1.65;
-}
-
-
-/* =========================================================
-   HERO STATISTICS
-========================================================= */
-
-.customer-hero-right {
-    display: grid;
-
-    grid-template-columns:
-        repeat(3, minmax(135px, 1fr));
-
-    gap: 12px;
-}
-
-.customer-stat {
-    min-width: 135px;
-
-    padding: 17px 18px;
-
-    background: #ffffff;
-
-    border: 1px solid #e4e7ec;
-
-    border-radius: 13px;
-
-    box-shadow:
-        0 7px 24px rgba(16, 24, 40, 0.055);
+.rental-icon {
+    background: #fff5e7;
 }
 
 .customer-stat-label {
-    display: block;
-
-    margin-bottom: 9px;
-
-    color: #98a2b3;
-
-    font-size: 9px;
-
-    font-weight: 800;
-
-    letter-spacing: 0.8px;
-
-    text-transform: uppercase;
+    color: #687386;
+    font-size: 13px;
+    font-weight: 650;
 }
 
-.customer-stat strong {
-    display: block;
+.customer-stat-value {
+    margin-top: 15px;
 
-    color: #101828;
-
-    font-size: 27px;
-
-    line-height: 1;
-
-    font-weight: 800;
+    color: #172033;
+    font-size: 28px;
+    font-weight: 750;
+    letter-spacing: -0.5px;
 }
 
-.customer-stat-caption {
-    display: block;
+.customer-stat-footer {
+    display: flex;
+    align-items: center;
+    gap: 7px;
 
-    margin-top: 7px;
+    margin-top: 5px;
 
-    color: #98a2b3;
-
-    font-size: 10px;
+    color: #8a94a5;
+    font-size: 11px;
 }
 
-.customer-stat.total {
-    border-top: 3px solid #2563eb;
+.stat-indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
 }
 
-.customer-stat.active {
-    border-top: 3px solid #12b76a;
+.stat-indicator.neutral {
+    background: #8a94a5;
 }
 
-.customer-stat.inactive {
-    border-top: 3px solid #f79009;
+.active-dot {
+    background: #20a36a;
+}
+
+.inactive-dot {
+    background: #9aa3af;
+}
+
+.rental-dot {
+    background: #e69b2f;
 }
 
 
-/* =========================================================
-   CONTROL PANEL
-========================================================= */
+/* ============================================================
+   DIRECTORY CARD
+============================================================ */
 
-.customer-control-panel {
-    margin-bottom: 22px;
-
-    padding: 21px;
-
+.customer-directory-card {
     background: #ffffff;
 
-    border: 1px solid #e4e7ec;
-
-    border-radius: 15px;
+    border: 1px solid #e5e9ef;
+    border-radius: 14px;
 
     box-shadow:
-        0 7px 25px rgba(16, 24, 40, 0.05);
+        0 3px 12px rgba(20, 30, 50, 0.04);
+
+    overflow: hidden;
 }
 
-.customer-control-heading {
+
+/* ============================================================
+   DIRECTORY HEADER
+============================================================ */
+
+.directory-header {
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
 
-    gap: 20px;
+    padding: 24px 26px;
 
-    margin-bottom: 18px;
+    border-bottom: 1px solid #edf0f4;
 }
 
-.customer-section-eyebrow {
+.directory-eyebrow {
     display: block;
 
     margin-bottom: 5px;
 
-    color: #98a2b3;
-
-    font-size: 9px;
-
-    font-weight: 800;
-
-    letter-spacing: 0.9px;
-
-    text-transform: uppercase;
+    color: #8791a1;
+    font-size: 10px;
+    font-weight: 750;
+    letter-spacing: 1.2px;
 }
 
-.customer-control-heading h2 {
+.directory-heading h2 {
     margin: 0;
 
-    color: #101828;
+    color: #1c2638;
+    font-size: 19px;
+    font-weight: 720;
+}
 
+.directory-heading p {
+    margin: 5px 0 0;
+
+    color: #8992a1;
+    font-size: 12px;
+}
+
+.directory-count {
+    min-width: 92px;
+
+    padding: 9px 13px;
+
+    text-align: center;
+
+    background: #f7f9fb;
+    border: 1px solid #e8ebf0;
+    border-radius: 8px;
+}
+
+.directory-count strong {
+    display: block;
+
+    color: #263247;
     font-size: 17px;
-
-    font-weight: 800;
+    font-weight: 750;
 }
 
-.customer-control-heading p {
-    margin: 4px 0 0;
-
-    color: #98a2b3;
-
-    font-size: 11px;
-}
-
-.customer-record-count {
-    padding: 7px 11px;
-
-    color: #475467;
-
-    background: #f2f4f7;
-
-    border-radius: 7px;
-
+.directory-count span {
+    color: #8992a1;
     font-size: 10px;
-
-    font-weight: 800;
+    font-weight: 600;
 }
 
 
-/* =========================================================
+/* ============================================================
    SEARCH
-========================================================= */
+============================================================ */
+
+.customer-search-section {
+    padding: 17px 26px;
+
+    background: #fbfcfd;
+    border-bottom: 1px solid #edf0f4;
+}
 
 .customer-search-form {
     display: flex;
-
-    align-items: flex-end;
-
-    gap: 11px;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
 }
 
-.customer-search-box {
+.customer-search-input-wrapper {
     position: relative;
-
     flex: 1;
-
-    min-width: 260px;
+    max-width: 570px;
 }
 
-.customer-search-icon {
+.search-icon {
     position: absolute;
-
     top: 50%;
     left: 14px;
 
     transform: translateY(-50%);
 
-    color: #98a2b3;
-
-    font-size: 17px;
-
-    pointer-events: none;
+    font-size: 14px;
+    opacity: 0.55;
 }
 
-.customer-search-box input {
+.customer-search-input-wrapper input {
     width: 100%;
+    height: 42px;
 
-    height: 44px;
+    padding: 0 15px 0 40px;
 
-    padding: 0 42px;
-
-    color: #344054;
+    box-sizing: border-box;
 
     background: #ffffff;
 
-    border: 1px solid #d0d5dd;
-
-    border-radius: 9px;
+    border: 1px solid #dfe4eb;
+    border-radius: 8px;
 
     outline: none;
 
+    color: #263247;
     font-family: inherit;
+    font-size: 13px;
 
-    font-size: 12px;
-
-    transition: 0.2s ease;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
-.customer-search-box input::placeholder {
-    color: #98a2b3;
+.customer-search-input-wrapper input::placeholder {
+    color: #a1a9b5;
 }
 
-.customer-search-box input:focus {
-    border-color: #2563eb;
+.customer-search-input-wrapper input:focus {
+    border-color: #9bb4df;
 
     box-shadow:
-        0 0 0 3px rgba(37, 99, 235, 0.09);
+        0 0 0 3px rgba(61, 109, 181, 0.08);
 }
 
-
-/* =========================================================
-   SEARCH BUTTON
-========================================================= */
-
 .customer-search-button {
-    height: 44px;
+    height: 42px;
 
-    display: inline-flex;
+    padding: 0 19px;
 
-    align-items: center;
-    justify-content: center;
+    border: 0;
+    border-radius: 8px;
 
-    gap: 7px;
-
-    padding: 0 17px;
-
+    background: #263b5c;
     color: #ffffff;
 
-    background: #0b1f3a;
-
-    border: 1px solid #0b1f3a;
-
-    border-radius: 9px;
-
     font-family: inherit;
-
-    font-size: 11px;
-
-    font-weight: 800;
+    font-size: 12px;
+    font-weight: 650;
 
     cursor: pointer;
 
-    transition: 0.2s ease;
+    transition:
+        background 0.2s ease,
+        transform 0.15s ease;
 }
 
 .customer-search-button:hover {
-    background: #163b68;
-
-    border-color: #163b68;
-
-    transform: translateY(-1px);
+    background: #1d304d;
 }
 
-
-/* =========================================================
-   CLEAR BUTTON
-========================================================= */
+.customer-search-button:active {
+    transform: translateY(1px);
+}
 
 .customer-clear-button {
-    height: 44px;
+    height: 42px;
 
     display: inline-flex;
-
     align-items: center;
     justify-content: center;
 
-    gap: 7px;
+    padding: 0 15px;
 
-    padding: 0 16px;
+    box-sizing: border-box;
 
-    color: #344054;
+    border: 1px solid #dfe4eb;
+    border-radius: 8px;
 
     background: #ffffff;
-
-    border: 1px solid #d0d5dd;
-
-    border-radius: 9px;
+    color: #697386;
 
     text-decoration: none;
 
-    font-size: 11px;
+    font-size: 12px;
+    font-weight: 600;
 
-    font-weight: 800;
-
-    transition: 0.2s ease;
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
 }
 
 .customer-clear-button:hover {
-    background: #f9fafb;
-
-    border-color: #98a2b3;
-
-    transform: translateY(-1px);
+    background: #f7f8fa;
+    border-color: #ccd3dd;
 }
 
 
-/* =========================================================
-   CUSTOMER CARD
-========================================================= */
+/* ============================================================
+   TABLE
+============================================================ */
 
-.customer-card {
-    overflow: hidden;
-
-    background: #ffffff;
-
-    border: 1px solid #e4e7ec;
-
-    border-radius: 15px;
-
-    box-shadow:
-        0 8px 28px rgba(16, 24, 40, 0.06);
-}
-
-
-/* =========================================================
-   TABLE HEADER
-========================================================= */
-
-.customer-table-header {
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 20px;
-
-    padding: 20px 22px;
-
-    border-bottom: 1px solid #eaecf0;
-}
-
-.customer-table-header h2 {
-    margin: 0;
-
-    color: #101828;
-
-    font-size: 16px;
-
-    font-weight: 800;
-}
-
-.customer-table-header p {
-    margin: 4px 0 0;
-
-    color: #98a2b3;
-
-    font-size: 10px;
-}
-
-.customer-table-header-info {
-    display: flex;
-
-    align-items: center;
-
-    gap: 7px;
-
-    color: #667085;
-
-    font-size: 10px;
-
-    font-weight: 700;
-}
-
-.customer-live-dot {
-    width: 7px;
-    height: 7px;
-
-    border-radius: 50%;
-
-    background: #12b76a;
-
-    box-shadow:
-        0 0 0 4px rgba(18, 183, 106, 0.10);
-}
-
-
-/* =========================================================
-   TABLE SCROLL
-========================================================= */
-
-.customer-table-scroll {
+.customer-table-wrapper {
     width: 100%;
-
     overflow-x: auto;
 }
 
-
-/* =========================================================
-   TABLE
-========================================================= */
-
 .customer-table {
     width: 100%;
-
     min-width: 1050px;
 
-    border-collapse: separate;
-
-    border-spacing: 0;
-}
-
-.customer-table thead th {
-    padding: 13px 15px;
-
-    color: #667085;
-
-    background: #f8fafc;
-
-    border-bottom: 1px solid #eaecf0;
+    border-collapse: collapse;
 
     text-align: left;
+}
 
-    font-size: 9px;
+.customer-table thead {
+    background: #f8fafc;
+}
 
-    font-weight: 800;
+.customer-table th {
+    height: 45px;
 
-    text-transform: uppercase;
+    padding: 0 19px;
+
+    border-bottom: 1px solid #e6eaf0;
+
+    color: #7d8797;
+
+    font-size: 10px;
+    font-weight: 750;
 
     letter-spacing: 0.65px;
+    text-transform: uppercase;
 
     white-space: nowrap;
 }
 
-.customer-table tbody td {
-    padding: 18px 15px;
+.customer-table td {
+    padding: 16px 19px;
 
-    color: #344054;
-
-    border-bottom: 1px solid #f0f2f5;
+    border-bottom: 1px solid #eef1f4;
 
     vertical-align: middle;
-
-    font-size: 11px;
 }
 
 .customer-table tbody tr {
@@ -628,7 +514,7 @@ body {
 }
 
 .customer-table tbody tr:hover {
-    background: #fafcff;
+    background: #fafbfd;
 }
 
 .customer-table tbody tr:last-child td {
@@ -636,455 +522,482 @@ body {
 }
 
 
-/* =========================================================
-   CUSTOMER INFO
-========================================================= */
+/* ============================================================
+   CUSTOMER PROFILE
+============================================================ */
 
-.customer-info {
+.customer-profile {
     display: flex;
-
     align-items: center;
-
     gap: 11px;
 
-    min-width: 210px;
+    min-width: 190px;
 }
 
 .customer-avatar {
-    width: 40px;
-    height: 40px;
-
-    flex: 0 0 40px;
+    width: 38px;
+    height: 38px;
 
     display: flex;
-
     align-items: center;
     justify-content: center;
 
-    color: #1d4ed8;
+    flex-shrink: 0;
 
-    background: #eff6ff;
+    border-radius: 10px;
 
-    border: 1px solid #dbeafe;
+    background: #edf2fa;
+    color: #344b70;
 
-    border-radius: 50%;
-
-    font-size: 12px;
-
-    font-weight: 800;
+    font-size: 13px;
+    font-weight: 750;
 }
 
-.customer-details {
-    display: flex;
-
-    flex-direction: column;
-
+.customer-identity {
     min-width: 0;
 }
 
-.customer-name {
-    color: #101828;
+.customer-full-name {
+    display: block;
 
+    max-width: 210px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    color: #273246;
     font-size: 12px;
-
-    font-weight: 800;
+    font-weight: 700;
 }
 
 .customer-username {
-    margin-top: 4px;
+    display: block;
 
-    color: #667085;
+    margin-top: 3px;
 
+    color: #929aa8;
+    font-size: 10px;
+}
+
+
+/* ============================================================
+   CONTACT
+============================================================ */
+
+.customer-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+
+    min-width: 165px;
+}
+
+.contact-email {
+    color: #4e596b;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.contact-label {
+    color: #9aa2ae;
+    font-size: 9px;
+}
+
+.no-contact {
+    color: #a0a8b4;
+    font-size: 11px;
+}
+
+
+/* ============================================================
+   REGISTERED DATE
+============================================================ */
+
+.registered-date {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+
+    min-width: 90px;
+}
+
+.registered-date strong {
+    color: #4a5568;
+    font-size: 11px;
+    font-weight: 650;
+}
+
+.registered-date span {
+    color: #9aa2ae;
     font-size: 9px;
 }
 
 
-/* =========================================================
-   EMAIL
-========================================================= */
+/* ============================================================
+   RENTAL SUMMARY
+============================================================ */
 
-.customer-email {
-    color: #344054;
+.rental-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 
-    font-size: 11px;
+    min-width: 125px;
 }
 
-.customer-email-muted {
-    color: #98a2b3;
-
-    font-size: 10px;
+.rental-summary > strong {
+    color: #293449;
+    font-size: 14px;
+    font-weight: 750;
 }
 
-
-/* =========================================================
-   DATE
-========================================================= */
-
-.customer-date {
-    min-width: 120px;
+.rental-summary > span {
+    color: #8992a0;
+    font-size: 9px;
 }
 
-.customer-date-label {
-    display: block;
+.rental-summary small {
+    margin-top: 2px;
 
-    margin-bottom: 4px;
-
-    color: #98a2b3;
-
-    font-size: 8px;
-
-    font-weight: 800;
-
-    text-transform: uppercase;
+    font-size: 9px;
+    font-weight: 600;
 }
 
-.customer-date-value {
-    color: #344054;
+.active-rental-text {
+    color: #249362;
+}
 
-    font-size: 10px;
+.completed-rental-text {
+    color: #718096;
+}
 
-    font-weight: 800;
+.no-rental-text {
+    color: #a0a7b2;
 }
 
 
-/* =========================================================
+/* ============================================================
+   SPENDING
+============================================================ */
+
+.customer-spending {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+
+    min-width: 90px;
+}
+
+.customer-spending strong {
+    color: #293449;
+    font-size: 12px;
+    font-weight: 750;
+}
+
+.customer-spending span {
+    color: #929aa7;
+    font-size: 9px;
+}
+
+
+/* ============================================================
    STATUS
-========================================================= */
+============================================================ */
 
 .customer-status {
     display: inline-flex;
-
     align-items: center;
-    justify-content: center;
-
     gap: 6px;
 
-    min-width: 82px;
+    padding: 5px 9px;
 
-    padding: 7px 10px;
+    border-radius: 6px;
 
-    border-radius: 20px;
-
-    font-size: 8px;
-
-    font-weight: 800;
+    font-size: 10px;
+    font-weight: 700;
 
     white-space: nowrap;
 }
 
-.customer-status-dot {
+.customer-status .status-dot {
     width: 6px;
     height: 6px;
-
     border-radius: 50%;
 }
 
 .customer-status.active {
-    color: #047857;
-
-    background: #ecfdf3;
+    background: #eaf8f1;
+    color: #27865a;
 }
 
-.customer-status.active .customer-status-dot {
-    background: #12b76a;
+.customer-status.active .status-dot {
+    background: #2aa36d;
 }
 
 .customer-status.inactive {
-    color: #b42318;
-
-    background: #fef3f2;
+    background: #f1f3f5;
+    color: #7d8591;
 }
 
-.customer-status.inactive .customer-status-dot {
-    background: #f04438;
+.customer-status.inactive .status-dot {
+    background: #9ca3af;
 }
 
 
-/* =========================================================
-   CUSTOMER ACTION
-========================================================= */
+/* ============================================================
+   ACTION
+============================================================ */
 
-.customer-actions {
-    min-width: 150px;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 7px;
+.action-column {
+    text-align: right !important;
 }
 
-.customer-action {
-    min-height: 32px;
-
+.customer-view-button {
     display: inline-flex;
-
     align-items: center;
-
     justify-content: center;
+    gap: 7px;
 
-    gap: 6px;
+    min-width: 72px;
+    height: 31px;
 
-    padding: 7px 11px;
+    padding: 0 10px;
 
-    border-radius: 7px;
+    box-sizing: border-box;
 
-    font-size: 9px;
+    background: #ffffff;
 
-    font-weight: 800;
+    border: 1px solid #dce2ea;
+    border-radius: 6px;
 
-    white-space: nowrap;
+    color: #40536f;
+
+    text-decoration: none;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.customer-view-button:hover {
+    background: #f3f6fa;
+    border-color: #c5cfdd;
+    color: #263d5f;
+}
+
+.view-arrow {
+    font-size: 13px;
+
+    transition:
+        transform 0.2s ease;
+}
+
+.customer-view-button:hover .view-arrow {
+    transform: translateX(2px);
 }
 
 
-/* ACTIVE ACCOUNT */
-
-.customer-action.activate {
-    color: #047857;
-
-    background: #ecfdf3;
-
-    border: 1px solid #bbf7d0;
-}
-
-
-/* INACTIVE ACCOUNT */
-
-.customer-action.deactivate {
-    color: #b42318;
-
-    background: #fef3f2;
-
-    border: 1px solid #fecdca;
-}
-
-
-/* =========================================================
+/* ============================================================
    EMPTY STATE
-========================================================= */
+============================================================ */
 
 .customer-empty-state {
-    padding: 75px 25px;
+    padding: 70px 25px;
 
     text-align: center;
 }
 
-.customer-empty-icon {
-    width: 70px;
-    height: 70px;
-
-    margin: 0 auto 18px;
+.empty-icon {
+    width: 58px;
+    height: 58px;
 
     display: flex;
-
     align-items: center;
     justify-content: center;
 
-    color: #667085;
+    margin: 0 auto 15px;
 
-    background: #f2f4f7;
+    border-radius: 14px;
 
-    border-radius: 18px;
+    background: #f3f5f8;
 
-    font-size: 28px;
+    font-size: 24px;
 }
 
 .customer-empty-state h3 {
     margin: 0;
 
-    color: #101828;
-
+    color: #293449;
     font-size: 17px;
-
-    font-weight: 800;
+    font-weight: 700;
 }
 
 .customer-empty-state p {
-    max-width: 420px;
+    max-width: 440px;
 
-    margin: 7px auto 18px;
+    margin: 7px auto 19px;
 
-    color: #98a2b3;
-
-    font-size: 11px;
-
+    color: #8992a0;
+    font-size: 12px;
     line-height: 1.6;
 }
 
-.customer-empty-reset {
+.empty-action {
     display: inline-flex;
-
     align-items: center;
-
     justify-content: center;
 
-    padding: 9px 14px;
+    height: 36px;
 
-    color: #ffffff;
-
-    background: #0b1f3a;
+    padding: 0 16px;
 
     border-radius: 7px;
 
+    background: #263b5c;
+    color: #ffffff;
+
     text-decoration: none;
 
-    font-size: 10px;
-
-    font-weight: 800;
-}
-
-.customer-empty-reset:hover {
-    background: #163b68;
+    font-size: 11px;
+    font-weight: 650;
 }
 
 
-/* =========================================================
-   FOOTER
-========================================================= */
+/* ============================================================
+   DIRECTORY FOOTER
+============================================================ */
 
-.customer-footer {
-    margin-top: 28px;
+.directory-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-    padding: 20px;
+    padding: 13px 20px;
 
-    color: #98a2b3;
+    background: #fafbfc;
 
-    text-align: center;
+    border-top: 1px solid #edf0f4;
 
-    font-size: 10px;
+    color: #9aa2ae;
+
+    font-size: 9px;
+}
+
+.directory-footer-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.footer-live-dot {
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: #2aa36d;
 }
 
 
-/* =========================================================
-   SCROLLBAR
-========================================================= */
-
-.customer-table-scroll::-webkit-scrollbar {
-    height: 8px;
-}
-
-.customer-table-scroll::-webkit-scrollbar-track {
-    background: #f2f4f7;
-}
-
-.customer-table-scroll::-webkit-scrollbar-thumb {
-    background: #c8ced8;
-
-    border-radius: 10px;
-}
-
-.customer-table-scroll::-webkit-scrollbar-thumb:hover {
-    background: #98a2b3;
-}
-
-
-/* =========================================================
+/* ============================================================
    RESPONSIVE
-========================================================= */
+============================================================ */
 
-@media (max-width: 1250px) {
+@media (max-width: 1200px) {
 
-    .customer-hero {
-        flex-direction: column;
+    .customer-stat-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .customer-hero-right {
-        width: 100%;
-    }
-
-    .customer-stat {
-        min-width: 0;
-    }
 }
 
 
 @media (max-width: 900px) {
 
-    .customer-management {
-        padding: 26px 20px 55px;
+    .customer-management-page {
+        padding: 22px 20px 35px;
     }
 
-    .customer-hero h1 {
-        font-size: 28px;
+    .customer-page-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .customer-header-meta {
+        display: none;
+    }
+
+    .directory-header {
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .customer-management-page {
+        padding: 18px 14px 30px;
+    }
+
+    .customer-page-title {
+        align-items: flex-start;
+    }
+
+    .customer-title-icon {
+        width: 48px;
+        height: 48px;
+    }
+
+    .customer-page-title h1 {
+        font-size: 23px;
+    }
+
+    .customer-page-title p {
+        font-size: 12px;
+    }
+
+    .customer-stat-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .directory-header {
+        padding: 19px;
+    }
+
+    .customer-search-section {
+        padding: 14px;
     }
 
     .customer-search-form {
-        flex-direction: column;
-
         align-items: stretch;
+        flex-direction: column;
     }
 
-    .customer-search-box {
-        width: 100%;
-
-        min-width: 0;
+    .customer-search-input-wrapper {
+        max-width: none;
     }
 
     .customer-search-button,
     .customer-clear-button {
         width: 100%;
     }
-}
 
-
-@media (max-width: 650px) {
-
-    .customer-management {
-        padding: 20px 13px 45px;
-    }
-
-    .customer-hero-left {
-        gap: 12px;
-    }
-
-    .customer-hero-icon {
-        width: 48px;
-        height: 48px;
-
-        flex-basis: 48px;
-    }
-
-    .customer-hero-icon span {
-        font-size: 21px;
-    }
-
-    .customer-hero h1 {
-        font-size: 23px;
-    }
-
-    .customer-hero p {
-        font-size: 11px;
-    }
-
-    .customer-hero-right {
-        grid-template-columns: 1fr;
-    }
-
-    .customer-stat {
-        width: 100%;
-
-        box-sizing: border-box;
-    }
-
-    .customer-control-panel {
-        padding: 15px;
-    }
-
-    .customer-control-heading {
-        align-items: flex-start;
-
-        flex-direction: column;
-    }
-
-    .customer-record-count {
-        align-self: flex-start;
-    }
-
-    .customer-table-header {
-        padding: 16px;
-    }
-
-    .customer-table-header-info {
+    .directory-count {
         display: none;
     }
+
+    .directory-footer {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 7px;
+    }
+
 }

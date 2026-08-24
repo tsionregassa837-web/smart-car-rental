@@ -16,9 +16,9 @@
 
 <div class="fleet-page">
 
-    <!-- =========================
+    <!-- =====================================================
          TOP NAVIGATION
-    ========================== -->
+    ====================================================== -->
     <header class="fleet-header">
 
         <div class="header-left">
@@ -42,14 +42,16 @@
     </header>
 
 
-    <!-- =========================
-         PAGE HEADER
-    ========================== -->
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
     <main class="page-container">
 
+        <!-- PAGE HEADER -->
         <section class="page-heading">
 
             <div>
+
                 <div class="eyebrow">
                     FLEET OPERATIONS
                 </div>
@@ -58,13 +60,14 @@
 
                 <p>
                     {% if car %}
-                        Update the vehicle's fleet information,
-                        operational status and maintenance details.
+                        Update the vehicle's information, specifications,
+                        fleet status and maintenance details.
                     {% else %}
-                        Add a new vehicle to your rental fleet
-                        and configure its operational information.
+                        Add a new vehicle to your rental fleet and configure
+                        its operational information.
                     {% endif %}
                 </p>
+
             </div>
 
             {% if car %}
@@ -77,9 +80,9 @@
         </section>
 
 
-        <!-- =========================
-             DJANGO FORM
-        ========================== -->
+        <!-- =================================================
+             FORM
+        ================================================== -->
         <form method="post"
               enctype="multipart/form-data"
               class="vehicle-form">
@@ -87,9 +90,9 @@
             {% csrf_token %}
 
 
-            <!-- =========================
+            <!-- =============================================
                  NON FIELD ERRORS
-            ========================== -->
+            ============================================== -->
             {% if form.non_field_errors %}
                 <div class="alert alert-error">
 
@@ -109,10 +112,9 @@
             {% endif %}
 
 
-            <!-- =========================
-                 SECTION 01
-                 VEHICLE INFORMATION
-            ========================== -->
+            <!-- =================================================
+                 SECTION 01 — BASIC VEHICLE INFORMATION
+            ================================================== -->
             <section class="form-card">
 
                 <div class="section-header">
@@ -125,8 +127,8 @@
                         <h2>Vehicle Information</h2>
 
                         <p>
-                            Basic identification and pricing
-                            information for this fleet vehicle.
+                            Basic identification, model and pricing
+                            information for this vehicle.
                         </p>
                     </div>
 
@@ -189,31 +191,6 @@
                     </div>
 
 
-                    <!-- Plate Number -->
-                    <div class="field-group">
-
-                        <label for="{{ form.plate_number.id_for_label }}">
-                            Plate Number
-                            {% if form.plate_number.field.required %}
-                                <span>*</span>
-                            {% endif %}
-                        </label>
-
-                        {{ form.plate_number }}
-
-                        <small>
-                            Vehicle registration or license plate number.
-                        </small>
-
-                        {% for error in form.plate_number.errors %}
-                            <div class="field-error">
-                                {{ error }}
-                            </div>
-                        {% endfor %}
-
-                    </div>
-
-
                     <!-- Price -->
                     <div class="field-group">
 
@@ -229,11 +206,40 @@
                             {{ form.price_per_day }}
                         </div>
 
-                        <small>
-                            Daily rental price charged to customers.
-                        </small>
+                        {% if form.price_per_day.help_text %}
+                            <small>
+                                {{ form.price_per_day.help_text }}
+                            </small>
+                        {% endif %}
 
                         {% for error in form.price_per_day.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Plate Number -->
+                    <div class="field-group">
+
+                        <label for="{{ form.plate_number.id_for_label }}">
+                            Plate Number
+                            {% if form.plate_number.field.required %}
+                                <span>*</span>
+                            {% endif %}
+                        </label>
+
+                        {{ form.plate_number }}
+
+                        {% if form.plate_number.help_text %}
+                            <small>
+                                {{ form.plate_number.help_text }}
+                            </small>
+                        {% endif %}
+
+                        {% for error in form.plate_number.errors %}
                             <div class="field-error">
                                 {{ error }}
                             </div>
@@ -246,10 +252,9 @@
             </section>
 
 
-            <!-- =========================
-                 SECTION 02
-                 FLEET CAPACITY
-            ========================== -->
+            <!-- =================================================
+                 SECTION 02 — VEHICLE SPECIFICATIONS
+            ================================================== -->
             <section class="form-card">
 
                 <div class="section-header">
@@ -259,11 +264,231 @@
                     </div>
 
                     <div>
-                        <h2>Fleet Capacity</h2>
+                        <h2>Vehicle Specifications</h2>
 
                         <p>
-                            Configure fleet quantity and current
-                            operational status.
+                            Configure the specifications customers will
+                            see when viewing this vehicle.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="form-grid">
+
+                    <!-- Transmission -->
+                    <div class="field-group">
+
+                        <label for="{{ form.transmission.id_for_label }}">
+                            Transmission
+                            {% if form.transmission.field.required %}
+                                <span>*</span>
+                            {% endif %}
+                        </label>
+
+                        {{ form.transmission }}
+
+                        {% if form.transmission.help_text %}
+                            <small>
+                                {{ form.transmission.help_text }}
+                            </small>
+                        {% endif %}
+
+                        {% for error in form.transmission.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Fuel Type -->
+                    <div class="field-group">
+
+                        <label for="{{ form.fuel_type.id_for_label }}">
+                            Fuel Type
+                            {% if form.fuel_type.field.required %}
+                                <span>*</span>
+                            {% endif %}
+                        </label>
+
+                        {{ form.fuel_type }}
+
+                        {% if form.fuel_type.help_text %}
+                            <small>
+                                {{ form.fuel_type.help_text }}
+                            </small>
+                        {% endif %}
+
+                        {% for error in form.fuel_type.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Seats -->
+                    <div class="field-group">
+
+                        <label for="{{ form.seats.id_for_label }}">
+                            Seats
+                            {% if form.seats.field.required %}
+                                <span>*</span>
+                            {% endif %}
+                        </label>
+
+                        {{ form.seats }}
+
+                        {% if form.seats.help_text %}
+                            <small>
+                                {{ form.seats.help_text }}
+                            </small>
+                        {% endif %}
+
+                        {% for error in form.seats.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Doors -->
+                    <div class="field-group">
+
+                        <label for="{{ form.doors.id_for_label }}">
+                            Doors
+                            {% if form.doors.field.required %}
+                                <span>*</span>
+                            {% endif %}
+                        </label>
+
+                        {{ form.doors }}
+
+                        {% if form.doors.help_text %}
+                            <small>
+                                {{ form.doors.help_text }}
+                            </small>
+                        {% endif %}
+
+                        {% for error in form.doors.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Luggage Capacity -->
+                    <div class="field-group">
+
+                        <label for="{{ form.luggage_capacity.id_for_label }}">
+                            Luggage Capacity
+                            {% if form.luggage_capacity.field.required %}
+                                <span>*</span>
+                            {% endif %}
+                        </label>
+
+                        {{ form.luggage_capacity }}
+
+                        {% if form.luggage_capacity.help_text %}
+                            <small>
+                                {{ form.luggage_capacity.help_text }}
+                            </small>
+                        {% endif %}
+
+                        {% for error in form.luggage_capacity.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Air Conditioning -->
+                    <div class="field-group checkbox-field">
+
+                        <label class="checkbox-label"
+                               for="{{ form.air_conditioning.id_for_label }}">
+
+                            {{ form.air_conditioning }}
+
+                            <span class="checkbox-custom"></span>
+
+                            <span class="checkbox-text">
+                                <strong>Air Conditioning</strong>
+
+                                <small>
+                                    Vehicle has air conditioning.
+                                </small>
+                            </span>
+
+                        </label>
+
+                        {% for error in form.air_conditioning.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Features -->
+                    <div class="field-group field-wide">
+
+                        <label for="{{ form.features.id_for_label }}">
+                            Features
+                            {% if form.features.field.required %}
+                                <span>*</span>
+                            {% endif %}
+                        </label>
+
+                        {{ form.features }}
+
+                        {% if form.features.help_text %}
+                            <small>
+                                {{ form.features.help_text }}
+                            </small>
+                        {% endif %}
+
+                        {% for error in form.features.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 SECTION 03 — FLEET MANAGEMENT
+            ================================================== -->
+            <section class="form-card">
+
+                <div class="section-header">
+
+                    <div class="section-number">
+                        03
+                    </div>
+
+                    <div>
+                        <h2>Fleet Management</h2>
+
+                        <p>
+                            Configure fleet capacity and operational
+                            availability.
                         </p>
                     </div>
 
@@ -284,9 +509,11 @@
 
                         {{ form.total_quantity }}
 
-                        <small>
-                            Total number of vehicles in this fleet group.
-                        </small>
+                        {% if form.total_quantity.help_text %}
+                            <small>
+                                {{ form.total_quantity.help_text }}
+                            </small>
+                        {% endif %}
 
                         {% for error in form.total_quantity.errors %}
                             <div class="field-error">
@@ -297,30 +524,8 @@
                     </div>
 
 
-                    <!-- Maintenance Count -->
-                    <div class="field-group">
-
-                        <label for="{{ form.maintenance_count.id_for_label }}">
-                            Maintenance Units
-                        </label>
-
-                        {{ form.maintenance_count }}
-
-                        <small>
-                            Number of units currently under maintenance.
-                        </small>
-
-                        {% for error in form.maintenance_count.errors %}
-                            <div class="field-error">
-                                {{ error }}
-                            </div>
-                        {% endfor %}
-
-                    </div>
-
-
                     <!-- Fleet Status -->
-                    <div class="field-group field-wide">
+                    <div class="field-group">
 
                         <label for="{{ form.fleet_status.id_for_label }}">
                             Fleet Status
@@ -331,9 +536,11 @@
 
                         {{ form.fleet_status }}
 
-                        <small>
-                            Controls the operational status of this fleet.
-                        </small>
+                        {% if form.fleet_status.help_text %}
+                            <small>
+                                {{ form.fleet_status.help_text }}
+                            </small>
+                        {% endif %}
 
                         {% for error in form.fleet_status.errors %}
                             <div class="field-error">
@@ -348,24 +555,23 @@
             </section>
 
 
-            <!-- =========================
-                 SECTION 03
-                 MAINTENANCE
-            ========================== -->
+            <!-- =================================================
+                 SECTION 04 — MAINTENANCE
+            ================================================== -->
             <section class="form-card">
 
                 <div class="section-header">
 
                     <div class="section-number">
-                        03
+                        04
                     </div>
 
                     <div>
                         <h2>Maintenance Information</h2>
 
                         <p>
-                            Record the reason when fleet units are
-                            unavailable for rental.
+                            Record units currently unavailable because
+                            of maintenance or service.
                         </p>
                     </div>
 
@@ -374,18 +580,50 @@
 
                 <div class="form-grid">
 
+                    <!-- Maintenance Count -->
+                    <div class="field-group">
+
+                        <label for="{{ form.maintenance_count.id_for_label }}">
+                            Maintenance Units
+                            {% if form.maintenance_count.field.required %}
+                                <span>*</span>
+                            {% endif %}
+                        </label>
+
+                        {{ form.maintenance_count }}
+
+                        {% if form.maintenance_count.help_text %}
+                            <small>
+                                {{ form.maintenance_count.help_text }}
+                            </small>
+                        {% endif %}
+
+                        {% for error in form.maintenance_count.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Maintenance Reason -->
                     <div class="field-group field-wide">
 
                         <label for="{{ form.maintenance_reason.id_for_label }}">
                             Maintenance Reason
+                            {% if form.maintenance_reason.field.required %}
+                                <span>*</span>
+                            {% endif %}
                         </label>
 
                         {{ form.maintenance_reason }}
 
-                        <small>
-                            Example: scheduled service, engine repair,
-                            accident repair or inspection.
-                        </small>
+                        {% if form.maintenance_reason.help_text %}
+                            <small>
+                                {{ form.maintenance_reason.help_text }}
+                            </small>
+                        {% endif %}
 
                         {% for error in form.maintenance_reason.errors %}
                             <div class="field-error">
@@ -400,24 +638,23 @@
             </section>
 
 
-            <!-- =========================
-                 SECTION 04
-                 IMAGE
-            ========================== -->
+            <!-- =================================================
+                 SECTION 05 — VEHICLE IMAGE
+            ================================================== -->
             <section class="form-card">
 
                 <div class="section-header">
 
                     <div class="section-number">
-                        04
+                        05
                     </div>
 
                     <div>
                         <h2>Vehicle Image</h2>
 
                         <p>
-                            Upload a clear professional image of
-                            the vehicle.
+                            Upload a clear professional image of the
+                            vehicle.
                         </p>
                     </div>
 
@@ -436,8 +673,9 @@
                             </div>
 
                             <div class="current-image-info">
+
                                 <span class="image-label">
-                                    Current Vehicle Image
+                                    CURRENT VEHICLE IMAGE
                                 </span>
 
                                 <strong>
@@ -445,9 +683,10 @@
                                 </strong>
 
                                 <small>
-                                    Upload a new image below
-                                    to replace the current one.
+                                    Upload a new image below to replace
+                                    the current image.
                                 </small>
+
                             </div>
 
                         </div>
@@ -471,7 +710,7 @@
                             {{ form.image }}
 
                             <p>
-                                JPG, JPEG or PNG
+                                JPG, JPEG, PNG or WEBP
                             </p>
 
                         </div>
@@ -490,9 +729,9 @@
             </section>
 
 
-            <!-- =========================
+            <!-- =================================================
                  FORM ACTIONS
-            ========================== -->
+            ================================================== -->
             <div class="form-actions">
 
                 <a href="{% url 'fleet_management' %}"
@@ -518,10 +757,11 @@
 </div>
 
 
-<!-- =========================
-     SMALL FORM ENHANCEMENT
-========================== -->
+<!-- =========================================================
+     FILE UPLOAD ENHANCEMENT
+========================================================== -->
 <script>
+
 document.addEventListener("DOMContentLoaded", function () {
 
     const fileInput = document.querySelector(
@@ -545,12 +785,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 uploadButton.textContent =
                     "Choose Vehicle Image";
+
             }
 
         });
+
     }
 
 });
+
 </script>
 
 </body>

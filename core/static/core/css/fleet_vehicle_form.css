@@ -1,7 +1,7 @@
 /* =========================================================
    SMART CAR RENTAL
    FLEET VEHICLE FORM
-   Professional admin/staff interface
+   Professional Admin / Staff Interface
 ========================================================= */
 
 :root {
@@ -21,13 +21,17 @@
 
     --success: #15803d;
     --danger: #dc2626;
+    --warning: #b45309;
 
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-lg: 16px;
 
-    --shadow-sm: 0 1px 3px rgba(16, 24, 40, 0.06);
-    --shadow-md: 0 8px 24px rgba(16, 24, 40, 0.07);
+    --shadow-sm:
+        0 1px 3px rgba(16, 24, 40, 0.06);
+
+    --shadow-md:
+        0 8px 24px rgba(16, 24, 40, 0.07);
 }
 
 
@@ -93,11 +97,11 @@ textarea {
     padding: 0 40px;
 
     background: #ffffff;
-
     border-bottom: 1px solid var(--border-light);
 
     position: sticky;
     top: 0;
+
     z-index: 100;
 }
 
@@ -127,9 +131,11 @@ textarea {
 .brand-section {
     font-size: 12px;
     font-weight: 600;
+
     color: var(--text-muted);
 
     padding-left: 12px;
+
     border-left: 1px solid var(--border);
 }
 
@@ -139,6 +145,7 @@ textarea {
     gap: 9px;
 
     color: var(--text-muted);
+
     text-decoration: none;
 
     font-size: 14px;
@@ -160,10 +167,10 @@ textarea {
     align-items: center;
 
     min-height: 32px;
+
     padding: 0 12px;
 
     background: #f8fafc;
-
     border: 1px solid var(--border);
 
     border-radius: 999px;
@@ -217,13 +224,14 @@ textarea {
     margin: 0;
 
     font-size: clamp(28px, 4vw, 38px);
+
     line-height: 1.15;
 
     letter-spacing: -0.025em;
 }
 
 .page-heading p {
-    max-width: 650px;
+    max-width: 700px;
 
     margin: 10px 0 0;
 
@@ -266,7 +274,6 @@ textarea {
 
 .vehicle-reference strong {
     color: var(--text);
-
     font-size: 15px;
 }
 
@@ -278,6 +285,7 @@ textarea {
 .vehicle-form {
     display: flex;
     flex-direction: column;
+
     gap: 22px;
 }
 
@@ -450,7 +458,115 @@ textarea {
     color: var(--text-light);
 
     font-size: 12px;
+
     line-height: 1.45;
+}
+
+
+/* =========================================================
+   CHECKBOX
+========================================================= */
+
+.checkbox-field {
+    justify-content: flex-start;
+}
+
+.checkbox-label {
+    min-height: 70px;
+
+    display: flex !important;
+    align-items: center;
+
+    gap: 12px;
+
+    margin: 0 !important;
+
+    padding: 13px 15px;
+
+    background: #f8fafc;
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius-sm);
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+.checkbox-label:hover {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+}
+
+.checkbox-label input[type="checkbox"] {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+
+    opacity: 0;
+}
+
+.checkbox-custom {
+    width: 20px;
+    height: 20px;
+
+    flex: 0 0 20px;
+
+    border: 1px solid #b8c1d1;
+
+    border-radius: 5px;
+
+    background: #ffffff;
+
+    position: relative;
+}
+
+.checkbox-label input[type="checkbox"]:checked
+~ .checkbox-custom {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.checkbox-label input[type="checkbox"]:checked
+~ .checkbox-custom::after {
+    content: "✓";
+
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -53%);
+
+    color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.checkbox-text {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+.checkbox-text strong {
+    font-size: 13px;
+    color: var(--text);
+}
+
+.checkbox-text small {
+    margin: 0;
+
+    color: var(--text-muted);
+
+    font-size: 11px;
 }
 
 
@@ -474,6 +590,7 @@ textarea {
     background: #f8fafc;
 
     border: 1px solid var(--border);
+
     border-right: 0;
 
     border-radius:
@@ -580,10 +697,10 @@ textarea {
 }
 
 .image-preview {
-    width: 120px;
-    height: 84px;
+    width: 140px;
+    height: 92px;
 
-    flex: 0 0 120px;
+    flex: 0 0 140px;
 
     overflow: hidden;
 
@@ -604,6 +721,7 @@ textarea {
 .current-image-info {
     display: flex;
     flex-direction: column;
+
     gap: 3px;
 }
 
@@ -614,6 +732,7 @@ textarea {
     font-weight: 800;
 
     text-transform: uppercase;
+
     letter-spacing: 0.06em;
 }
 
@@ -683,6 +802,7 @@ textarea {
 .upload-content {
     display: flex;
     flex-direction: column;
+
     align-items: center;
 }
 
@@ -699,6 +819,7 @@ textarea {
 
 .upload-button {
     display: inline-flex;
+
     align-items: center;
     justify-content: center;
 
@@ -826,7 +947,7 @@ textarea {
 
 
 /* =========================================================
-   RESPONSIVE
+   RESPONSIVE — TABLET
 ========================================================= */
 
 @media (max-width: 900px) {
@@ -865,6 +986,10 @@ textarea {
 
 }
 
+
+/* =========================================================
+   RESPONSIVE — MOBILE
+========================================================= */
 
 @media (max-width: 600px) {
 
@@ -910,6 +1035,11 @@ textarea {
         align-items: flex-start;
 
         flex-direction: column;
+    }
+
+    .image-preview {
+        width: 100%;
+        height: 180px;
     }
 
     .upload-box {
