@@ -552,6 +552,10 @@ Payment Management | Smart Car Rental
 
         <div class="payment-header-left">
 
+            <div class="payment-breadcrumb" style="font-size: 12px; color: #64748b; font-weight: 700; margin-bottom: 6px;">
+                <span>ADMIN</span> / <span>PAYMENT MANAGEMENT</span>
+            </div>
+
             <h1>
                 💰 Payment Management
             </h1>
@@ -563,8 +567,18 @@ Payment Management | Smart Car Rental
 
         </div>
 
-        <div class="payment-header-icon">
-            💳
+        <div style="display: flex; gap: 14px; align-items: center;">
+
+            <a href="{% url 'admin_dashboard' %}"
+               class="btn btn-secondary"
+               style="background: #e2e8f0; color: #1e293b; text-decoration: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                <span>←</span> Dashboard
+            </a>
+
+            <div class="payment-header-icon">
+                💳
+            </div>
+
         </div>
 
     </div>

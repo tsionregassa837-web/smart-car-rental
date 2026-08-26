@@ -48,7 +48,13 @@ Reports & Analytics | Smart Car Rental
         </div>
 
 
-        <div class="reports-header-meta">
+        <div class="reports-header-meta" style="display: flex; gap: 16px; align-items: center;">
+
+            <a href="{% url 'admin_dashboard' %}"
+               class="btn btn-secondary"
+               style="background: #e2e8f0; color: #1e293b; text-decoration: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                <span>←</span> Dashboard
+            </a>
 
             <span class="report-status-dot"></span>
 
@@ -827,18 +833,26 @@ Reports & Analytics | Smart Car Rental
                                     <div class="customer-cell">
 
                                         <div class="customer-avatar">
-                                            {{ booking.first_name|first|upper }}
+                                            {% if booking.user.first_name %}
+    {{ booking.user.first_name|first|upper }}
+{% else %}
+    {{ booking.user.username|first|upper }}
+{% endif %}
                                         </div>
 
                                         <div>
                                             <strong>
-                                                {{ booking.first_name }}
-                                                {{ booking.last_name }}
-                                            </strong>
+    {% if booking.user.first_name or booking.user.last_name %}
+        {{ booking.user.first_name }}
+        {{ booking.user.last_name }}
+    {% else %}
+        {{ booking.user.username }}
+    {% endif %}
+</strong>
 
-                                            <span>
-                                                {{ booking.email }}
-                                            </span>
+<span>
+    {{ booking.user.email }}
+</span>
                                         </div>
 
                                     </div>

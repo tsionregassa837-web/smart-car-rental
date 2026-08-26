@@ -21,8 +21,9 @@ Book Your Car - Smart Car Rental
 
 <div class="booking-form-card">
 
-<div class="booking-heading">
+<div class="booking-heading" style="display: flex; justify-content: space-between; align-items: center;">
 
+<div style="display: flex; align-items: center; gap: 14px;">
 <i class="fa-solid fa-car"></i>
 
 <div>
@@ -35,6 +36,15 @@ Book Your Vehicle
 Complete your rental information
 </p>
 
+</div>
+</div>
+
+<div>
+<a href="{% url 'cars' %}"
+   class="btn btn-secondary"
+   style="background: #e2e8f0; color: #1e293b; text-decoration: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+    <span>←</span> Back to Cars
+</a>
 </div>
 
 </div>

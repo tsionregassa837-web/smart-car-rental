@@ -12,12 +12,26 @@
 
 
 <section class="payment-history-page">
-  <div class="history-hero">
-    <div class="history-hero-icon"><i class="fa-solid fa-receipt"></i></div>
+  <div class="history-hero" style="display: flex; justify-content: space-between; align-items: center;">
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <div class="history-hero-icon"><i class="fa-solid fa-receipt"></i></div>
+      <div>
+        <p class="history-eyebrow">ACCOUNT ACTIVITY</p>
+        <h1>Payment History</h1>
+        <p>View all payments for your car rental bookings.</p>
+      </div>
+    </div>
+
     <div>
-      <p class="history-eyebrow">ACCOUNT ACTIVITY</p>
-      <h1>Payment History</h1>
-      <p>View all payments for your car rental bookings.</p>
+      {% if request.user.is_staff %}
+        <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary" style="background: #e2e8f0; color: #1e293b; text-decoration: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+          <span>←</span> Dashboard
+        </a>
+      {% else %}
+        <a href="{% url 'customer_dashboard' %}" class="btn btn-secondary" style="background: #e2e8f0; color: #1e293b; text-decoration: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+          <span>←</span> Dashboard
+        </a>
+      {% endif %}
     </div>
   </div>
 

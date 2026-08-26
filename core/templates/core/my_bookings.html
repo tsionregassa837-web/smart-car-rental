@@ -20,16 +20,26 @@ My Bookings
          PAGE HEADER
     ================================================== -->
 
-    <div class="page-header">
+    <div class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
 
-        <h1>
-            <i class="fa-solid fa-car"></i>
-            My Rentals
-        </h1>
+        <div>
+            <h1>
+                <i class="fa-solid fa-car"></i>
+                My Rentals
+            </h1>
 
-        <p>
-            Manage your car rental bookings
-        </p>
+            <p>
+                Manage your car rental bookings
+            </p>
+        </div>
+
+        <div>
+            <a href="{% url 'customer_dashboard' %}"
+               class="btn btn-secondary"
+               style="background: #e2e8f0; color: #1e293b; text-decoration: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                <span>←</span> Back 
+            </a>
+        </div>
 
     </div>
 

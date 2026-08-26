@@ -17,29 +17,35 @@ My Profile
 
     <!-- PROFILE HEADER -->
 
-    <div class="profile-header">
+    <div class="profile-header" style="display: flex; justify-content: space-between; align-items: center;">
 
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <div class="profile-avatar">
+                <i class="fa-solid fa-user"></i>
+            </div>
 
-        <div class="profile-avatar">
+            <div>
+                <h1>
+                    {{ user.get_full_name|default:user.username }}
+                </h1>
 
-            <i class="fa-solid fa-user"></i>
-
+                <p>
+                    Smart Car Rental Customer
+                </p>
+            </div>
         </div>
-
 
         <div>
-
-            <h1>
-                {{ user.get_full_name|default:user.username }}
-            </h1>
-
-
-            <p>
-                Smart Car Rental Customer
-            </p>
-
+            {% if request.user.is_staff %}
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary" style="background: #e2e8f0; color: #1e293b; text-decoration: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                    <span>←</span> Dashboard
+                </a>
+            {% else %}
+                <a href="{% url 'customer_dashboard' %}" class="btn btn-secondary" style="background: #e2e8f0; color: #1e293b; text-decoration: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                    <span>←</span> Dashboard
+                </a>
+            {% endif %}
         </div>
-
 
     </div>
 

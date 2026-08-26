@@ -332,19 +332,13 @@ Return:
 
 
 
-<a href="{% url 'cancel_booking' booking.id %}"
-
-class="cancel-btn"
-
-onclick="return confirm('Cancel this booking?');">
-
-
+<form method="post" action="{% url 'cancel_booking' booking.id %}" style="display:inline;">
+{% csrf_token %}
+<button type="submit" class="cancel-btn" style="border:none; background:none; cursor:pointer;" onclick="return confirm('Cancel this booking?');">
 <i class="fa-solid fa-xmark"></i>
-
 Cancel
-
-
-</a>
+</button>
+</form>
 
 
 

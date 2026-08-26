@@ -784,54 +784,54 @@ Booking #{{ booking.id }} | Smart Car Rental
 
                         {% if booking.document_status == "Verified" %}
 
-                            <a
-                                href="{% url 'update_booking_status' booking.id 'Approved' %}"
-                                class="action-button approve-button"
-                            >
-                                ✓ Approve Booking
-                            </a>
+                            <form method="post" action="{% url 'update_booking_status' booking.id 'Approved' %}" onsubmit="return confirm('Approve booking #{{ booking.id }}?');">
+                                {% csrf_token %}
+                                <button type="submit" class="action-button approve-button" style="width: 100%; margin-bottom: 8px;">
+                                    ✓ Approve Booking
+                                </button>
+                            </form>
 
                         {% else %}
 
-                            <div class="disabled-action">
+                            <div class="disabled-action" style="margin-bottom: 8px;">
                                 🔒 Verify documents first
                             </div>
 
                         {% endif %}
 
 
-                        <a
-                            href="{% url 'update_booking_status' booking.id 'Rejected' %}"
-                            class="action-button reject-button"
-                        >
-                            × Reject Booking
-                        </a>
+                        <form method="post" action="{% url 'update_booking_status' booking.id 'Rejected' %}" onsubmit="return confirm('Reject booking #{{ booking.id }}?');">
+                            {% csrf_token %}
+                            <button type="submit" class="action-button reject-button" style="width: 100%; margin-bottom: 8px;">
+                                × Reject Booking
+                            </button>
+                        </form>
 
 
-                        <a
-                            href="{% url 'update_booking_status' booking.id 'Cancelled' %}"
-                            class="action-button cancel-button"
-                        >
-                            ⊘ Cancel Booking
-                        </a>
+                        <form method="post" action="{% url 'update_booking_status' booking.id 'Cancelled' %}" onsubmit="return confirm('Cancel booking #{{ booking.id }}?');">
+                            {% csrf_token %}
+                            <button type="submit" class="action-button cancel-button" style="width: 100%;">
+                                ⊘ Cancel Booking
+                            </button>
+                        </form>
 
 
                     {% elif booking.status == "Approved" %}
 
 
-                        <div class="current-state approved-state">
+                        <div class="current-state approved-state" style="margin-bottom: 8px;">
                             ✓ Booking Approved
                         </div>
 
 
                         {% if booking.payment_status == "Paid" and booking.document_status == "Verified" %}
 
-                            <a
-                                href="{% url 'rental_action' booking.id 'start' %}"
-                                class="action-button start-button"
-                            >
-                                🚗 Start Rental
-                            </a>
+                            <form method="post" action="{% url 'rental_action' booking.id 'start' %}" onsubmit="return confirm('Start rental for booking #{{ booking.id }}?');">
+                                {% csrf_token %}
+                                <button type="submit" class="action-button start-button" style="width: 100%;">
+                                    🚗 Start Rental
+                                </button>
+                            </form>
 
                         {% else %}
 
@@ -855,17 +855,17 @@ Booking #{{ booking.id }} | Smart Car Rental
                     {% elif booking.status == "Active" %}
 
 
-                        <div class="current-state active-state">
+                        <div class="current-state active-state" style="margin-bottom: 8px;">
                             ● Rental currently active
                         </div>
 
 
-                        <a
-                            href="{% url 'rental_action' booking.id 'complete' %}"
-                            class="action-button complete-button"
-                        >
-                            ✓ Complete Rental
-                        </a>
+                        <form method="post" action="{% url 'rental_action' booking.id 'complete' %}" onsubmit="return confirm('Complete rental for booking #{{ booking.id }}?');">
+                            {% csrf_token %}
+                            <button type="submit" class="action-button complete-button" style="width: 100%;">
+                                ✓ Complete Rental
+                            </button>
+                        </form>
 
 
                     {% elif booking.status == "Completed" %}
@@ -929,6 +929,7 @@ Booking #{{ booking.id }} | Smart Car Rental
                                 <a
                                     href="{% url 'payment' booking.id %}"
                                     class="action-button payment-button"
+                                    style="width: 100%; text-align: center; display: block; margin-bottom: 8px;"
                                 >
                                     💳 Make Payment
                                 </a>
@@ -940,12 +941,12 @@ Booking #{{ booking.id }} | Smart Car Rental
 
                         {% if booking.status == "Pending" %}
 
-                            <a
-                                href="{% url 'cancel_booking' booking.id %}"
-                                class="action-button cancel-button"
-                            >
-                                Cancel Booking
-                            </a>
+                            <form method="post" action="{% url 'cancel_booking' booking.id %}" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+                                {% csrf_token %}
+                                <button type="submit" class="action-button cancel-button" style="width: 100%;">
+                                    Cancel Booking
+                                </button>
+                            </form>
 
                         {% endif %}
 

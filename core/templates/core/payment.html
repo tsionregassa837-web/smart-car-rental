@@ -17,17 +17,29 @@ Payment - Smart Car Rental
          PAGE HEADER
          ===================================================== -->
 
-    <div class="payment-header">
+    <div class="payment-header" style="display: flex; justify-content: space-between; align-items: center;">
 
-        <div class="payment-header-icon">
-            <i class="fa-solid fa-shield-halved"></i>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <div class="payment-header-icon">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+
+            <div>
+                <h1>Complete Your Payment</h1>
+
+                <p>
+                    Secure your rental by completing the payment below.
+                </p>
+            </div>
         </div>
 
-        <h1>Complete Your Payment</h1>
-
-        <p>
-            Secure your rental by completing the payment below.
-        </p>
+        <div>
+            <a href="{% url 'customer_booking_detail' booking.id %}"
+               class="btn btn-secondary"
+               style="background: #e2e8f0; color: #1e293b; text-decoration: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-arrow-left"></i> Back to Booking Details
+            </a>
+        </div>
 
     </div>
 

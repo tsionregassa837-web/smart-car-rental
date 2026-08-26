@@ -1,4 +1,3 @@
-```html
 {% extends "core/base.html" %}
 {% load static %}
 
@@ -21,19 +20,40 @@ Account Settings | Smart Car Rental
 
     <!-- PAGE HEADER -->
 
-    <div class="settings-header">
+    <div class="settings-header" style="display:flex; justify-content:space-between; align-items:center;">
 
-        <div class="settings-icon">
-            <i class="fa-solid fa-user-gear"></i>
+        <div style="display:flex; align-items:center; gap:16px;">
+            <div class="settings-icon">
+                <i class="fa-solid fa-user-gear"></i>
+            </div>
+
+            <div>
+                <h1>
+                    Account Settings
+                </h1>
+
+                <p>
+                    Manage your account security, notifications, and preferences.
+                </p>
+            </div>
         </div>
 
-        <h1>
-            Account Settings
-        </h1>
+        <div>
+            {% if request.user.is_staff %}
+                <a href="{% url 'admin_dashboard' %}" class="back-link" style="text-decoration:none; font-weight:600; color:#2463EB;">
+                    ← Back
+                </a>
 
-        <p>
-            Manage your account security, notifications, and preferences.
-        </p>
+
+
+
+                
+            {% else %}
+                <a href="{% url 'customer_dashboard' %}" class="back-link" style="text-decoration:none; font-weight:600; color:#2463EB;">
+                    ← Back
+                </a>
+            {% endif %}
+        </div>
 
     </div>
 
@@ -441,100 +461,5 @@ Account Settings | Smart Car Rental
 
 </div>
 
-
-{% endblock %}
-```
-{% extends "core/base.html" %}
-{% load static %}
-
-{% block extra_css %}
-<link rel="stylesheet"
-      href="{% static 'core/css/admin_profile.css' %}">
-{% endblock %}
-
-{% block title %}
-Account Settings - Smart Car Rental
-{% endblock %}
-
-{% block content %}
-
-<div class="profile-page">
-
-    <div class="profile-page-header">
-
-        <div>
-
-            <span>ACCOUNT</span>
-
-            <h1>Account Settings</h1>
-
-            <p>
-                Manage your administrator account and security.
-            </p>
-
-        </div>
-
-        <a href="{% url 'admin_dashboard' %}"
-           class="back-dashboard">
-            ← Dashboard
-        </a>
-
-    </div>
-
-
-    <div class="settings-grid">
-
-        <div class="settings-card">
-
-            <div class="settings-icon">
-                🔐
-            </div>
-
-            <div>
-
-                <h2>Password & Security</h2>
-
-                <p>
-                    Keep your administrator account secure
-                    by regularly updating your password.
-                </p>
-
-                <a href="{% url 'password_change' %}"
-                   class="settings-button">
-                    Change Password →
-                </a>
-
-            </div>
-
-        </div>
-
-
-        <div class="settings-card">
-
-            <div class="settings-icon">
-                👤
-            </div>
-
-            <div>
-
-                <h2>Profile Information</h2>
-
-                <p>
-                    Update your administrator name and
-                    email address.
-                </p>
-
-                <a href="{% url 'admin_profile' %}"
-                   class="settings-button">
-                    Edit My Profile →
-                </a>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
 
 {% endblock %}

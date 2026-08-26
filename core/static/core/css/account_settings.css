@@ -718,3 +718,32 @@ MOBILE
 
 
 }
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+    padding: 10px 16px;
+
+    color: #1f2937;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+
+    transition: all 0.2s ease;
+}
+
+.back-link span {
+    font-size: 18px;
+    line-height: 1;
+}
+
+.back-link:hover {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+    transform: translateX(-2px);
+}

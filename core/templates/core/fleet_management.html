@@ -27,16 +27,6 @@ Fleet Management | Smart Car Rental
                 <span>FLEET MANAGEMENT</span>
             </div>
 
-            <div class="header-actions">
-
-                <a href="{% url 'admin_dashboard' %}"
-                   class="btn btn-secondary">
-
-                    <span class="btn-icon">←</span>
-                    Dashboard
-
-                </a>
-
             <h1>Fleet Management</h1>
 
             <p>
@@ -46,7 +36,14 @@ Fleet Management | Smart Car Rental
 
         </div>
 
-        <div class="fleet-header-actions">
+        <div class="fleet-header-actions" style="display: flex; gap: 12px; align-items: center;">
+
+            <a href="{% url 'admin_dashboard' %}"
+               class="fleet-btn fleet-btn-secondary"
+               style="background: #e2e8f0; color: #1e293b; text-decoration: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                <span class="btn-icon">←</span>
+                Dashboard
+            </a>
 
             <a
                 href="{% url 'fleet_vehicle_add' %}"
@@ -306,6 +303,13 @@ Fleet Management | Smart Car Rental
                     >
                         Available
                     </option>
+
+                    <option value="Reserved"
+    {% if status == "Reserved" %}selected{% endif %}
+>
+    Reserved
+</option>
+
 
                     <option
                         value="Rented"

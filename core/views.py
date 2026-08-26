@@ -10,6 +10,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.tokens import default_token_generator
+from django.http import FileResponse, Http404
+from django.core.exceptions import PermissionDenied
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.mail import send_mail
 from django.core.validators import validate_email
@@ -28,69 +30,16 @@ from .models import Booking, Car, Contact
 
 
 # ============================================================
-# RENTAL STATUS AUTOMATION
+# RENTAL STATUS HELPER
 # ============================================================
 
 def update_rental_statuses():
     """
-    Automatically updates rental lifecycle states.
-
-    APPROVED -> ACTIVE
-    ACTIVE   -> COMPLETED
-
-    A booking can only become ACTIVE when payment is Paid.
+    Rental lifecycle states (Approved -> Active -> Completed) are controlled
+    via explicit staff actions upon vehicle handover and return inspection.
+    This helper is preserved for backward compatibility.
     """
-
-    today = timezone.localdate()
-
-    # --------------------------------------------------------
-    # APPROVED -> ACTIVE
-    # --------------------------------------------------------
-
-    approved_bookings = Booking.objects.filter(
-        status="Approved",
-        payment_status="Paid",
-        pickup_date__lte=today,
-    )
-
-    for booking in approved_bookings:
-
-        update_data = {
-            "status": "Active",
-        }
-
-        if not booking.pickup_completed:
-            update_data["pickup_completed"] = timezone.now()
-
-        Booking.objects.filter(
-            pk=booking.pk
-        ).update(
-            **update_data
-        )
-
-    # --------------------------------------------------------
-    # ACTIVE -> COMPLETED
-    # --------------------------------------------------------
-
-    active_bookings = Booking.objects.filter(
-        status="Active",
-        dropoff_date__lt=today,
-    )
-
-    for booking in active_bookings:
-
-        update_data = {
-            "status": "Completed",
-        }
-
-        if not booking.return_completed:
-            update_data["return_completed"] = timezone.now()
-
-        Booking.objects.filter(
-            pk=booking.pk
-        ).update(
-            **update_data
-        )
+    pass
 
 
 # ============================================================
@@ -1079,68 +1028,95 @@ def my_bookings(request):
 
 
 @login_required
-def booking_detail(request, id):
+def booking_detail(request, booking_id=None, id=None):
+    """
+    Unified booking detail workspace for both customers and staff.
+    - Staff can access and inspect any booking.
+    - Customers can only access their own bookings.
+    """
+    actual_id = booking_id if booking_id is not None else id
 
-    booking = get_object_or_404(
-        Booking,
-        id=id,
-        user=request.user,
-    )
+    if request.user.is_staff:
+        booking = get_object_or_404(
+            Booking.objects.select_related("car", "user"),
+            id=actual_id,
+        )
+    else:
+        booking = get_object_or_404(
+            Booking.objects.select_related("car", "user"),
+            id=actual_id,
+            user=request.user,
+        )
+
+    context = {
+        "booking": booking,
+        "customer_name": " ".join(
+            part
+            for part in [
+                booking.first_name,
+                booking.middle_name,
+                booking.last_name,
+            ]
+            if part
+        ),
+        "vehicle": booking.car,
+        "rental_days": booking.rental_days,
+        "documents_complete": bool(
+            booking.driver_license and booking.national_id
+        ),
+        "can_approve": (
+            booking.status == "Pending"
+            and booking.document_status == "Verified"
+            and booking.car is not None
+        ),
+        "can_start_rental": (
+            booking.status == "Approved"
+            and booking.payment_status == "Paid"
+            and booking.document_status == "Verified"
+        ),
+        "can_complete_rental": (
+            booking.status == "Active"
+        ),
+    }
 
     return render(
         request,
         "core/booking_detail.html",
-        {
-            "booking": booking,
-        },
+        context,
     )
 
 
 @login_required
-def cancel_booking(
-    request,
-    booking_id,
-):
+@require_POST
+def cancel_booking(request, booking_id):
+    """
+    Cancel an existing booking. Protected with POST and CSRF.
+    """
+    if request.user.is_staff:
+        booking = get_object_or_404(Booking, id=booking_id)
+    else:
+        booking = get_object_or_404(Booking, id=booking_id, user=request.user)
 
-    booking = get_object_or_404(
-        Booking,
-        id=booking_id,
-        user=request.user,
-    )
-
-    if booking.status not in [
-        "Pending",
-        "Approved",
-    ]:
-
+    if booking.status not in ["Pending", "Approved"]:
         messages.error(
             request,
-            (
-                "This booking can no longer "
-                "be cancelled."
-            ),
+            "This booking can no longer be cancelled."
         )
-
-        return redirect(
-            "customer_dashboard"
-        )
+        if request.user.is_staff:
+            return redirect("booking_management")
+        return redirect("customer_dashboard")
 
     booking.status = "Cancelled"
-
-    booking.save(
-        update_fields=[
-            "status",
-        ]
-    )
+    booking.save(update_fields=["status"])
 
     messages.success(
         request,
-        f"Booking #{booking.id} has been cancelled.",
+        f"Booking #{booking.id} has been cancelled."
     )
 
-    return redirect(
-        "customer_dashboard"
-    )
+    if request.user.is_staff:
+        return redirect("booking_management")
+    return redirect("customer_dashboard")
 
 
 # ============================================================
@@ -1149,6 +1125,7 @@ def cancel_booking(
 
 @login_required
 def booking_document(request, booking_id, document_type):
+
     booking = get_object_or_404(
         Booking,
         id=booking_id,
@@ -1183,7 +1160,7 @@ def booking_document(request, booking_id, document_type):
     # --------------------------------------------------------
 
     if not document:
-        raise PermissionDenied(
+        raise Http404(
             "Requested document does not exist."
         )
 
@@ -1195,7 +1172,7 @@ def booking_document(request, booking_id, document_type):
         document.open("rb")
 
     except (FileNotFoundError, OSError):
-        raise PermissionDenied(
+        raise Http404(
             "The requested document file is unavailable."
         )
 
@@ -1208,6 +1185,7 @@ def booking_document(request, booking_id, document_type):
         as_attachment=False,
         filename=os.path.basename(document.name),
     )
+
 # ============================================================
 # CUSTOMER PAYMENT
 # ============================================================
@@ -1241,7 +1219,7 @@ def payment(
 
         return redirect(
             "booking_detail",
-            id=booking.id,
+            booking_id=booking.id,
         )
 
     # --------------------------------------------------------
@@ -2257,10 +2235,7 @@ def admin_dashboard(request):
 # CUSTOMER MANAGEMENT
 # ============================================================
 
-from django.contrib.auth.models import User
-from django.db.models import Count, Q, Sum
-from django.shortcuts import render
-
+@staff_member_required
 
 def customer_management(request):
 
@@ -2326,19 +2301,24 @@ def customer_management(request):
     # SUMMARY STATISTICS
     # ========================================================
 
-    total_customers = customers.count()
+    all_customers = User.objects.filter(
+        is_staff=False,
+        is_superuser=False
+        )
 
-    active_customers = customers.filter(
+    total_customers = all_customers.count()
+
+    active_customers = all_customers.filter(
         is_active=True
     ).count()
 
-    inactive_customers = customers.filter(
-        is_active=False
+    inactive_customers = all_customers.filter(
+
     ).count()
 
-    customers_with_rentals = customers.filter(
-        total_bookings__gt=0
-    ).count()
+    customers_with_rentals = all_customers.filter(
+        booking__isnull=False
+    ).distinct().count()
 
 
     context = {
@@ -2367,8 +2347,7 @@ def customer_management(request):
 # ============================================================
 # CUSTOMER DETAIL
 # ============================================================
-
-@login_required
+@staff_member_required
 def customer_detail(request, user_id):
 
     # --------------------------------------------------------
@@ -2496,9 +2475,7 @@ def customer_detail(request, user_id):
 @staff_member_required
 def fleet_management(request):
 
-    cars = Car.objects.all().order_by(
-        "name"
-    )
+    cars = Car.objects.all().order_by("name")
 
     # --------------------------------------------------------
     # SEARCH
@@ -2510,7 +2487,6 @@ def fleet_management(request):
     ).strip()
 
     if search:
-
         cars = cars.filter(
             Q(name__icontains=search)
             | Q(plate_number__icontains=search)
@@ -2527,18 +2503,21 @@ def fleet_management(request):
     )
 
     valid_fleet_statuses = {
-    "Available",
-    "Maintenance",
-    "Inactive",
-}
+        "Available",
+        "Maintenance",
+        "Inactive",
+    }
 
-    if status == "Rented":
-
+    # "Reserved" and "Rented" are booking states,
+    # not Car.fleet_status values.
+    if status == "Reserved":
         cars = cars.filter(
-            booking__status__in=[
-                "Approved",
-                "Active",
-            ]
+            booking__status="Approved"
+        ).distinct()
+
+    elif status == "Rented":
+        cars = cars.filter(
+            booking__status="Active"
         ).distinct()
 
     elif (
@@ -2546,10 +2525,9 @@ def fleet_management(request):
         and status != "All"
         and status in valid_fleet_statuses
     ):
-
         cars = cars.filter(
             fleet_status=status
-            )
+        )
 
     # --------------------------------------------------------
     # FLEET DATA
@@ -2559,29 +2537,41 @@ def fleet_management(request):
 
     total_vehicles = 0
     available_vehicles = 0
+    reserved_vehicles = 0
     rented_vehicles = 0
     maintenance_vehicles = 0
     inactive_vehicles = 0
 
     for car in cars:
 
-        rented_count = Booking.objects.filter(
-            car=car,
-            status__in=[
-                "Approved",
-                "Active",
-            ],
-        ).count()
-
-        available = max(
-            0,
-            car.available_quantity or 0,
-        )
-
         total_quantity = max(
             0,
             car.total_quantity or 0,
         )
+
+        # ----------------------------------------------------
+        # RESERVED
+        # Approved bookings = future/reserved vehicles
+        # ----------------------------------------------------
+
+        reserved_count = Booking.objects.filter(
+            car=car,
+            status="Approved",
+        ).count()
+
+        # ----------------------------------------------------
+        # RENTED
+        # Active bookings = currently rented vehicles
+        # ----------------------------------------------------
+
+        rented_count = Booking.objects.filter(
+            car=car,
+            status="Active",
+        ).count()
+
+        # ----------------------------------------------------
+        # MAINTENANCE
+        # ----------------------------------------------------
 
         maintenance_count = max(
             0,
@@ -2591,44 +2581,95 @@ def fleet_management(request):
         if maintenance_count > total_quantity:
             maintenance_count = total_quantity
 
+        # ----------------------------------------------------
+        # INACTIVE
+        # ----------------------------------------------------
+
         if car.fleet_status == "Inactive":
-
             inactive_count = total_quantity
-
         else:
-
             inactive_count = 0
+
+        # ----------------------------------------------------
+        # AVAILABLE
+        #
+        # Available units are units not reserved, rented,
+        # maintained, or inactive.
+        # ----------------------------------------------------
+
+        unavailable_units = (
+            reserved_count
+            + rented_count
+            + maintenance_count
+            + inactive_count
+        )
+
+        available = max(
+            0,
+            total_quantity - unavailable_units,
+        )
+
+        # ----------------------------------------------------
+        # SAFETY CAP
+        #
+        # Prevent bad historical data from making the counts
+        # exceed the fleet size.
+        # ----------------------------------------------------
+
+        reserved_count = min(
+            reserved_count,
+            total_quantity,
+        )
+
+        rented_count = min(
+            rented_count,
+            total_quantity,
+        )
+
+        available = min(
+            available,
+            total_quantity,
+        )
+
+        # ----------------------------------------------------
+        # TOTALS
+        # ----------------------------------------------------
 
         total_vehicles += total_quantity
         available_vehicles += available
+        reserved_vehicles += reserved_count
         rented_vehicles += rented_count
         maintenance_vehicles += maintenance_count
         inactive_vehicles += inactive_count
 
+        # ----------------------------------------------------
+        # ROW DATA
+        # ----------------------------------------------------
+
         fleet_data.append({
             "car": car,
-            "rented_count": rented_count,
             "available": available,
+            "reserved_count": reserved_count,
+            "rented_count": rented_count,
             "maintenance_count": maintenance_count,
             "inactive_count": inactive_count,
         })
 
-    context = {
+    # --------------------------------------------------------
+    # CONTEXT
+    # --------------------------------------------------------
 
+    context = {
         "fleet_data": fleet_data,
 
         "total_vehicles": total_vehicles,
-
         "available_vehicles": available_vehicles,
-
+        "reserved_vehicles": reserved_vehicles,
         "rented_vehicles": rented_vehicles,
-
         "maintenance_vehicles": maintenance_vehicles,
-
         "inactive_vehicles": inactive_vehicles,
 
         "search": search,
-
         "status": status,
     }
 
@@ -2946,6 +2987,7 @@ def fleet_vehicle_detail(request, car_id):
 # ============================================================
 
 @staff_member_required
+@require_POST
 def fleet_vehicle_archive(request, car_id):
     """
     Archive a fleet vehicle.
@@ -2963,20 +3005,7 @@ def fleet_vehicle_archive(request, car_id):
         id=car_id,
     )
 
-    # --------------------------------------------------------
-    # ONLY POST IS ALLOWED
-    # --------------------------------------------------------
-
-    if request.method != "POST":
-
-        messages.error(
-            request,
-            "Invalid request.",
-        )
-
-        return redirect(
-            "fleet_management"
-        )
+    
 
     # --------------------------------------------------------
     # DO NOT ARCHIVE AN ALREADY INACTIVE VEHICLE
@@ -3203,89 +3232,10 @@ def booking_management(request):
         context,
     )
 
+
 # ============================================================
-# BOOKING DETAIL
+# BOOKING STATUS UPDATE
 # ============================================================
-
-@staff_member_required
-def booking_detail(request, booking_id):
-    """
-    Professional staff booking detail workspace.
-
-    Provides one complete operational view of a booking:
-    customer, vehicle, rental dates, documents, payment
-    and current booking actions.
-    """
-
-    update_rental_statuses()
-
-    booking = get_object_or_404(
-        Booking.objects.select_related(
-            "car",
-            "user",
-        ),
-        id=booking_id,
-    )
-
-    context = {
-        "booking": booking,
-
-        # ----------------------------------------------------
-        # CUSTOMER
-        # ----------------------------------------------------
-        "customer_name": " ".join(
-            part
-            for part in [
-                booking.first_name,
-                booking.middle_name,
-                booking.last_name,
-            ]
-            if part
-        ),
-
-        # ----------------------------------------------------
-        # VEHICLE
-        # ----------------------------------------------------
-        "vehicle": booking.car,
-
-        # ----------------------------------------------------
-        # RENTAL
-        # ----------------------------------------------------
-        "rental_days": booking.rental_days,
-
-        # ----------------------------------------------------
-        # DOCUMENT STATE
-        # ----------------------------------------------------
-        "documents_complete": bool(
-            booking.driver_license
-            and booking.national_id
-        ),
-
-        # ----------------------------------------------------
-        # OPERATIONAL CONDITIONS
-        # ----------------------------------------------------
-        "can_approve": (
-            booking.status == "Pending"
-            and booking.document_status == "Verified"
-            and booking.car is not None
-        ),
-
-        "can_start_rental": (
-            booking.status == "Approved"
-            and booking.payment_status == "Paid"
-            and booking.document_status == "Verified"
-        ),
-
-        "can_complete_rental": (
-            booking.status == "Active"
-        ),
-    }
-
-    return render(
-        request,
-        "core/booking_detail.html",
-        context,
-    )
 
 @staff_member_required
 @require_POST
@@ -3434,7 +3384,10 @@ def update_booking_status(request, booking_id, status):
     )
 
     return redirect("booking_management")
+
+
 @staff_member_required
+@require_POST
 def verify_documents(
     request,
     booking_id,
@@ -3665,6 +3618,8 @@ def rental_action(
         )
 
     return redirect("booking_management")
+
+
 # ============================================================
 # PAYMENT MANAGEMENT
 # ============================================================
@@ -3754,6 +3709,7 @@ def payment_management(request):
 # ============================================================
 
 @staff_member_required
+@require_POST
 def mark_payment_paid(request, booking_id):
 
     if request.method != "POST":

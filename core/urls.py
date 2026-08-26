@@ -128,7 +128,13 @@ urlpatterns = [
         name="my_bookings",
     ),
 
-    # Shared booking detail view - CUSTOMER
+    # Shared booking detail views
+    path(
+        "booking/<int:booking_id>/",
+        views.booking_detail,
+        name="booking_detail",
+    ),
+
     path(
         "my_bookings/<int:booking_id>/",
         views.booking_detail,

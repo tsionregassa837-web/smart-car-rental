@@ -14,39 +14,42 @@ Notifications
 
 {% block content %}
 
-s
-
-
 <section class="notifications-page">
-
 
     <!-- ==================================================
          PAGE HEADER
          ================================================== -->
 
-    <div class="notifications-hero">
+    <div class="notifications-hero" style="display:flex; justify-content:space-between; align-items:center;">
 
-        <div class="notifications-hero-icon">
+        <div style="display:flex; align-items:center; gap:20px;">
+            <div class="notifications-hero-icon">
+                <i class="fa-solid fa-bell"></i>
+            </div>
 
-            <i class="fa-solid fa-bell"></i>
+            <div>
+                <p class="notifications-eyebrow">
+                    ACCOUNT ACTIVITY
+                </p>
 
+                <h1>
+                    Notifications
+                </h1>
+
+                <p>
+                    View your latest booking and rental updates.
+                </p>
+            </div>
         </div>
 
-
         <div>
-
-            <p class="notifications-eyebrow">
-                ACCOUNT ACTIVITY
-            </p>
-
-            <h1>
-                Notifications
-            </h1>
-
-            <p>
-                View your latest booking and rental updates.
-            </p>
-
+            {% if request.user.is_staff %}
+                <a href="{% url 'admin_dashboard' %}" class="back-link" style="text-decoration:none; font-weight:600; color:#2463EB;">
+                    ← Back
+                </a>
+            {% else %}
+                <a href="{% url 'customer_dashboard' %}" class="back-link" style="text-decoration:none; font-weight:600; color:#2463EB;">← Dashboard</a>
+            {% endif %}
         </div>
 
     </div>
