@@ -1,0 +1,1490 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Booking Management | Smart Car Rental{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{% static 'core/css/booking_management.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="booking-management-page">
+
+    <!-- =========================================================
+         PAGE HEADER
+    ========================================================== -->
+
+    <section class="booking-page-header">
+
+        <div class="page-heading">
+
+            <div class="heading-icon">
+                <span>▣</span>
+            </div>
+
+            <div class="header-title">
+
+                <span class="header-eyebrow">
+                    OPERATIONS / BOOKINGS
+                </span>
+
+                <h1>Booking Management</h1>
+
+                <p>
+                    Manage reservations, customer documents,
+                    payments and rental operations from one workspace.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="header-actions">
+
+            <a href="{% url 'admin_dashboard' %}"
+               class="btn btn-secondary">
+
+                <span class="btn-icon">←</span>
+
+                Dashboard
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================================
+         DJANGO MESSAGES
+    ========================================================== -->
+
+    {% if messages %}
+
+        <section class="messages-container">
+
+            {% for message in messages %}
+
+                <div class="alert-message {{ message.tags }}">
+
+                    <div class="alert-content">
+
+                        <span class="alert-icon">
+
+                            {% if message.tags == "success" %}
+                                ✓
+                            {% elif message.tags == "error" %}
+                                !
+                            {% elif message.tags == "warning" %}
+                                ⚠
+                            {% else %}
+                                i
+                            {% endif %}
+
+                        </span>
+
+                        <span>{{ message }}</span>
+
+                    </div>
+
+                    <button type="button"
+                            class="alert-close"
+                            onclick="this.parentElement.remove()"
+                            aria-label="Close message">
+
+                        ×
+
+                    </button>
+
+                </div>
+
+            {% endfor %}
+
+        </section>
+
+    {% endif %}
+
+
+    <!-- =========================================================
+         KPI SUMMARY
+    ========================================================== -->
+
+    <section class="booking-statistics">
+
+        <a href="{% url 'booking_management' %}"
+           class="stat-card total">
+
+            <div class="stat-icon">
+                <span>▤</span>
+            </div>
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+                    TOTAL BOOKINGS
+                </span>
+
+                <strong class="stat-value">
+                    {{ total_bookings }}
+                </strong>
+
+                <span class="stat-description">
+                    All reservations
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <a href="{% url 'booking_management' %}?status=Pending"
+           class="stat-card pending">
+
+            <div class="stat-icon">
+                <span>!</span>
+            </div>
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+                    PENDING
+                </span>
+
+                <strong class="stat-value">
+                    {{ pending_bookings }}
+                </strong>
+
+                <span class="stat-description">
+                    Need review
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <a href="{% url 'booking_management' %}?status=Approved"
+           class="stat-card approved">
+
+            <div class="stat-icon">
+                <span>✓</span>
+            </div>
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+                    APPROVED
+                </span>
+
+                <strong class="stat-value">
+                    {{ approved_bookings }}
+                </strong>
+
+                <span class="stat-description">
+                    Awaiting pickup
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <a href="{% url 'booking_management' %}?status=Active"
+           class="stat-card active">
+
+            <div class="stat-icon">
+                <span>▶</span>
+            </div>
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+                    ACTIVE RENTALS
+                </span>
+
+                <strong class="stat-value">
+                    {{ active_bookings }}
+                </strong>
+
+                <span class="stat-description">
+                    Currently rented
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <a href="{% url 'booking_management' %}?status=Completed"
+           class="stat-card completed">
+
+            <div class="stat-icon">
+                <span>✓</span>
+            </div>
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+                    COMPLETED
+                </span>
+
+                <strong class="stat-value">
+                    {{ completed_bookings }}
+                </strong>
+
+                <span class="stat-description">
+                    Finished rentals
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <a href="{% url 'booking_management' %}?status=Cancelled"
+           class="stat-card cancelled">
+
+            <div class="stat-icon">
+                <span>×</span>
+            </div>
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+                    CANCELLED
+                </span>
+
+                <strong class="stat-value">
+                    {{ cancelled_bookings }}
+                </strong>
+
+                <span class="stat-description">
+                    Cancelled requests
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <a href="{% url 'booking_management' %}?status=Rejected"
+           class="stat-card rejected">
+
+            <div class="stat-icon">
+                <span>×</span>
+            </div>
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+                    REJECTED
+                </span>
+
+                <strong class="stat-value">
+                    {{ rejected_bookings }}
+                </strong>
+
+                <span class="stat-description">
+                    Declined requests
+                </span>
+
+            </div>
+
+        </a>
+
+    </section>
+
+
+    <!-- =========================================================
+         MAIN BOOKING WORKSPACE
+    ========================================================== -->
+
+    <section class="booking-panel">
+
+        <!-- =====================================================
+             PANEL HEADER
+        ====================================================== -->
+
+        <div class="panel-header">
+
+            <div class="panel-heading">
+
+                <div class="panel-title-row">
+
+                    <h2>Booking Records</h2>
+
+                    <span class="record-count">
+                        {{ filtered_bookings }}
+                    </span>
+
+                </div>
+
+                <p>
+                    Reservations currently matching your filters.
+                </p>
+
+            </div>
+
+            <div class="live-indicator">
+
+                <span class="live-dot"></span>
+
+                <span>Live records</span>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             FILTER TOOLBAR
+        ====================================================== -->
+
+        <div class="booking-toolbar">
+
+            <form method="get"
+                  class="booking-filter-form">
+
+                <div class="search-box">
+
+                    <span class="search-icon">
+                        ⌕
+                    </span>
+
+                    <input
+                        type="search"
+                        name="search"
+                        value="{{ search }}"
+                        placeholder="Search customer, email or vehicle..."
+                        autocomplete="off"
+                        aria-label="Search bookings">
+
+                </div>
+
+
+                <div class="filter-field">
+
+                    <label for="booking-status">
+                        Status
+                    </label>
+
+                    <select id="booking-status"
+                            name="status">
+
+                        <option value="">
+                            All statuses
+                        </option>
+
+                        <option value="Pending"
+                            {% if status == "Pending" %}selected{% endif %}>
+                            Pending
+                        </option>
+
+                        <option value="Approved"
+                            {% if status == "Approved" %}selected{% endif %}>
+                            Approved
+                        </option>
+
+                        <option value="Active"
+                            {% if status == "Active" %}selected{% endif %}>
+                            Active
+                        </option>
+
+                        <option value="Completed"
+                            {% if status == "Completed" %}selected{% endif %}>
+                            Completed
+                        </option>
+
+                        <option value="Cancelled"
+                            {% if status == "Cancelled" %}selected{% endif %}>
+                            Cancelled
+                        </option>
+
+                        <option value="Rejected"
+                            {% if status == "Rejected" %}selected{% endif %}>
+                            Rejected
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <button type="submit"
+                        class="btn btn-primary filter-button">
+
+                    <span>⌕</span>
+                    Apply Filters
+
+                </button>
+
+
+                {% if search or status %}
+
+                    <a href="{% url 'booking_management' %}"
+                       class="btn btn-reset">
+
+                        Clear
+
+                    </a>
+
+                {% endif %}
+
+            </form>
+
+
+            {% if search or status %}
+
+                <div class="active-filters">
+
+                    <span class="filter-caption">
+                        Active filters:
+                    </span>
+
+                    {% if search %}
+                        <span class="filter-chip">
+                            Search: "{{ search }}"
+                        </span>
+                    {% endif %}
+
+                    {% if status %}
+                        <span class="filter-chip">
+                            Status: {{ status }}
+                        </span>
+                    {% endif %}
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- =====================================================
+             TABLE
+        ====================================================== -->
+
+        <div class="booking-table-wrapper">
+
+            {% if bookings %}
+
+                <table class="booking-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th class="col-booking">
+                                Booking
+                            </th>
+
+                            <th class="col-customer">
+                                Customer
+                            </th>
+
+                            <th class="col-vehicle">
+                                Vehicle
+                            </th>
+
+                            <th class="col-period">
+                                Rental Period
+                            </th>
+
+                            <th class="col-documents">
+                                Documents
+                            </th>
+
+                            <th class="col-payment">
+                                Payment
+                            </th>
+
+                            <th class="col-status">
+                                Status
+                            </th>
+
+                            <th class="col-actions">
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                    {% for booking in bookings %}
+
+                        <tr class="booking-row">
+
+                            <!-- =================================================
+                                 BOOKING REFERENCE
+                            ================================================== -->
+
+                            <td>
+
+                                <div class="booking-reference">
+
+                                    <a href="{% url 'staff_booking_detail' booking.id %}"
+                                       class="booking-number">
+
+                                        #{{ booking.id }}
+
+                                    </a>
+
+                                    <span class="booking-date">
+
+                                        {{ booking.created_at|date:"M d, Y" }}
+
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- =================================================
+                                 CUSTOMER
+                            ================================================== -->
+
+                            <td>
+
+                                <div class="customer-cell">
+
+                                    <div class="customer-avatar">
+
+                                        {{ booking.first_name|first|upper }}
+
+                                    </div>
+
+                                    <div class="customer-info">
+
+                                        <strong>
+
+                                            {{ booking.first_name }}
+
+                                            {% if booking.middle_name %}
+                                                {{ booking.middle_name }}
+                                            {% endif %}
+
+                                            {{ booking.last_name }}
+
+                                        </strong>
+
+                                        <span class="customer-email">
+
+                                            {{ booking.email }}
+
+                                        </span>
+
+                                        {% if booking.phone %}
+
+                                            <small>
+
+                                                {{ booking.phone }}
+
+                                            </small>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- =================================================
+                                 VEHICLE
+                            ================================================== -->
+
+                            <td>
+
+                                <div class="vehicle-cell">
+
+                                    <div class="vehicle-main">
+
+                                        <span class="vehicle-icon">
+                                            🚗
+                                        </span>
+
+                                        <div>
+
+                                            <strong>
+
+                                                {% if booking.car %}
+                                                    {{ booking.car.name }}
+                                                {% else %}
+                                                    {{ booking.car_type }}
+                                                {% endif %}
+
+                                            </strong>
+
+                                            <span class="vehicle-meta">
+
+                                                {% if booking.car %}
+
+                                                    {% if booking.car.model_year %}
+                                                        {{ booking.car.model_year }}
+                                                    {% endif %}
+
+                                                    {% if booking.car.plate_number %}
+                                                        <span class="meta-separator">•</span>
+                                                        {{ booking.car.plate_number }}
+                                                    {% endif %}
+
+                                                {% else %}
+
+                                                    Vehicle not assigned
+
+                                                {% endif %}
+
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- =================================================
+                                 RENTAL PERIOD
+                            ================================================== -->
+
+                            <td>
+
+                                <div class="rental-period">
+
+                                    <div class="date-block">
+
+                                        <span class="date-label">
+                                            PICKUP
+                                        </span>
+
+                                        <strong>
+                                            {{ booking.pickup_date|date:"M d, Y" }}
+                                        </strong>
+
+                                    </div>
+
+                                    <span class="period-arrow">
+                                        →
+                                    </span>
+
+                                    <div class="date-block">
+
+                                        <span class="date-label">
+                                            RETURN
+                                        </span>
+
+                                        <strong>
+                                            {{ booking.dropoff_date|date:"M d, Y" }}
+                                        </strong>
+
+                                    </div>
+
+                                </div>
+
+                                <span class="rental-days">
+
+                                    {{ booking.rental_days }}
+                                    day{{ booking.rental_days|pluralize }}
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- =================================================
+                                 DOCUMENTS
+                            ================================================== -->
+
+                            <td>
+
+                                <div class="document-cell">
+
+                                    {% if booking.document_status == "Verified" %}
+
+                                        <span class="status-badge document-verified">
+                                            <span>✓</span>
+                                            Verified
+                                        </span>
+
+                                    {% elif booking.document_status == "Rejected" %}
+
+                                        <span class="status-badge document-rejected">
+                                            <span>×</span>
+                                            Rejected
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="status-badge document-pending">
+                                            <span>!</span>
+                                            Pending
+                                        </span>
+
+                                    {% endif %}
+
+                                    <span class="document-hint">
+
+                                        {% if booking.driver_license and booking.national_id %}
+                                            2 documents
+                                        {% elif booking.driver_license or booking.national_id %}
+                                            1 document
+                                        {% else %}
+                                            No documents
+                                        {% endif %}
+
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- =================================================
+                                 PAYMENT
+                            ================================================== -->
+
+                            <td>
+
+                                <div class="payment-cell">
+
+                                    <strong class="payment-amount">
+
+                                        {{ booking.total_price }}
+
+                                    </strong>
+
+
+                                    {% if booking.payment_method %}
+
+                                        <span class="payment-method">
+
+                                            {% if booking.payment_method == "Cash" %}
+
+                                                💵 Cash
+
+                                            {% elif booking.payment_method == "Chapa" %}
+
+                                                Chapa
+
+                                            {% elif booking.payment_method == "Telebirr" %}
+
+                                                Telebirr
+
+                                            {% else %}
+
+                                                {{ booking.payment_method }}
+
+                                            {% endif %}
+
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="payment-method empty">
+                                            Method not selected
+                                        </span>
+
+                                    {% endif %}
+
+
+                                    {% if booking.payment_status == "Paid" %}
+
+                                        <span class="status-badge payment-paid">
+                                            ✓ Paid
+                                        </span>
+
+                                    {% elif booking.payment_status == "Failed" %}
+
+                                        <span class="status-badge payment-failed">
+                                            × Failed
+                                        </span>
+
+                                    {% elif booking.payment_status == "Refunded" %}
+
+                                        <span class="status-badge payment-refunded">
+                                            ↩ Refunded
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="status-badge payment-pending">
+                                            ! Pending
+                                        </span>
+
+                                    {% endif %}
+
+
+                                    {% if booking.payment_reference %}
+
+                                        <small class="payment-reference">
+
+                                            Ref:
+                                            {{ booking.payment_reference }}
+
+                                        </small>
+
+                                    {% endif %}
+
+
+                                    <!-- CASH PAYMENT -->
+
+                                    {% if booking.payment_method == "Cash" and booking.payment_status != "Paid" %}
+
+                                        <form method="post"
+                                              action="{% url 'mark_payment_paid' booking.id %}"
+                                              class="cash-payment-form"
+                                              onsubmit="return confirmCashPayment('{{ booking.id }}');">
+
+                                            {% csrf_token %}
+
+                                            <button type="submit"
+                                                    class="cash-payment-button">
+
+                                                💵 Mark Paid
+
+                                            </button>
+
+                                        </form>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- =================================================
+                                 BOOKING STATUS
+                            ================================================== -->
+
+                            <td>
+
+                                {% if booking.status == "Pending" %}
+
+                                    <span class="status-badge booking-pending">
+                                        <span class="status-dot"></span>
+                                        Pending
+                                    </span>
+
+                                {% elif booking.status == "Approved" %}
+
+                                    <span class="status-badge booking-approved">
+                                        <span class="status-dot"></span>
+                                        Approved
+                                    </span>
+
+                                {% elif booking.status == "Active" %}
+
+                                    <span class="status-badge booking-active">
+                                        <span class="status-dot"></span>
+                                        Active
+                                    </span>
+
+                                {% elif booking.status == "Completed" %}
+
+                                    <span class="status-badge booking-completed">
+                                        <span class="status-dot"></span>
+                                        Completed
+                                    </span>
+
+                                {% elif booking.status == "Cancelled" %}
+
+                                    <span class="status-badge booking-cancelled">
+                                        <span class="status-dot"></span>
+                                        Cancelled
+                                    </span>
+
+                                {% elif booking.status == "Rejected" %}
+
+                                    <span class="status-badge booking-rejected">
+                                        <span class="status-dot"></span>
+                                        Rejected
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- =================================================
+                                 ACTIONS
+                            ================================================== -->
+
+                            <td>
+
+                                <div class="booking-actions">
+
+                                    <!-- VIEW -->
+
+                                    <a href="{% url 'staff_booking_detail' booking.id %}"
+                                       class="action-btn view"
+                                       title="Open booking details">
+
+                                        View
+
+                                    </a>
+
+
+                                    <!-- =================================================
+                                         PENDING ACTIONS
+                                    ================================================== -->
+
+                                    {% if booking.status == "Pending" %}
+
+                                        <div class="action-dropdown">
+
+                                            <button type="button"
+                                                    class="action-btn more"
+                                                    onclick="toggleBookingMenu('{{ booking.id }}', this)"
+                                                    aria-expanded="false"
+                                                    aria-haspopup="true">
+
+                                                More
+                                                <span class="more-chevron">⌄</span>
+
+                                            </button>
+
+
+                                            <div class="booking-menu"
+                                                 id="booking-menu-{{ booking.id }}">
+
+
+                                                <!-- VERIFY -->
+
+                                                {% if booking.document_status != "Verified" %}
+
+                                                    <form method="post"
+                                                          action="{% url 'verify_documents' booking.id 'verify' %}">
+
+                                                        {% csrf_token %}
+
+                                                        <button type="submit"
+                                                                class="menu-button menu-document">
+
+                                                            <span>✓</span>
+                                                            Verify Documents
+
+                                                        </button>
+
+                                                    </form>
+
+                                                {% endif %}
+
+
+                                                <!-- REJECT DOCUMENTS -->
+
+                                                {% if booking.document_status != "Rejected" %}
+
+                                                    <form method="post"
+                                                          action="{% url 'verify_documents' booking.id 'reject' %}"
+                                                          onsubmit="return confirm('Reject these customer documents?');">
+
+                                                        {% csrf_token %}
+
+                                                        <button type="submit"
+                                                                class="menu-button menu-document-danger">
+
+                                                            <span>×</span>
+                                                            Reject Documents
+
+                                                        </button>
+
+                                                    </form>
+
+                                                {% endif %}
+
+
+                                                <div class="menu-divider"></div>
+
+
+                                                <!-- APPROVE -->
+
+                                                <form method="post"
+                                                      action="{% url 'update_booking_status' booking.id 'Approved' %}"
+                                                      onsubmit="return confirm('Approve booking #{{ booking.id }}?');">
+
+                                                    {% csrf_token %}
+
+                                                    <button type="submit"
+                                                            class="menu-button menu-success">
+
+                                                        <span>✓</span>
+                                                        Approve Booking
+
+                                                    </button>
+
+                                                </form>
+
+
+                                                <!-- REJECT -->
+
+                                                <form method="post"
+                                                      action="{% url 'update_booking_status' booking.id 'Rejected' %}"
+                                                      onsubmit="return confirm('Reject booking #{{ booking.id }}?');">
+
+                                                    {% csrf_token %}
+
+                                                    <button type="submit"
+                                                            class="menu-button menu-danger">
+
+                                                        <span>×</span>
+                                                        Reject Booking
+
+                                                    </button>
+
+                                                </form>
+
+
+                                                <!-- CANCEL -->
+
+                                                <form method="post"
+                                                      action="{% url 'update_booking_status' booking.id 'Cancelled' %}"
+                                                      onsubmit="return confirm('Cancel booking #{{ booking.id }}?');">
+
+                                                    {% csrf_token %}
+
+                                                    <button type="submit"
+                                                            class="menu-button menu-warning">
+
+                                                        <span>!</span>
+                                                        Cancel Booking
+
+                                                    </button>
+
+                                                </form>
+
+                                            </div>
+
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    <!-- =================================================
+                                         APPROVED
+                                    ================================================== -->
+
+                                    {% if booking.status == "Approved" %}
+
+                                        {% if booking.payment_status == "Paid" %}
+
+                                            <form method="post"
+                                                  action="{% url 'rental_operations' booking.id %}"
+                                                  onsubmit="return confirm('Open rental operations for booking #{{ booking.id }}?');">
+
+                                                {% csrf_token %}
+
+                                                <button type="submit"
+                                                        class="action-btn start">
+
+                                                    ▶ Start
+
+                                                </button>
+
+                                            </form>
+
+                                        {% else %}
+
+                                            <span class="action-disabled"
+                                                  title="Payment must be completed before rental starts.">
+
+                                                🔒 Payment Required
+
+                                            </span>
+
+                                        {% endif %}
+
+                                    {% endif %}
+
+
+                                    <!-- =================================================
+                                         ACTIVE
+                                    ================================================== -->
+
+                                    {% if booking.status == "Active" %}
+
+                                        <form method="post"
+                                              action="{% url 'rental_operations' booking.id %}"
+                                              onsubmit="return confirm('Open return operations for booking #{{ booking.id }}?');">
+
+                                            {% csrf_token %}
+
+                                            <button type="submit"
+                                                    class="action-btn complete">
+
+                                                ✓ Complete
+
+                                            </button>
+
+                                        </form>
+
+                                    {% endif %}
+
+
+                                    <!-- =================================================
+                                         COMPLETED
+                                    ================================================== -->
+
+                                    {% if booking.status == "Completed" %}
+
+                                        <span class="action-completed">
+
+                                            ✓ Completed
+
+                                        </span>
+
+                                    {% endif %}
+
+
+                                    <!-- =================================================
+                                         CANCELLED / REJECTED
+                                    ================================================== -->
+
+                                    {% if booking.status == "Cancelled" or booking.status == "Rejected" %}
+
+                                        <span class="action-disabled">
+
+                                            No actions
+
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+
+                <!-- =================================================
+                     TABLE FOOTER
+                ================================================== -->
+
+                <div class="table-footer">
+
+                    <span>
+
+                        Showing
+                        <strong>{{ filtered_bookings }}</strong>
+                        booking{{ filtered_bookings|pluralize }}
+
+                    </span>
+
+                    <span class="footer-note">
+
+                        Booking records are updated from the live system.
+
+                    </span>
+
+                </div>
+
+
+            {% else %}
+
+                <!-- =================================================
+                     EMPTY STATE
+                ================================================== -->
+
+                <div class="empty-bookings">
+
+                    <div class="empty-icon">
+                        ▤
+                    </div>
+
+                    <h3>
+                        No bookings found
+                    </h3>
+
+                    {% if search or status %}
+
+                        <p>
+                            No bookings match your current search
+                            or status filter.
+                        </p>
+
+                        <a href="{% url 'booking_management' %}"
+                           class="btn btn-primary">
+
+                            Clear Filters
+
+                        </a>
+
+                    {% else %}
+
+                        <p>
+                            There are currently no customer
+                            bookings in the system.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<!-- =============================================================
+     BOOKING MANAGEMENT JAVASCRIPT
+============================================================== -->
+
+<script>
+
+(function () {
+
+    "use strict";
+
+
+    /* =========================================================
+       DROPDOWN
+    ========================================================= */
+
+    window.toggleBookingMenu = function (bookingId, button) {
+
+        const menu = document.getElementById(
+            "booking-menu-" + bookingId
+        );
+
+        if (!menu) {
+            return;
+        }
+
+        const isOpen = menu.classList.contains("show");
+
+
+        document
+            .querySelectorAll(".booking-menu.show")
+            .forEach(function (item) {
+
+                item.classList.remove("show");
+
+            });
+
+
+        document
+            .querySelectorAll(".action-btn.more[aria-expanded='true']")
+            .forEach(function (item) {
+
+                item.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+
+            });
+
+
+        if (!isOpen) {
+
+            menu.classList.add("show");
+
+            if (button) {
+
+                button.setAttribute(
+                    "aria-expanded",
+                    "true"
+                );
+
+            }
+
+        }
+
+    };
+
+
+    /* =========================================================
+       CLOSE DROPDOWNS OUTSIDE
+    ========================================================= */
+
+    document.addEventListener(
+        "click",
+        function (event) {
+
+            if (!event.target.closest(".action-dropdown")) {
+
+                document
+                    .querySelectorAll(".booking-menu.show")
+                    .forEach(function (menu) {
+
+                        menu.classList.remove("show");
+
+                    });
+
+                document
+                    .querySelectorAll(
+                        ".action-btn.more[aria-expanded='true']"
+                    )
+                    .forEach(function (button) {
+
+                        button.setAttribute(
+                            "aria-expanded",
+                            "false"
+                        );
+
+                    });
+
+            }
+
+        }
+    );
+
+
+    /* =========================================================
+       ESCAPE KEY
+    ========================================================= */
+
+    document.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (event.key !== "Escape") {
+                return;
+            }
+
+            document
+                .querySelectorAll(".booking-menu.show")
+                .forEach(function (menu) {
+
+                    menu.classList.remove("show");
+
+                });
+
+            document
+                .querySelectorAll(
+                    ".action-btn.more[aria-expanded='true']"
+                )
+                .forEach(function (button) {
+
+                    button.setAttribute(
+                        "aria-expanded",
+                        "false"
+                    );
+
+                });
+
+        }
+    );
+
+
+    /* =========================================================
+       CASH PAYMENT CONFIRMATION
+    ========================================================= */
+
+    window.confirmCashPayment = function (bookingId) {
+
+        return confirm(
+            "Confirm that cash payment for booking #" +
+            bookingId +
+            " has been received?"
+        );
+
+    };
+
+
+    /* =========================================================
+       PREVENT DOUBLE SUBMISSION
+    ========================================================= */
+
+    document.addEventListener(
+        "submit",
+        function (event) {
+
+            const form = event.target;
+
+            if (!form.matches("form")) {
+                return;
+            }
+
+            if (form.dataset.submitting === "true") {
+
+                event.preventDefault();
+
+                return;
+
+            }
+
+            form.dataset.submitting = "true";
+
+
+            const submitButton =
+                form.querySelector(
+                    "button[type='submit']"
+                );
+
+
+            if (submitButton) {
+
+                submitButton.disabled = true;
+
+                submitButton.classList.add(
+                    "is-submitting"
+                );
+
+                submitButton.dataset.originalText =
+                    submitButton.innerHTML;
+
+                submitButton.innerHTML =
+                    "<span>Processing...</span>";
+
+            }
+
+        }
+    );
+
+
+    /* =========================================================
+       AUTO FOCUS SEARCH
+    ========================================================= */
+
+    const searchInput =
+        document.querySelector(
+            ".search-box input"
+        );
+
+    if (searchInput && window.innerWidth > 900) {
+
+        searchInput.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (
+                    event.key === "/" &&
+                    document.activeElement !== searchInput
+                ) {
+
+                    event.preventDefault();
+
+                    searchInput.focus();
+
+                }
+
+            }
+        );
+
+    }
+
+})();
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,510 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/booking.css' %}">
+{% endblock %}
+
+{% block title %}
+Book Your Car - Smart Car Rental
+{% endblock %}
+
+{% block content %}
+
+<section class="booking-section">
+
+<div class="booking-container">
+
+<!-- ==========================
+     BOOKING FORM
+=========================== -->
+
+<div class="booking-form-card">
+
+<div class="booking-heading" style="display: flex; justify-content: space-between; align-items: center;">
+
+<div style="display: flex; align-items: center; gap: 14px;">
+<i class="fa-solid fa-car"></i>
+
+<div>
+
+<h1>
+Book Your Vehicle
+</h1>
+
+<p>
+Complete your rental information
+</p>
+
+</div>
+</div>
+
+<div>
+<a href="{% url 'cars' %}"
+   class="btn btn-secondary"
+   style="background: #e2e8f0; color: #1e293b; text-decoration: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+    <span>←</span> Back to Cars
+</a>
+</div>
+
+</div>
+
+
+{% if error %}
+
+<div class="error-message">
+{{ error }}
+</div>
+
+{% endif %}
+
+
+<form id="bookingForm"
+      action="{% url 'booking' %}"
+      method="POST"
+      enctype="multipart/form-data">
+
+    {% csrf_token %}
+
+
+<fieldset>
+
+<legend>
+<i class="fa-solid fa-car"></i>
+Select Vehicle
+</legend>
+
+
+<label>
+Vehicle
+</label>
+
+
+<select
+id="car_type"
+name="car_type"
+required
+>
+
+<option value="">
+-- Choose Vehicle --
+</option>
+
+
+{% for car in cars %}
+
+<option
+value="{{ car.name }}"
+data-price="{{ car.price_per_day }}"
+
+{% if selected_car == car.name %}
+selected
+{% endif %}
+
+>
+
+{{ car.name }}
+
+{% if car.available_quantity > 0 %}
+
+({{ car.available_quantity }} Available)
+
+{% else %}
+
+(Unavailable)
+
+{% endif %}
+
+</option>
+
+{% endfor %}
+
+</select>
+
+</fieldset>
+
+
+<fieldset>
+
+<legend>
+<i class="fa-solid fa-calendar"></i>
+Rental Details
+</legend>
+
+
+<label>
+Pickup Date
+</label>
+
+
+<input
+type="date"
+id="pickup_date"
+name="pickup_date"
+value="{{ form_data.pickup_date|default:'' }}"
+required
+>
+
+
+<label>
+Return Date
+</label>
+
+
+<input
+type="date"
+id="dropoff_date"
+name="dropoff_date"
+value="{{ form_data.dropoff_date|default:'' }}"
+required
+>
+
+
+<label>
+Pickup Location
+</label>
+
+
+<input
+type="text"
+name="pickup_location"
+value="{{ form_data.pickup_location|default:'' }}"
+placeholder="Example: Bole Branch"
+required
+>
+
+</fieldset>
+
+
+<fieldset>
+
+<legend>
+<i class="fa-solid fa-user"></i>
+Customer Information
+</legend>
+
+
+<label>
+First Name
+</label>
+
+<input
+type="text"
+name="first_name"
+value="{{ form_data.first_name|default:'' }}"
+required
+>
+
+
+<label>
+Last Name
+</label>
+
+<input
+type="text"
+name="last_name"
+value="{{ form_data.last_name|default:'' }}"
+required
+>
+
+
+<label>
+Middle Name
+</label>
+
+<input
+type="text"
+name="middle_name"
+value="{{ form_data.middle_name|default:'' }}"
+required
+>
+
+
+<label>
+Email
+</label>
+
+<input
+type="email"
+name="email"
+value="{{ form_data.email|default:request.user.email }}"
+required
+>
+
+
+<label>
+Phone Number
+</label>
+
+<input
+type="text"
+name="phone"
+value="{{ form_data.phone|default:'' }}"
+placeholder="+251..."
+required
+>
+
+</fieldset>
+
+
+<fieldset>
+
+<legend>
+<i class="fa-solid fa-file"></i>
+Required Documents
+</legend>
+
+
+<label>
+Driver License
+</label>
+
+<input
+type="file"
+name="driver_license"
+accept=".pdf,.jpg,.png,.jpeg"
+required
+>
+
+
+<label>
+National ID
+</label>
+
+<input
+type="file"
+name="national_id"
+accept=".pdf,.jpg,.png,.jpeg"
+required
+>
+
+</fieldset>
+
+
+<button
+type="submit"
+id="confirmBookingBtn"
+class="booking-btn"
+>
+
+<i class="fa-solid fa-check-circle"></i>
+
+Confirm Reservation
+
+</button>
+
+</form>
+
+</div>
+
+
+<!-- ==========================
+     SUMMARY CARD
+=========================== -->
+
+<div class="booking-summary">
+
+<h2>
+
+<i class="fa-solid fa-receipt"></i>
+
+Booking Summary
+
+</h2>
+
+
+<div class="summary-item">
+
+<span>
+Vehicle
+</span>
+
+<strong id="summary-car">
+Not Selected
+</strong>
+
+</div>
+
+
+<div class="summary-item">
+
+<span>
+Rental Days
+</span>
+
+<strong id="summary-days">
+0
+</strong>
+
+</div>
+
+
+<div class="summary-item">
+
+<span>
+Price / Day
+</span>
+
+<strong>
+
+ETB
+
+<span id="summary-price">
+0
+</span>
+
+</strong>
+
+</div>
+
+
+<div class="summary-total">
+
+<h3>
+Estimated Total
+</h3>
+
+<strong>
+
+ETB
+
+<span id="summary-total">
+0
+</span>
+
+</strong>
+
+</div>
+
+
+<div class="summary-note">
+
+<i class="fa-solid fa-lock"></i>
+
+Secure booking.
+Your documents are protected.
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ==========================
+ CONFIRMATION MODAL
+=========================== -->
+
+<div
+class="booking-modal"
+id="bookingModal"
+>
+
+<div class="modal-content">
+
+
+<button
+class="close-modal"
+id="closeModal"
+>
+
+×
+
+</button>
+
+
+<h2>
+
+<i class="fa-solid fa-car"></i>
+
+Confirm Your Booking
+
+</h2>
+
+
+<p>
+Please check your rental details.
+</p>
+
+
+<div class="confirm-details">
+
+
+<p>
+
+<strong>
+Vehicle:
+</strong>
+
+<span id="confirm-car"></span>
+
+</p>
+
+
+<p>
+
+<strong>
+Pickup:
+</strong>
+
+<span id="confirm-pickup"></span>
+
+</p>
+
+
+<p>
+
+<strong>
+Return:
+</strong>
+
+<span id="confirm-dropoff"></span>
+
+</p>
+
+
+<p>
+
+<strong>
+Days:
+</strong>
+
+<span id="confirm-days"></span>
+
+</p>
+
+
+<p>
+
+<strong>
+Total:
+</strong>
+
+<span id="confirm-total"></span>
+
+</p>
+
+</div>
+
+
+<button
+type="submit"
+form="bookingForm"
+class="confirm-btn"
+>
+
+<i class="fa-solid fa-check"></i>
+
+Yes, Confirm Booking
+
+</button>
+
+
+</div>
+
+</div>
+
+
+{% endblock %}

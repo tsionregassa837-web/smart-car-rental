@@ -1,0 +1,1004 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}
+    Fleet Management | Smart Car Rental
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{% static 'core/css/fleet_management.css' %}"
+>
+{% endblock %}
+
+{% block content %}
+
+<main class="fleet-page">
+
+    <!-- =========================================================
+         PAGE HEADER
+         ========================================================= -->
+
+    <header class="fleet-header">
+
+        <div class="fleet-header-content">
+
+            <nav class="fleet-breadcrumb" aria-label="Breadcrumb">
+                <span>Admin</span>
+                <span class="breadcrumb-separator">/</span>
+                <span>Fleet Management</span>
+            </nav>
+
+            <h1>Fleet Management</h1>
+
+            <p>
+                Manage your vehicles, monitor availability, and keep your
+                rental fleet operational.
+            </p>
+
+        </div>
+
+        <div class="fleet-header-actions">
+
+            <a
+                href="{% url 'fleet_vehicle_add' %}"
+                class="fleet-btn fleet-btn-primary"
+            >
+                <span class="btn-icon" aria-hidden="true">+</span>
+                Add Vehicle
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================================================
+         SUMMARY CARDS
+         ========================================================= -->
+
+    <section
+        class="fleet-summary"
+        aria-label="Fleet summary"
+    >
+
+        <!-- Total -->
+        <article class="fleet-stat-card total">
+
+            <div class="stat-top">
+
+                <div>
+                    <span class="stat-label">Total Fleet</span>
+
+                    <strong class="stat-value">
+                        {{ total_cars|default:0 }}
+                    </strong>
+
+                    <span class="stat-description">
+                        Registered vehicles
+                    </span>
+                </div>
+
+                <div class="stat-icon" aria-hidden="true">
+                    🚘
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- Available -->
+        <article class="fleet-stat-card available">
+
+            <div class="stat-top">
+
+                <div>
+                    <span class="stat-label">Available</span>
+
+                    <strong class="stat-value">
+                        {{ available_cars|default:0 }}
+                    </strong>
+
+                    <span class="stat-description">
+                        Ready for rental
+                    </span>
+                </div>
+
+                <div class="stat-icon" aria-hidden="true">
+                    ✓
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- Rented -->
+        <article class="fleet-stat-card rented">
+
+            <div class="stat-top">
+
+                <div>
+                    <span class="stat-label">Rented</span>
+
+                    <strong class="stat-value">
+                        {{ rented_cars|default:0 }}
+                    </strong>
+
+                    <span class="stat-description">
+                        Currently on rental
+                    </span>
+                </div>
+
+                <div class="stat-icon" aria-hidden="true">
+                    🚗
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- Maintenance -->
+        <article class="fleet-stat-card maintenance">
+
+            <div class="stat-top">
+
+                <div>
+                    <span class="stat-label">Maintenance</span>
+
+                    <strong class="stat-value">
+                        {{ maintenance_cars|default:0 }}
+                    </strong>
+
+                    <span class="stat-description">
+                        Currently unavailable
+                    </span>
+                </div>
+
+                <div class="stat-icon" aria-hidden="true">
+                    🔧
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- Inactive -->
+        <article class="fleet-stat-card inactive">
+
+            <div class="stat-top">
+
+                <div>
+                    <span class="stat-label">Inactive</span>
+
+                    <strong class="stat-value">
+                        {{ inactive_cars|default:0 }}
+                    </strong>
+
+                    <span class="stat-description">
+                        Archived vehicles
+                    </span>
+                </div>
+
+                <div class="stat-icon" aria-hidden="true">
+                    ⛔
+                </div>
+
+            </div>
+
+        </article>
+
+    </section>
+
+
+    <!-- =========================================================
+         DJANGO MESSAGES
+         ========================================================= -->
+
+    {% if messages %}
+
+        <section
+            class="fleet-messages"
+            aria-label="Notifications"
+        >
+
+            {% for message in messages %}
+
+                <div
+                    class="fleet-message
+                    {% if message.tags %}
+                        {{ message.tags }}
+                    {% endif %}"
+                    role="alert"
+                >
+
+                    <span
+                        class="message-icon"
+                        aria-hidden="true"
+                    >
+                        {% if message.tags == "success" %}
+                            ✓
+                        {% elif message.tags == "error" %}
+                            !
+                        {% elif message.tags == "warning" %}
+                            !
+                        {% else %}
+                            •
+                        {% endif %}
+                    </span>
+
+                    <span>
+                        {{ message }}
+                    </span>
+
+                </div>
+
+            {% endfor %}
+
+        </section>
+
+    {% endif %}
+
+
+    <!-- =========================================================
+         MAIN FLEET PANEL
+         ========================================================= -->
+
+    <section class="fleet-panel">
+
+        <!-- -----------------------------------------------------
+             PANEL HEADER
+             ----------------------------------------------------- -->
+
+        <div class="panel-header">
+
+            <div>
+
+                <span class="panel-eyebrow">
+                    VEHICLE INVENTORY
+                </span>
+
+                <h2>Fleet Vehicles</h2>
+
+                <p>
+                    View and manage every vehicle in your fleet.
+                </p>
+
+            </div>
+
+            <div class="vehicle-count">
+
+                <strong>
+                    {{ cars|length }}
+                </strong>
+
+                <span>
+                    vehicle{{ cars|length|pluralize }}
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- -----------------------------------------------------
+             SEARCH + FILTER TOOLBAR
+             ----------------------------------------------------- -->
+
+        <div class="fleet-toolbar">
+
+            <form
+                method="get"
+                action="{% url 'fleet_management' %}"
+                class="fleet-search-form"
+            >
+
+                <div class="fleet-search">
+
+                    <span
+                        class="search-icon"
+                        aria-hidden="true"
+                    >
+                        ⌕
+                    </span>
+
+                    <input
+                        type="search"
+                        name="search"
+                        value="{{ search|default:'' }}"
+                        placeholder="Search by vehicle, plate number, model..."
+                        aria-label="Search fleet"
+                    >
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="fleet-btn fleet-btn-search"
+                >
+                    Search
+                </button>
+
+            </form>
+
+
+            <form
+                method="get"
+                action="{% url 'fleet_management' %}"
+                class="fleet-filter-form"
+            >
+
+                {% if search %}
+                    <input
+                        type="hidden"
+                        name="search"
+                        value="{{ search }}"
+                    >
+                {% endif %}
+
+                <label for="fleet-status">
+                    Status
+                </label>
+
+                <select
+                    id="fleet-status"
+                    name="status"
+                    onchange="this.form.submit()"
+                >
+
+                    <option value="">
+                        All Statuses
+                    </option>
+
+                    <option
+                        value="available"
+                        {% if status == "available" %}selected{% endif %}
+                    >
+                        Available
+                    </option>
+
+                    <option
+                        value="reserved"
+                        {% if status == "reserved" %}selected{% endif %}
+                    >
+                        Reserved
+                    </option>
+
+                    <option
+                        value="rented"
+                        {% if status == "rented" %}selected{% endif %}
+                    >
+                        Rented
+                    </option>
+
+                    <option
+                        value="maintenance"
+                        {% if status == "maintenance" %}selected{% endif %}
+                    >
+                        Maintenance
+                    </option>
+
+                    <option
+                        value="inactive"
+                        {% if status == "inactive" %}selected{% endif %}
+                    >
+                        Inactive
+                    </option>
+
+                </select>
+
+            </form>
+
+
+            {% if search or status %}
+
+                <a
+                    href="{% url 'fleet_management' %}"
+                    class="fleet-clear-btn"
+                >
+                    Clear Filters
+                </a>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- -----------------------------------------------------
+             VEHICLE TABLE
+             ----------------------------------------------------- -->
+
+        {% if cars %}
+
+            <div class="fleet-table-wrapper">
+
+                <table class="fleet-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th scope="col">
+                                Vehicle
+                            </th>
+
+                            <th scope="col">
+                                Status
+                            </th>
+
+                            <th scope="col">
+                                Fleet
+                            </th>
+
+                            <th scope="col">
+                                Availability
+                            </th>
+
+                            <th scope="col">
+                                Rate
+                            </th>
+
+                            <th scope="col">
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for car in cars %}
+
+                            <tr>
+
+                                <!-- =================================
+                                     VEHICLE
+                                     ================================= -->
+
+                                <td>
+
+                                    <div class="vehicle-cell">
+
+                                        <div
+                                            class="vehicle-avatar"
+                                            aria-hidden="true"
+                                        >
+                                            🚘
+                                        </div>
+
+                                        <div class="vehicle-info">
+
+                                            <strong>
+                                                {{ car.name }}
+                                            </strong>
+
+                                            {% if car.model %}
+                                                <span>
+                                                    {{ car.model }}
+                                                </span>
+                                            {% endif %}
+
+                                            {% if car.plate_number %}
+
+                                                <span class="plate-number">
+                                                    {{ car.plate_number }}
+                                                </span>
+
+                                            {% else %}
+
+                                                <span class="plate-number plate-missing">
+                                                    No plate number
+                                                </span>
+
+                                            {% endif %}
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- =================================
+                                     STATUS
+                                     ================================= -->
+
+                                <td>
+
+                                    {% if car.status == "available" %}
+
+                                        <span class="fleet-status status-available">
+                                            <span
+                                                class="status-dot"
+                                                aria-hidden="true"
+                                            ></span>
+                                            Available
+                                        </span>
+
+                                    {% elif car.status == "reserved" %}
+
+                                        <span class="fleet-status status-reserved">
+                                            <span
+                                                class="status-dot"
+                                                aria-hidden="true"
+                                            ></span>
+                                            Reserved
+                                        </span>
+
+                                    {% elif car.status == "rented" %}
+
+                                        <span class="fleet-status status-rented">
+                                            <span
+                                                class="status-dot"
+                                                aria-hidden="true"
+                                            ></span>
+                                            Rented
+                                        </span>
+
+                                    {% elif car.status == "maintenance" %}
+
+                                        <span class="fleet-status status-maintenance">
+                                            <span
+                                                class="status-dot"
+                                                aria-hidden="true"
+                                            ></span>
+                                            Maintenance
+                                        </span>
+
+                                    {% elif car.status == "inactive" %}
+
+                                        <span class="fleet-status status-inactive">
+                                            <span
+                                                class="status-dot"
+                                                aria-hidden="true"
+                                            ></span>
+                                            Inactive
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="fleet-status">
+                                            <span
+                                                class="status-dot"
+                                                aria-hidden="true"
+                                            ></span>
+                                            {{ car.status|default:"Unknown"|title }}
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- =================================
+                                     FLEET QUANTITY
+                                     ================================= -->
+
+                                <td>
+
+                                    <div class="fleet-number-cell">
+
+                                        <strong class="number">
+                                            {{ car.quantity|default:1 }}
+                                        </strong>
+
+                                        <small>
+                                            Total
+                                        </small>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- =================================
+                                     AVAILABILITY
+                                     ================================= -->
+
+                                <td>
+
+                                    <div class="quantity-cell">
+
+                                        {% if car.available_quantity is not None %}
+
+                                            <strong
+                                                class="
+                                                {% if car.available_quantity > 0 %}
+                                                    available-number
+                                                {% else %}
+                                                    unavailable-number
+                                                {% endif %}
+                                                "
+                                            >
+                                                {{ car.available_quantity }}
+                                            </strong>
+
+                                            <span>
+                                                Available units
+                                            </span>
+
+                                        {% elif car.status == "available" %}
+
+                                            <strong class="available-number">
+                                                Available
+                                            </strong>
+
+                                            <span>
+                                                Ready for rental
+                                            </span>
+
+                                        {% elif car.status == "rented" %}
+
+                                            <strong class="rented-number">
+                                                Rented
+                                            </strong>
+
+                                            <span>
+                                                Currently on rental
+                                            </span>
+
+                                        {% elif car.status == "maintenance" %}
+
+                                            <strong class="maintenance-number">
+                                                Maintenance
+                                            </strong>
+
+                                            <span>
+                                                Not available
+                                            </span>
+
+                                        {% elif car.status == "inactive" %}
+
+                                            <strong class="inactive-number">
+                                                Inactive
+                                            </strong>
+
+                                            <span>
+                                                Not available
+                                            </span>
+
+                                        {% else %}
+
+                                            <strong class="unavailable-number">
+                                                —
+                                            </strong>
+
+                                            <span>
+                                                Check status
+                                            </span>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- =================================
+                                     PRICE
+                                     ================================= -->
+
+                                <td>
+
+                                    <div class="price-cell">
+
+                                        {% if car.price_per_day %}
+
+                                            <strong>
+                                                ETB {{ car.price_per_day|floatformat:2 }}
+                                            </strong>
+
+                                            <span>
+                                                per day
+                                            </span>
+
+                                        {% elif car.daily_rate %}
+
+                                            <strong>
+                                                ETB {{ car.daily_rate|floatformat:2 }}
+                                            </strong>
+
+                                            <span>
+                                                per day
+                                            </span>
+
+                                        {% else %}
+
+                                            <strong>
+                                                —
+                                            </strong>
+
+                                            <span>
+                                                Rate not set
+                                            </span>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- =================================
+                                     ACTIONS
+                                     ================================= -->
+
+                                <td>
+
+                                    <div class="vehicle-actions">
+
+                                        <a
+                                            href="{% url 'fleet_vehicle_detail' car.id %}"
+                                            class="action-btn action-view"
+                                            aria-label="View {{ car.name }}"
+                                        >
+                                            View
+                                        </a>
+
+                                        <a
+                                            href="{% url 'fleet_vehicle_edit' car.id %}"
+                                            class="action-btn action-edit"
+                                            aria-label="Edit {{ car.name }}"
+                                        >
+                                            Edit
+                                        </a>
+
+                                        {% if car.status != "inactive" %}
+
+                                            <button
+                                                type="button"
+                                                class="action-btn action-archive"
+                                                data-vehicle-id="{{ car.id }}"
+                                                data-vehicle-name="{{ car.name|escape }}"
+                                                onclick="openArchiveModal(
+                                                    this.dataset.vehicleId,
+                                                    this.dataset.vehicleName
+                                                )"
+                                            >
+                                                Archive
+                                            </button>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- -----------------------------------------------------
+                 TABLE FOOTER
+                 ----------------------------------------------------- -->
+
+            <footer class="fleet-table-footer">
+
+                <div>
+
+                    Showing
+                    <strong>{{ cars|length }}</strong>
+                    vehicle{{ cars|length|pluralize }}
+
+                </div>
+
+                <div>
+                    Fleet inventory
+                </div>
+
+            </footer>
+
+        {% else %}
+
+            <!-- =====================================================
+                 EMPTY STATE
+                 ===================================================== -->
+
+            <div class="fleet-empty">
+
+                <div
+                    class="empty-icon"
+                    aria-hidden="true"
+                >
+                    🚘
+                </div>
+
+                {% if search or status %}
+
+                    <h3>
+                        No vehicles found
+                    </h3>
+
+                    <p>
+                        No vehicles match your current search or status
+                        filter. Try changing your filters or clear them
+                        to view the full fleet.
+                    </p>
+
+                    <a
+                        href="{% url 'fleet_management' %}"
+                        class="fleet-btn fleet-btn-secondary"
+                    >
+                        Clear Filters
+                    </a>
+
+                {% else %}
+
+                    <h3>
+                        No vehicles in your fleet
+                    </h3>
+
+                    <p>
+                        Your fleet is currently empty. Add your first
+                        vehicle to begin managing your rental inventory.
+                    </p>
+
+                    <a
+                        href="{% url 'fleet_vehicle_add' %}"
+                        class="fleet-btn fleet-btn-primary"
+                    >
+                        <span class="btn-icon" aria-hidden="true">+</span>
+                        Add Vehicle
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</main>
+
+
+<!-- =============================================================
+     ARCHIVE CONFIRMATION MODAL
+     ============================================================= -->
+
+<div
+    id="archiveModal"
+    class="fleet-modal-overlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="archiveModalTitle"
+    aria-describedby="archiveModalDescription"
+>
+
+    <div class="fleet-modal">
+
+        <div
+            class="modal-warning-icon"
+            aria-hidden="true"
+        >
+            !
+        </div>
+
+        <h3 id="archiveModalTitle">
+            Archive vehicle?
+        </h3>
+
+        <p id="archiveModalDescription">
+            Are you sure you want to archive
+            <strong id="archiveVehicleName">
+                this vehicle
+            </strong>?
+        </p>
+
+        <div class="modal-info">
+
+            Archiving removes the vehicle from active fleet
+            operations. Existing rental and booking records will
+            remain preserved.
+
+        </div>
+
+        <div class="modal-actions">
+
+            <button
+                type="button"
+                class="fleet-btn fleet-btn-secondary"
+                onclick="closeArchiveModal()"
+            >
+                Cancel
+            </button>
+
+            <form
+                id="archiveForm"
+                method="post"
+                action=""
+            >
+
+                {% csrf_token %}
+
+                <button
+                    type="submit"
+                    class="fleet-btn fleet-btn-danger"
+                >
+                    Archive Vehicle
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =============================================================
+     ARCHIVE MODAL SCRIPT
+     ============================================================= -->
+
+<script>
+(function () {
+
+    const modal = document.getElementById("archiveModal");
+    const archiveForm = document.getElementById("archiveForm");
+    const vehicleName = document.getElementById("archiveVehicleName");
+
+    if (!modal || !archiveForm || !vehicleName) {
+        return;
+    }
+
+    window.openArchiveModal = function (vehicleId, name) {
+
+        vehicleName.textContent = name || "this vehicle";
+
+        archiveForm.action =
+            "{% url 'fleet_vehicle_archive' 0 %}"
+                .replace("/0/", "/" + vehicleId + "/");
+
+        modal.classList.add("active");
+
+        document.body.style.overflow = "hidden";
+
+    };
+
+
+    window.closeArchiveModal = function () {
+
+        modal.classList.remove("active");
+
+        document.body.style.overflow = "";
+
+        archiveForm.action = "";
+
+    };
+
+
+    modal.addEventListener("click", function (event) {
+
+        if (event.target === modal) {
+            closeArchiveModal();
+        }
+
+    });
+
+
+    document.addEventListener("keydown", function (event) {
+
+        if (event.key === "Escape" && modal.classList.contains("active")) {
+            closeArchiveModal();
+        }
+
+    });
+
+})();
+</script>
+
+{% endblock %}

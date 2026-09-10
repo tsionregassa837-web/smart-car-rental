@@ -1,0 +1,1003 @@
+/* ============================================================
+   SMART CAR RENTAL
+   CUSTOMER MANAGEMENT
+   Professional Admin Interface
+============================================================ */
+
+
+/* ============================================================
+   PAGE
+============================================================ */
+
+.customer-management-page {
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 28px 32px 40px;
+    box-sizing: border-box;
+    color: #172033;
+}
+
+
+/* ============================================================
+   PAGE HEADER
+============================================================ */
+
+.customer-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 28px;
+}
+
+.customer-page-title {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.customer-title-icon {
+    width: 58px;
+    height: 58px;
+    border-radius: 14px;
+    background: #eef4ff;
+    border: 1px solid #dce7fb;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 25px;
+    flex-shrink: 0;
+}
+
+.customer-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    margin-bottom: 5px;
+
+    color: #8a94a6;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.customer-breadcrumb span {
+    color: #b5bdc9;
+    font-size: 16px;
+}
+
+.customer-page-title h1 {
+    margin: 0;
+
+    color: #172033;
+    font-size: 29px;
+    font-weight: 750;
+    letter-spacing: -0.6px;
+}
+
+.customer-page-title p {
+    margin: 6px 0 0;
+
+    color: #737d8f;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.customer-header-meta {
+    display: flex;
+    align-items: center;
+}
+
+.customer-system-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 9px 14px;
+
+    background: #f8fafc;
+    border: 1px solid #e6eaf0;
+    border-radius: 8px;
+
+    color: #697386;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-pulse {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #20a36a;
+    box-shadow: 0 0 0 4px rgba(32, 163, 106, 0.10);
+}
+
+
+/* ============================================================
+   STATISTICS
+============================================================ */
+
+.customer-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.customer-stat-card {
+    position: relative;
+
+    min-height: 145px;
+    padding: 20px;
+
+    background: #ffffff;
+    border: 1px solid #e7eaf0;
+    border-radius: 13px;
+
+    box-shadow: 0 2px 8px rgba(20, 30, 50, 0.035);
+
+    box-sizing: border-box;
+    overflow: hidden;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.customer-stat-card:hover {
+    transform: translateY(-2px);
+
+    border-color: #dce2eb;
+
+    box-shadow:
+        0 8px 22px rgba(20, 30, 50, 0.07);
+}
+
+.customer-stat-top {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.customer-stat-icon {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.total-icon {
+    background: #eef4ff;
+}
+
+.active-icon {
+    background: #eaf8f1;
+    color: #1b8c5a;
+}
+
+.inactive-icon {
+    background: #f3f4f6;
+    color: #7b8492;
+}
+
+.rental-icon {
+    background: #fff5e7;
+}
+
+.customer-stat-label {
+    color: #687386;
+    font-size: 13px;
+    font-weight: 650;
+}
+
+.customer-stat-value {
+    margin-top: 15px;
+
+    color: #172033;
+    font-size: 28px;
+    font-weight: 750;
+    letter-spacing: -0.5px;
+}
+
+.customer-stat-footer {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    margin-top: 5px;
+
+    color: #8a94a5;
+    font-size: 11px;
+}
+
+.stat-indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.stat-indicator.neutral {
+    background: #8a94a5;
+}
+
+.active-dot {
+    background: #20a36a;
+}
+
+.inactive-dot {
+    background: #9aa3af;
+}
+
+.rental-dot {
+    background: #e69b2f;
+}
+
+
+/* ============================================================
+   DIRECTORY CARD
+============================================================ */
+
+.customer-directory-card {
+    background: #ffffff;
+
+    border: 1px solid #e5e9ef;
+    border-radius: 14px;
+
+    box-shadow:
+        0 3px 12px rgba(20, 30, 50, 0.04);
+
+    overflow: hidden;
+}
+
+
+/* ============================================================
+   DIRECTORY HEADER
+============================================================ */
+
+.directory-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 24px 26px;
+
+    border-bottom: 1px solid #edf0f4;
+}
+
+.directory-eyebrow {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #8791a1;
+    font-size: 10px;
+    font-weight: 750;
+    letter-spacing: 1.2px;
+}
+
+.directory-heading h2 {
+    margin: 0;
+
+    color: #1c2638;
+    font-size: 19px;
+    font-weight: 720;
+}
+
+.directory-heading p {
+    margin: 5px 0 0;
+
+    color: #8992a1;
+    font-size: 12px;
+}
+
+.directory-count {
+    min-width: 92px;
+
+    padding: 9px 13px;
+
+    text-align: center;
+
+    background: #f7f9fb;
+    border: 1px solid #e8ebf0;
+    border-radius: 8px;
+}
+
+.directory-count strong {
+    display: block;
+
+    color: #263247;
+    font-size: 17px;
+    font-weight: 750;
+}
+
+.directory-count span {
+    color: #8992a1;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+
+/* ============================================================
+   SEARCH
+============================================================ */
+
+.customer-search-section {
+    padding: 17px 26px;
+
+    background: #fbfcfd;
+    border-bottom: 1px solid #edf0f4;
+}
+
+.customer-search-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.customer-search-input-wrapper {
+    position: relative;
+    flex: 1;
+    max-width: 570px;
+}
+
+.search-icon {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+
+    transform: translateY(-50%);
+
+    font-size: 14px;
+    opacity: 0.55;
+}
+
+.customer-search-input-wrapper input {
+    width: 100%;
+    height: 42px;
+
+    padding: 0 15px 0 40px;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    border: 1px solid #dfe4eb;
+    border-radius: 8px;
+
+    outline: none;
+
+    color: #263247;
+    font-family: inherit;
+    font-size: 13px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.customer-search-input-wrapper input::placeholder {
+    color: #a1a9b5;
+}
+
+.customer-search-input-wrapper input:focus {
+    border-color: #9bb4df;
+
+    box-shadow:
+        0 0 0 3px rgba(61, 109, 181, 0.08);
+}
+
+.customer-search-button {
+    height: 42px;
+
+    padding: 0 19px;
+
+    border: 0;
+    border-radius: 8px;
+
+    background: #263b5c;
+    color: #ffffff;
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 650;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.15s ease;
+}
+
+.customer-search-button:hover {
+    background: #1d304d;
+}
+
+.customer-search-button:active {
+    transform: translateY(1px);
+}
+
+.customer-clear-button {
+    height: 42px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 15px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #dfe4eb;
+    border-radius: 8px;
+
+    background: #ffffff;
+    color: #697386;
+
+    text-decoration: none;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.customer-clear-button:hover {
+    background: #f7f8fa;
+    border-color: #ccd3dd;
+}
+
+
+/* ============================================================
+   TABLE
+============================================================ */
+
+.customer-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.customer-table {
+    width: 100%;
+    min-width: 1050px;
+
+    border-collapse: collapse;
+
+    text-align: left;
+}
+
+.customer-table thead {
+    background: #f8fafc;
+}
+
+.customer-table th {
+    height: 45px;
+
+    padding: 0 19px;
+
+    border-bottom: 1px solid #e6eaf0;
+
+    color: #7d8797;
+
+    font-size: 10px;
+    font-weight: 750;
+
+    letter-spacing: 0.65px;
+    text-transform: uppercase;
+
+    white-space: nowrap;
+}
+
+.customer-table td {
+    padding: 16px 19px;
+
+    border-bottom: 1px solid #eef1f4;
+
+    vertical-align: middle;
+}
+
+.customer-table tbody tr {
+    transition: background 0.15s ease;
+}
+
+.customer-table tbody tr:hover {
+    background: #fafbfd;
+}
+
+.customer-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* ============================================================
+   CUSTOMER PROFILE
+============================================================ */
+
+.customer-profile {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+
+    min-width: 190px;
+}
+
+.customer-avatar {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 10px;
+
+    background: #edf2fa;
+    color: #344b70;
+
+    font-size: 13px;
+    font-weight: 750;
+}
+
+.customer-identity {
+    min-width: 0;
+}
+
+.customer-full-name {
+    display: block;
+
+    max-width: 210px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    color: #273246;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.customer-username {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #929aa8;
+    font-size: 10px;
+}
+
+
+/* ============================================================
+   CONTACT
+============================================================ */
+
+.customer-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+
+    min-width: 165px;
+}
+
+.contact-email {
+    color: #4e596b;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.contact-label {
+    color: #9aa2ae;
+    font-size: 9px;
+}
+
+.no-contact {
+    color: #a0a8b4;
+    font-size: 11px;
+}
+
+
+/* ============================================================
+   REGISTERED DATE
+============================================================ */
+
+.registered-date {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+
+    min-width: 90px;
+}
+
+.registered-date strong {
+    color: #4a5568;
+    font-size: 11px;
+    font-weight: 650;
+}
+
+.registered-date span {
+    color: #9aa2ae;
+    font-size: 9px;
+}
+
+
+/* ============================================================
+   RENTAL SUMMARY
+============================================================ */
+
+.rental-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    min-width: 125px;
+}
+
+.rental-summary > strong {
+    color: #293449;
+    font-size: 14px;
+    font-weight: 750;
+}
+
+.rental-summary > span {
+    color: #8992a0;
+    font-size: 9px;
+}
+
+.rental-summary small {
+    margin-top: 2px;
+
+    font-size: 9px;
+    font-weight: 600;
+}
+
+.active-rental-text {
+    color: #249362;
+}
+
+.completed-rental-text {
+    color: #718096;
+}
+
+.no-rental-text {
+    color: #a0a7b2;
+}
+
+
+/* ============================================================
+   SPENDING
+============================================================ */
+
+.customer-spending {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+
+    min-width: 90px;
+}
+
+.customer-spending strong {
+    color: #293449;
+    font-size: 12px;
+    font-weight: 750;
+}
+
+.customer-spending span {
+    color: #929aa7;
+    font-size: 9px;
+}
+
+
+/* ============================================================
+   STATUS
+============================================================ */
+
+.customer-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 5px 9px;
+
+    border-radius: 6px;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.customer-status .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.customer-status.active {
+    background: #eaf8f1;
+    color: #27865a;
+}
+
+.customer-status.active .status-dot {
+    background: #2aa36d;
+}
+
+.customer-status.inactive {
+    background: #f1f3f5;
+    color: #7d8591;
+}
+
+.customer-status.inactive .status-dot {
+    background: #9ca3af;
+}
+
+
+/* ============================================================
+   ACTION
+============================================================ */
+
+.action-column {
+    text-align: right !important;
+}
+
+.customer-view-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    min-width: 72px;
+    height: 31px;
+
+    padding: 0 10px;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    border: 1px solid #dce2ea;
+    border-radius: 6px;
+
+    color: #40536f;
+
+    text-decoration: none;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.customer-view-button:hover {
+    background: #f3f6fa;
+    border-color: #c5cfdd;
+    color: #263d5f;
+}
+
+.view-arrow {
+    font-size: 13px;
+
+    transition:
+        transform 0.2s ease;
+}
+
+.customer-view-button:hover .view-arrow {
+    transform: translateX(2px);
+}
+
+
+/* ============================================================
+   EMPTY STATE
+============================================================ */
+
+.customer-empty-state {
+    padding: 70px 25px;
+
+    text-align: center;
+}
+
+.empty-icon {
+    width: 58px;
+    height: 58px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto 15px;
+
+    border-radius: 14px;
+
+    background: #f3f5f8;
+
+    font-size: 24px;
+}
+
+.customer-empty-state h3 {
+    margin: 0;
+
+    color: #293449;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.customer-empty-state p {
+    max-width: 440px;
+
+    margin: 7px auto 19px;
+
+    color: #8992a0;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.empty-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 36px;
+
+    padding: 0 16px;
+
+    border-radius: 7px;
+
+    background: #263b5c;
+    color: #ffffff;
+
+    text-decoration: none;
+
+    font-size: 11px;
+    font-weight: 650;
+}
+
+
+/* ============================================================
+   DIRECTORY FOOTER
+============================================================ */
+
+.directory-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 13px 20px;
+
+    background: #fafbfc;
+
+    border-top: 1px solid #edf0f4;
+
+    color: #9aa2ae;
+
+    font-size: 9px;
+}
+
+.directory-footer-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.footer-live-dot {
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: #2aa36d;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media (max-width: 1200px) {
+
+    .customer-stat-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+
+@media (max-width: 900px) {
+
+    .customer-management-page {
+        padding: 22px 20px 35px;
+    }
+
+    .customer-page-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .customer-header-meta {
+        display: none;
+    }
+
+    .directory-header {
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .customer-management-page {
+        padding: 18px 14px 30px;
+    }
+
+    .customer-page-title {
+        align-items: flex-start;
+    }
+
+    .customer-title-icon {
+        width: 48px;
+        height: 48px;
+    }
+
+    .customer-page-title h1 {
+        font-size: 23px;
+    }
+
+    .customer-page-title p {
+        font-size: 12px;
+    }
+
+    .customer-stat-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .directory-header {
+        padding: 19px;
+    }
+
+    .customer-search-section {
+        padding: 14px;
+    }
+
+    .customer-search-form {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .customer-search-input-wrapper {
+        max-width: none;
+    }
+
+    .customer-search-button,
+    .customer-clear-button {
+        width: 100%;
+    }
+
+    .directory-count {
+        display: none;
+    }
+
+    .directory-footer {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 7px;
+    }
+
+}

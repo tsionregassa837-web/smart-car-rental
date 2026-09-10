@@ -1,0 +1,185 @@
+
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/notifications.css' %}">
+{% endblock %}
+
+
+{% block title %}
+Notifications
+{% endblock %}
+
+
+{% block content %}
+
+<section class="notifications-page">
+
+    <!-- ==================================================
+         PAGE HEADER
+         ================================================== -->
+
+    <div class="notifications-hero" style="display:flex; justify-content:space-between; align-items:center;">
+
+        <div style="display:flex; align-items:center; gap:20px;">
+            <div class="notifications-hero-icon">
+                <i class="fa-solid fa-bell"></i>
+            </div>
+
+            <div>
+                <p class="notifications-eyebrow">
+                    ACCOUNT ACTIVITY
+                </p>
+
+                <h1>
+                    Notifications
+                </h1>
+
+                <p>
+                    View your latest booking and rental updates.
+                </p>
+            </div>
+        </div>
+
+        <div>
+            {% if request.user.is_staff %}
+                <a href="{% url 'admin_dashboard' %}" class="back-link" style="text-decoration:none; font-weight:600; color:#2463EB;">
+                    ← Back
+                </a>
+            {% else %}
+                <a href="{% url 'customer_dashboard' %}" class="back-link" style="text-decoration:none; font-weight:600; color:#2463EB;">← Dashboard</a>
+            {% endif %}
+        </div>
+
+    </div>
+
+
+
+    <!-- ==================================================
+         NOTIFICATIONS
+         ================================================== -->
+
+    {% if notifications %}
+
+        <div class="notification-list">
+
+
+            {% for notification in notifications %}
+
+                <div class="notification-card {{ notification.type }}">
+
+
+                    <!-- Notification Icon -->
+
+                    <div class="notification-icon">
+
+                        {% if notification.type == "success" %}
+
+                            <i class="fa-solid fa-circle-check"></i>
+
+                        {% elif notification.type == "warning" %}
+
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+
+                        {% elif notification.type == "danger" %}
+
+                            <i class="fa-solid fa-circle-xmark"></i>
+
+                        {% elif notification.type == "error" %}
+
+                            <i class="fa-solid fa-circle-xmark"></i>
+
+                        {% else %}
+
+                            <i class="fa-solid fa-bell"></i>
+
+                        {% endif %}
+
+                    </div>
+
+
+
+                    <!-- Notification Content -->
+
+                    <div class="notification-content">
+
+                        <h3>
+                            {{ notification.title }}
+                        </h3>
+
+
+                        <p>
+                            {{ notification.message }}
+                        </p>
+
+
+                        <small>
+
+                            <i class="fa-regular fa-clock"></i>
+
+                            {{ notification.date|date:"F d, Y - H:i" }}
+
+                        </small>
+
+                    </div>
+
+
+                </div>
+
+            {% endfor %}
+
+
+        </div>
+
+
+    {% else %}
+
+
+        <!-- ==================================================
+             EMPTY STATE
+             ================================================== -->
+
+        <div class="empty-notifications">
+
+
+            <div class="notification-icon">
+
+                <i class="fa-solid fa-bell-slash"></i>
+
+            </div>
+
+
+            <h2>
+                No Notifications
+            </h2>
+
+
+            <p>
+                You don't have any notifications yet.
+                Booking updates will appear here automatically.
+            </p>
+
+
+            <a
+                href="{% url 'cars' %}"
+                class="cta-button"
+            >
+
+                <i class="fa-solid fa-car-side"></i>
+
+                Browse Cars
+
+            </a>
+
+
+        </div>
+
+
+    {% endif %}
+
+
+</section>
+
+
+{% endblock %}

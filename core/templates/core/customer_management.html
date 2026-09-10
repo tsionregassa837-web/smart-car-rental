@@ -1,0 +1,650 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}
+Customer Management | Smart Car Rental
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/customer_management.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="customer-management-page">
+
+    <!-- =========================================================
+         PAGE HEADER
+    ========================================================== -->
+
+    <section class="customer-page-header">
+
+        <div class="customer-page-title">
+
+            <div class="customer-title-icon">
+                <span>👥</span>
+            </div>
+
+            <div>
+                <div class="customer-breadcrumb">
+                    Administration
+                    <span>›</span>
+                    Customers
+                </div>
+
+                <h1>Customer Management</h1>
+
+                <p>
+                    Manage customer accounts, rental activity,
+                    account status, and customer history.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="customer-header-meta" style="display: flex; gap: 14px; align-items: center;">
+
+            <a href="{% url 'admin_dashboard' %}"
+               class="btn btn-secondary"
+               style="background: #e2e8f0; color: #1e293b; text-decoration: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                <span>←</span> Dashboard
+            </a>
+
+            <span class="customer-system-status">
+                <span class="status-pulse"></span>
+                Customer Database
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================================
+         CUSTOMER STATISTICS
+    ========================================================== -->
+
+    <section class="customer-stat-grid">
+
+        <!-- TOTAL -->
+
+        <div class="customer-stat-card">
+
+            <div class="customer-stat-top">
+
+                <div class="customer-stat-icon total-icon">
+                    👥
+                </div>
+
+                <span class="customer-stat-label">
+                    Total Customers
+                </span>
+
+            </div>
+
+            <div class="customer-stat-value">
+                {{ total_customers }}
+            </div>
+
+            <div class="customer-stat-footer">
+                <span class="stat-indicator neutral"></span>
+                Registered customer accounts
+            </div>
+
+        </div>
+
+
+        <!-- ACTIVE -->
+
+        <div class="customer-stat-card">
+
+            <div class="customer-stat-top">
+
+                <div class="customer-stat-icon active-icon">
+                    ✓
+                </div>
+
+                <span class="customer-stat-label">
+                    Active Customers
+                </span>
+
+            </div>
+
+            <div class="customer-stat-value">
+                {{ active_customers }}
+            </div>
+
+            <div class="customer-stat-footer">
+                <span class="stat-indicator active-dot"></span>
+                Currently active accounts
+            </div>
+
+        </div>
+
+
+        <!-- INACTIVE -->
+
+        <div class="customer-stat-card">
+
+            <div class="customer-stat-top">
+
+                <div class="customer-stat-icon inactive-icon">
+                    ⏸
+                </div>
+
+                <span class="customer-stat-label">
+                    Inactive Customers
+                </span>
+
+            </div>
+
+            <div class="customer-stat-value">
+                {{ inactive_customers }}
+            </div>
+
+            <div class="customer-stat-footer">
+                <span class="stat-indicator inactive-dot"></span>
+                Disabled accounts
+            </div>
+
+        </div>
+
+
+        <!-- RENTING CUSTOMERS -->
+
+        <div class="customer-stat-card">
+
+            <div class="customer-stat-top">
+
+                <div class="customer-stat-icon rental-icon">
+                    🚗
+                </div>
+
+                <span class="customer-stat-label">
+                    Customers With Rentals
+                </span>
+
+            </div>
+
+            <div class="customer-stat-value">
+                {{ customers_with_rentals }}
+            </div>
+
+            <div class="customer-stat-footer">
+                <span class="stat-indicator rental-dot"></span>
+                Customers with booking history
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================================
+         CUSTOMER DIRECTORY
+    ========================================================== -->
+
+    <section class="customer-directory-card">
+
+        <!-- DIRECTORY HEADER -->
+
+        <div class="directory-header">
+
+            <div class="directory-heading">
+
+                <span class="directory-eyebrow">
+                    CUSTOMER DIRECTORY
+                </span>
+
+                <h2>
+                    All Customers
+                </h2>
+
+                <p>
+                    Review registered customers and their rental activity.
+                </p>
+
+            </div>
+
+
+            <div class="directory-count">
+
+                <strong>
+                    {{ total_customers }}
+                </strong>
+
+                <span>
+                    Customer{{ total_customers|pluralize }}
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             SEARCH
+        ====================================================== -->
+
+        <div class="customer-search-section">
+
+            <form
+                method="get"
+                action="{% url 'customer_management' %}"
+                class="customer-search-form"
+            >
+
+                <div class="customer-search-input-wrapper">
+
+                    <span class="search-icon">
+                        🔍
+                    </span>
+
+                    <input
+                        type="text"
+                        name="search"
+                        value="{{ search|default:'' }}"
+                        placeholder="Search by username, name, or email..."
+                        autocomplete="off"
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="customer-search-button"
+                >
+                    Search Customers
+                </button>
+
+
+                {% if search %}
+
+                    <a
+                        href="{% url 'customer_management' %}"
+                        class="customer-clear-button"
+                    >
+                        Clear
+                    </a>
+
+                {% endif %}
+
+            </form>
+
+        </div>
+
+
+        <!-- =====================================================
+             TABLE
+        ====================================================== -->
+
+        {% if customers %}
+
+            <div class="customer-table-wrapper">
+
+                <table class="customer-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Customer
+                            </th>
+
+                            <th>
+                                Contact
+                            </th>
+
+                            <th>
+                                Registered
+                            </th>
+
+                            <th>
+                                Rentals
+                            </th>
+
+                            <th>
+                                Spending
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th class="action-column">
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for customer in customers %}
+
+                            <tr>
+
+                                <!-- =================================
+                                     CUSTOMER
+                                ================================== -->
+
+                                <td>
+
+                                    <div class="customer-profile">
+
+                                        <div class="customer-avatar">
+
+                                            {% if customer.first_name %}
+
+                                                {{ customer.first_name|first|upper }}
+
+                                            {% else %}
+
+                                                {{ customer.username|first|upper }}
+
+                                            {% endif %}
+
+                                        </div>
+
+
+                                        <div class="customer-identity">
+
+                                            <strong class="customer-full-name">
+
+                                                {% if customer.first_name or customer.last_name %}
+
+                                                    {{ customer.first_name }}
+                                                    {{ customer.last_name }}
+
+                                                {% else %}
+
+                                                    {{ customer.username }}
+
+                                                {% endif %}
+
+                                            </strong>
+
+
+                                            <span class="customer-username">
+                                                @{{ customer.username }}
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- =================================
+                                     CONTACT
+                                ================================== -->
+
+                                <td>
+
+                                    {% if customer.email %}
+
+                                        <div class="customer-contact">
+
+                                            <span class="contact-email">
+                                                {{ customer.email }}
+                                            </span>
+
+                                            <span class="contact-label">
+                                                Email
+                                            </span>
+
+                                        </div>
+
+                                    {% else %}
+
+                                        <span class="no-contact">
+                                            No email provided
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- =================================
+                                     REGISTERED
+                                ================================== -->
+
+                                <td>
+
+                                    <div class="registered-date">
+
+                                        <strong>
+                                            {{ customer.date_joined|date:"M d, Y" }}
+                                        </strong>
+
+                                        <span>
+                                            {{ customer.date_joined|date:"g:i A" }}
+                                        </span>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- =================================
+                                     RENTALS
+                                ================================== -->
+
+                                <td>
+
+                                    <div class="rental-summary">
+
+                                        <strong>
+                                            {{ customer.total_bookings }}
+                                        </strong>
+
+                                        <span>
+                                            Total booking{{ customer.total_bookings|pluralize }}
+                                        </span>
+
+                                        {% if customer.active_bookings %}
+
+                                            <small class="active-rental-text">
+                                                {{ customer.active_bookings }}
+                                                active rental{{ customer.active_bookings|pluralize }}
+                                            </small>
+
+                                        {% elif customer.completed_bookings %}
+
+                                            <small class="completed-rental-text">
+                                                {{ customer.completed_bookings }}
+                                                completed
+                                            </small>
+
+                                        {% else %}
+
+                                            <small class="no-rental-text">
+                                                No rental history
+                                            </small>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- =================================
+                                     SPENDING
+                                ================================== -->
+
+                                <td>
+
+                                    <div class="customer-spending">
+
+                                        {% if customer.total_spent %}
+
+                                            <strong>
+                                                ${{ customer.total_spent|floatformat:2 }}
+                                            </strong>
+
+                                            <span>
+                                                Paid rentals
+                                            </span>
+
+                                        {% else %}
+
+                                            <strong>
+                                                $0.00
+                                            </strong>
+
+                                            <span>
+                                                No payments
+                                            </span>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- =================================
+                                     STATUS
+                                ================================== -->
+
+                                <td>
+
+                                    {% if customer.is_active %}
+
+                                        <span class="customer-status active">
+
+                                            <span class="status-dot"></span>
+
+                                            Active
+
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="customer-status inactive">
+
+                                            <span class="status-dot"></span>
+
+                                            Inactive
+
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- =================================
+                                     ACTION
+                                ================================== -->
+
+                                <td class="action-column">
+
+                                    <a
+                                        href="{% url 'customer_detail' customer.id %}"
+                                        class="customer-view-button"
+                                    >
+                                        <span>View</span>
+                                        <span class="view-arrow">→</span>
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+        {% else %}
+
+            <!-- =================================================
+                 EMPTY STATE
+            ================================================== -->
+
+            <div class="customer-empty-state">
+
+                <div class="empty-icon">
+                    👥
+                </div>
+
+
+                {% if search %}
+
+                    <h3>
+                        No Customers Found
+                    </h3>
+
+                    <p>
+                        No customer matches
+                        "<strong>{{ search }}</strong>".
+                        Try another search term.
+                    </p>
+
+                    <a
+                        href="{% url 'customer_management' %}"
+                        class="empty-action"
+                    >
+                        Clear Search
+                    </a>
+
+                {% else %}
+
+                    <h3>
+                        No Customers Yet
+                    </h3>
+
+                    <p>
+                        Registered customers will appear here
+                        when they create an account.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- =====================================================
+             DIRECTORY FOOTER
+        ====================================================== -->
+
+        {% if customers %}
+
+            <div class="directory-footer">
+
+                <div class="directory-footer-info">
+
+                    <span class="footer-live-dot"></span>
+
+                    Showing customer records
+
+                </div>
+
+                <span>
+                    Smart Car Rental Customer Management
+                </span>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</div>
+
+{% endblock %}

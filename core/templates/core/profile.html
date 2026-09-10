@@ -1,0 +1,162 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/profile.css' %}">
+{% endblock %}
+
+{% block title %}
+My Profile
+{% endblock %}
+
+
+{% block content %}
+
+<section class="profile-page">
+
+
+    <!-- PROFILE HEADER -->
+
+    <div class="profile-header" style="display: flex; justify-content: space-between; align-items: center;">
+
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <div class="profile-avatar">
+                <i class="fa-solid fa-user"></i>
+            </div>
+
+            <div>
+                <h1>
+                    {{ user.get_full_name|default:user.username }}
+                </h1>
+
+                <p>
+                    Smart Car Rental Customer
+                </p>
+            </div>
+        </div>
+
+        <div>
+            {% if request.user.is_staff %}
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary" style="background: #e2e8f0; color: #1e293b; text-decoration: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                    <span>←</span> Dashboard
+                </a>
+            {% else %}
+                <a href="{% url 'customer_dashboard' %}" class="btn btn-secondary" style="background: #e2e8f0; color: #1e293b; text-decoration: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                    <span>←</span> Dashboard
+                </a>
+            {% endif %}
+        </div>
+
+    </div>
+
+
+
+
+
+    <!-- INFORMATION CARD -->
+
+    <div class="profile-card">
+
+
+        <h2>
+            <i class="fa-solid fa-id-card"></i>
+            Account Information
+        </h2>
+
+
+
+        <div class="profile-item">
+
+            <span>
+                Username
+            </span>
+
+            <strong>
+                {{ user.username }}
+            </strong>
+
+        </div>
+
+
+
+        <div class="profile-item">
+
+            <span>
+                Email
+            </span>
+
+            <strong>
+                {{ user.email|default:"Not provided" }}
+            </strong>
+
+        </div>
+
+
+
+
+        <div class="profile-item">
+
+            <span>
+                Member Since
+            </span>
+
+
+            <strong>
+                {{ user.date_joined|date:"F d, Y" }}
+            </strong>
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+    <!-- ACTIONS -->
+
+
+    <div class="profile-actions">
+
+
+        <a href="{% url 'account_settings' %}">
+
+            <i class="fa-solid fa-gear"></i>
+
+            Account Settings
+
+        </a>
+
+
+
+
+        <a href="{% url 'my_bookings' %}">
+
+            <i class="fa-solid fa-car"></i>
+
+            My Rentals
+
+        </a>
+
+
+
+        <a href="{% url 'payment_history' %}">
+
+            <i class="fa-solid fa-credit-card"></i>
+
+            Payments
+
+        </a>
+
+
+
+    </div>
+
+
+
+</section>
+
+
+{% endblock %}

@@ -1,0 +1,1549 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard | Smart Car Rental</title>
+
+    <link rel="stylesheet" href="{% static 'core/css/admin_dashboard.css' %}">
+</head>
+
+<body>
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar">
+
+    <div class="sidebar-brand">
+
+        <div class="brand-icon">🚗</div>
+
+        <div>
+            <h1>Smart Car Rental</h1>
+            <span>Administration</span>
+        </div>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+        <!-- Dashboard -->
+        <a href="{% url 'admin_dashboard' %}"
+           class="nav-item active">
+
+            <span class="nav-icon">📊</span>
+            <span>Dashboard</span>
+
+        </a>
+
+
+        <!-- Booking Management -->
+        <a href="{% url 'booking_management' %}"
+           class="nav-item">
+
+            <span class="nav-icon">📋</span>
+            <span>Booking Management</span>
+
+        </a>
+
+        <!-- FLEET MANAGEMENT -->
+        <a href="{% url 'fleet_management' %}"
+           class="nav-item">
+            <span class="nav-icon">🚗</span>
+            <span>Fleet Management</span>
+        </a>
+
+        <!-- PAYMENT MANAGEMENT -->
+        <a href="{% url 'payment_management' %}"
+           class="nav-item">
+            <span class="nav-icon">💵</span>
+            <span>Payment Management</span>
+        </a>
+        <!-- CUSTOMER MANAGEMENT -->
+        <a href="{% url 'customer_management' %}"
+           class="nav-item">
+            <span class="nav-icon">👥</span>
+            <span>Customer Management</span>
+        </a>
+        <!-- REPORTS DASHBORAD -->
+        <a href="{% url 'reports_dashboard' %}"
+           class="nav-item">
+            <span class="nav-icon">📊</span>
+            <span>Reports</span>
+        </a>
+
+
+
+        <!-- Django Admin -->
+        <a href="{% url 'admin:index' %}"
+           class="nav-item">
+
+            <span class="nav-icon">⚙️</span>
+            <span>Django Admin</span>
+
+        </a>
+
+    </nav>
+
+
+    <div class="sidebar-footer">
+
+        <div class="admin-profile">
+
+            <div class="profile-avatar">
+                {{ request.user.username|first|upper }}
+            </div>
+
+            <div class="profile-info">
+
+                <strong>
+                    {{ request.user.get_full_name|default:request.user.username }}
+                </strong>
+
+                <span>Administrator</span>
+
+            </div>
+
+        </div>
+
+
+        <a href="{% url 'logout' %}"
+           class="logout-button">
+
+            <span>↪</span>
+            Logout
+
+        </a>
+
+    </div>
+
+</aside>
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
+<main class="main-content">
+
+    <!-- HEADER -->
+
+    <header class="topbar">
+
+        <div>
+            <p class="page-label">ADMINISTRATION</p>
+            <h2>Dashboard</h2>
+            <p class="welcome-text">
+                Welcome back, {{ request.user.get_full_name|default:request.user.username }}.
+                Here's what's happening with your rental business.
+            </p>
+        </div>
+
+        <div class="topbar-right">
+
+            <div class="today-card">
+                <span class="today-icon">📅</span>
+
+                <div>
+                    <small>Today</small>
+                    <strong>{{ today|date:"M d, Y" }}</strong>
+                </div>
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         OVERVIEW CARDS
+    ====================================================== -->
+
+    <section class="section">
+
+        <div class="section-heading">
+            <div>
+                <p class="section-label">OVERVIEW</p>
+                <h3>Business Summary</h3>
+            </div>
+        </div>
+
+
+        <div class="stats-grid">
+
+            <!-- TOTAL BOOKINGS -->
+
+            <div class="stat-card blue">
+
+                <div class="stat-card-top">
+                    <div class="stat-icon">📋</div>
+
+                    <span class="stat-status">ALL</span>
+                </div>
+
+                <div class="stat-value">
+                    {{ total_bookings }}
+                </div>
+
+                <div class="stat-title">
+                    Total Bookings
+                </div>
+
+                <div class="stat-description">
+                    All rental bookings
+                </div>
+
+            </div>
+
+
+            <!-- PENDING BOOKINGS -->
+
+            <div class="stat-card orange">
+
+                <div class="stat-card-top">
+                    <div class="stat-icon">⏳</div>
+
+                    {% if pending_bookings > 0 %}
+                        <span class="stat-status warning">ACTION</span>
+                    {% else %}
+                        <span class="stat-status success">CLEAR</span>
+                    {% endif %}
+                </div>
+
+                <div class="stat-value">
+                    {{ pending_bookings }}
+                </div>
+
+                <div class="stat-title">
+                    Pending Bookings
+                </div>
+
+                <div class="stat-description">
+                    Waiting for approval
+                </div>
+
+            </div>
+
+
+            <!-- ACTIVE RENTALS -->
+
+            <div class="stat-card green">
+
+                <div class="stat-card-top">
+                    <div class="stat-icon">🚙</div>
+
+                    <span class="stat-status success">LIVE</span>
+                </div>
+
+                <div class="stat-value">
+                    {{ active_rentals }}
+                </div>
+
+                <div class="stat-title">
+                    Active Rentals
+                </div>
+
+                <div class="stat-description">
+                    Vehicles currently rented
+                </div>
+
+            </div>
+
+
+            <!-- REVENUE -->
+
+            <div class="stat-card purple">
+
+                <div class="stat-card-top">
+                    <div class="stat-icon">💰</div>
+
+                    <span class="stat-status success">PAID</span>
+                </div>
+
+                <div class="stat-value">
+                    {{ paid_revenue|floatformat:2 }}
+                </div>
+
+                <div class="stat-title">
+                    Paid Revenue
+                </div>
+
+                <div class="stat-description">
+                    Total recorded payments
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FLEET SECTION
+    ====================================================== -->
+
+    <section class="section">
+
+        <div class="section-heading">
+
+            <div>
+                <p class="section-label">FLEET MANAGEMENT</p>
+                <h3>Fleet Overview</h3>
+            </div>
+
+            <div class="section-summary">
+                {{ total_fleet_units }} total units
+            </div>
+
+        </div>
+
+
+        <div class="fleet-grid">
+
+            <!-- TOTAL FLEET -->
+
+            <div class="fleet-card">
+
+                <div class="fleet-icon fleet-blue">
+                    🚗
+                </div>
+
+                <div class="fleet-info">
+                    <span>Total Fleet</span>
+                    <strong>{{ total_fleet_units }}</strong>
+                    <small>{{ total_cars }} vehicle types</small>
+                </div>
+
+            </div>
+
+
+            <!-- AVAILABLE -->
+
+            <div class="fleet-card">
+
+                <div class="fleet-icon fleet-green">
+                    ✓
+                </div>
+
+                <div class="fleet-info">
+                    <span>Available</span>
+                    <strong>{{ available_fleet_units }}</strong>
+                    <small>{{ available_cars }} available types</small>
+                </div>
+
+            </div>
+
+
+            <!-- RENTED -->
+
+            <div class="fleet-card">
+
+                <div class="fleet-icon fleet-orange">
+                    🚘
+                </div>
+
+                <div class="fleet-info">
+                    <span>Rented</span>
+                    <strong>{{ rented_fleet_units }}</strong>
+                    <small>Currently in use</small>
+                </div>
+
+            </div>
+
+
+            <!-- MAINTENANCE -->
+
+            <div class="fleet-card">
+
+                <div class="fleet-icon fleet-red">
+                    🔧
+                </div>
+
+                <div class="fleet-info">
+                    <span>Maintenance</span>
+                    <strong>{{ maintenance_fleet_units }}</strong>
+                    <small>{{ maintenance_cars }} vehicle types</small>
+                </div>
+
+            </div>
+
+
+            <!-- INACTIVE -->
+
+            <div class="fleet-card">
+
+                <div class="fleet-icon fleet-gray">
+                    ⛔
+                </div>
+
+                <div class="fleet-info">
+                    <span>Inactive</span>
+                    <strong>{{ inactive_fleet_units }}</strong>
+                    <small>{{ inactive_cars }} vehicle types</small>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- FLEET UTILIZATION -->
+
+        <div class="utilization-card">
+
+            <div class="utilization-header">
+
+                <div>
+                    <span class="utilization-title">
+                        Fleet Utilization
+                    </span>
+
+                    <small>
+                        Percentage of total fleet currently rented
+                    </small>
+                </div>
+
+                <strong>
+                    {{ fleet_utilization }}%
+                </strong>
+
+            </div>
+
+            <div class="utilization-track">
+
+                {% if fleet_utilization >= 90 %}
+                    <div class="utilization-fill utilization-critical">
+                        <span>{{ fleet_utilization }}%</span>
+                    </div>
+
+                {% elif fleet_utilization >= 70 %}
+                    <div class="utilization-fill utilization-high">
+                        <span>{{ fleet_utilization }}%</span>
+                    </div>
+
+                {% elif fleet_utilization >= 40 %}
+                    <div class="utilization-fill utilization-medium">
+                        <span>{{ fleet_utilization }}%</span>
+                    </div>
+
+                {% else %}
+                    <div class="utilization-fill utilization-low">
+                        <span>{{ fleet_utilization }}%</span>
+                    </div>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         BOOKING STATUS
+    ====================================================== -->
+
+    <section class="section">
+
+        <div class="section-heading">
+
+            <div>
+                <p class="section-label">BOOKINGS</p>
+                <h3>Booking Status</h3>
+            </div>
+
+        </div>
+
+
+        <div class="booking-status-grid">
+
+            <div class="status-box pending">
+                <span class="status-icon">⏳</span>
+                <strong>{{ pending_bookings }}</strong>
+                <span>Pending</span>
+            </div>
+
+            <div class="status-box approved">
+                <span class="status-icon">✓</span>
+                <strong>{{ approved_bookings }}</strong>
+                <span>Approved</span>
+            </div>
+
+            <div class="status-box active">
+                <span class="status-icon">🚗</span>
+                <strong>{{ active_rentals }}</strong>
+                <span>Active</span>
+            </div>
+
+            <div class="status-box completed">
+                <span class="status-icon">✓</span>
+                <strong>{{ completed_bookings }}</strong>
+                <span>Completed</span>
+            </div>
+
+            <div class="status-box cancelled">
+                <span class="status-icon">×</span>
+                <strong>{{ cancelled_bookings }}</strong>
+                <span>Cancelled</span>
+            </div>
+
+            <div class="status-box rejected">
+                <span class="status-icon">!</span>
+                <strong>{{ rejected_bookings }}</strong>
+                <span>Rejected</span>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         TODAY'S OPERATIONS
+    ====================================================== -->
+
+    <section class="section">
+
+        <div class="section-heading">
+
+            <div>
+                <p class="section-label">OPERATIONS</p>
+                <h3>Today's Operations</h3>
+            </div>
+
+            <div class="date-badge">
+                {{ today|date:"F d, Y" }}
+            </div>
+
+        </div>
+
+
+        <div class="operations-grid">
+
+            <div class="operation-card pickup">
+
+                <div class="operation-icon">
+                    🚙
+                </div>
+
+                <div>
+                    <span>Today's Pickups</span>
+                    <strong>{{ today_pickups }}</strong>
+                    <small>{{ completed_pickups_today }} completed</small>
+                </div>
+
+            </div>
+
+
+            <div class="operation-card return">
+
+                <div class="operation-icon">
+                    ↩
+                </div>
+
+                <div>
+                    <span>Today's Returns</span>
+                    <strong>{{ today_returns }}</strong>
+                    <small>{{ completed_returns_today }} completed</small>
+                </div>
+
+            </div>
+
+
+            <div class="operation-card overdue">
+
+                <div class="operation-icon">
+                    ⚠
+                </div>
+
+                <div>
+                    <span>Overdue Rentals</span>
+                    <strong>{{ overdue_rentals }}</strong>
+
+                    {% if overdue_rentals > 0 %}
+                        <small class="danger-text">
+                            Attention required
+                        </small>
+                    {% else %}
+                        <small>
+                            No overdue rentals
+                        </small>
+                    {% endif %}
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         TODAY PICKUPS / RETURNS / OVERDUE
+    ====================================================== -->
+
+    <section class="section">
+
+        <div class="three-column-layout">
+
+            <!-- TODAY PICKUPS -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <span class="panel-label">TODAY</span>
+                        <h3>Pickups</h3>
+                    </div>
+
+                    <span class="panel-count">
+                        {{ today_pickups }}
+                    </span>
+
+                </div>
+
+
+                <div class="panel-body">
+
+                    {% for booking in today_pickup_list %}
+
+                        <div class="booking-row">
+
+                            <div class="booking-avatar">
+                                {{ booking.user.username|first|upper }}
+                            </div>
+
+                            <div class="booking-info">
+
+                                <strong>
+                                    {{ booking.user.get_full_name|default:booking.user.username }}
+                                </strong>
+
+                                <span>
+                                    {{ booking.car.name }}
+                                </span>
+
+                                <small>
+                                    Pickup:
+                                    {{ booking.pickup_date|date:"M d, Y" }}
+                                </small>
+
+                            </div>
+
+                            <span class="mini-status approved">
+                                {{ booking.status }}
+                            </span>
+
+                        </div>
+
+                    {% empty %}
+
+                        <div class="empty-state">
+                            <span>✓</span>
+                            <p>No pickups scheduled today.</p>
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+
+            <!-- TODAY RETURNS -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <span class="panel-label">TODAY</span>
+                        <h3>Returns</h3>
+                    </div>
+
+                    <span class="panel-count">
+                        {{ today_returns }}
+                    </span>
+
+                </div>
+
+
+                <div class="panel-body">
+
+                    {% for booking in today_return_list %}
+
+                        <div class="booking-row">
+
+                            <div class="booking-avatar">
+                                {{ booking.user.username|first|upper }}
+                            </div>
+
+                            <div class="booking-info">
+
+                                <strong>
+                                    {{ booking.user.get_full_name|default:booking.user.username }}
+                                </strong>
+
+                                <span>
+                                    {{ booking.car.name }}
+                                </span>
+
+                                <small>
+                                    Return:
+                                    {{ booking.dropoff_date|date:"M d, Y" }}
+                                </small>
+
+                            </div>
+
+                            <span class="mini-status active">
+                                Active
+                            </span>
+
+                        </div>
+
+                    {% empty %}
+
+                        <div class="empty-state">
+                            <span>✓</span>
+                            <p>No returns scheduled today.</p>
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+
+            <!-- OVERDUE -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <span class="panel-label danger-label">ATTENTION</span>
+                        <h3>Overdue</h3>
+                    </div>
+
+                    <span class="panel-count danger-count">
+                        {{ overdue_rentals }}
+                    </span>
+
+                </div>
+
+
+                <div class="panel-body">
+
+                    {% for booking in overdue_rental_list %}
+
+                        <div class="booking-row overdue-row">
+
+                            <div class="booking-avatar danger-avatar">
+                                {{ booking.user.username|first|upper }}
+                            </div>
+
+                            <div class="booking-info">
+
+                                <strong>
+                                    {{ booking.user.get_full_name|default:booking.user.username }}
+                                </strong>
+
+                                <span>
+                                    {{ booking.car.name }}
+                                </span>
+
+                                <small class="danger-text">
+                                    Due:
+                                    {{ booking.dropoff_date|date:"M d, Y" }}
+                                </small>
+
+                            </div>
+
+                            <span class="mini-status rejected">
+                                OVERDUE
+                            </span>
+
+                        </div>
+
+                    {% empty %}
+
+                        <div class="empty-state success-empty">
+                            <span>✓</span>
+                            <p>No overdue rentals.</p>
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         DOCUMENT VERIFICATION
+    ====================================================== -->
+
+    <section class="section">
+
+        <div class="section-heading">
+
+            <div>
+                <p class="section-label">DOCUMENT VERIFICATION</p>
+                <h3>Customer Documents</h3>
+            </div>
+
+        </div>
+
+
+        <div class="document-grid">
+
+            <div class="document-card pending-document">
+
+                <div class="document-icon">
+                    📄
+                </div>
+
+                <div>
+                    <span>Pending</span>
+                    <strong>{{ pending_documents }}</strong>
+                    <small>Need verification</small>
+                </div>
+
+            </div>
+
+
+            <div class="document-card verified-document">
+
+                <div class="document-icon">
+                    ✓
+                </div>
+
+                <div>
+                    <span>Verified</span>
+                    <strong>{{ verified_documents }}</strong>
+                    <small>Approved documents</small>
+                </div>
+
+            </div>
+
+
+            <div class="document-card rejected-document">
+
+                <div class="document-icon">
+                    !
+                </div>
+
+                <div>
+                    <span>Rejected</span>
+                    <strong>{{ rejected_documents }}</strong>
+                    <small>Require attention</small>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- PENDING DOCUMENT LIST -->
+
+        <div class="panel full-width-panel">
+
+            <div class="panel-header">
+
+                <div>
+                    <span class="panel-label">REVIEW QUEUE</span>
+                    <h3>Pending Documents</h3>
+                </div>
+
+                <span class="panel-count">
+                    {{ pending_documents }}
+                </span>
+
+            </div>
+
+
+            <div class="panel-body">
+
+                {% for booking in pending_document_list %}
+
+                    <div class="document-row">
+
+                        <div class="booking-avatar">
+                            {{ booking.user.username|first|upper }}
+                        </div>
+
+                        <div class="document-info">
+
+                            <strong>
+                                {{ booking.user.get_full_name|default:booking.user.username }}
+                            </strong>
+
+                            <span>
+                                {{ booking.car.name }}
+                            </span>
+
+                            <small>
+                                Booking #{{ booking.id }}
+                            </small>
+
+                        </div>
+
+                        <span class="mini-status pending">
+                            Pending
+                        </span>
+
+                    </div>
+
+                {% empty %}
+
+                    <div class="empty-state">
+                        <span>✓</span>
+                        <p>No documents waiting for verification.</p>
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         CUSTOMERS / STAFF
+    ====================================================== -->
+
+    <section class="section">
+
+        <div class="section-heading">
+
+            <div>
+                <p class="section-label">USERS</p>
+                <h3>Customer & Staff Overview</h3>
+            </div>
+
+        </div>
+
+
+        <div class="user-stat-grid">
+
+            <div class="user-stat-card">
+
+                <div class="user-stat-icon">
+                    👥
+                </div>
+
+                <div>
+                    <span>Customers</span>
+                    <strong>{{ total_customers }}</strong>
+                    <small>Registered customers</small>
+                </div>
+
+            </div>
+
+
+            <div class="user-stat-card">
+
+                <div class="user-stat-icon">
+                    👤
+                </div>
+
+                <div>
+                    <span>Staff Members</span>
+                    <strong>{{ staff_users }}</strong>
+                    <small>Staff accounts</small>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PAYMENT OVERVIEW
+    ====================================================== -->
+
+    <section class="section">
+
+        <div class="section-heading">
+
+            <div>
+                <p class="section-label">PAYMENTS</p>
+                <h3>Payment Overview</h3>
+            </div>
+
+        </div>
+
+
+        <div class="payment-grid">
+
+            <div class="payment-card revenue-card">
+
+                <div class="payment-icon">
+                    💰
+                </div>
+
+                <div>
+                    <span>Paid Revenue</span>
+                    <strong>{{ paid_revenue|floatformat:2 }}</strong>
+                    <small>{{ paid_payment_count }} paid payments</small>
+                </div>
+
+            </div>
+
+
+            <div class="payment-card completed-revenue-card">
+
+                <div class="payment-icon">
+                    📈
+                </div>
+
+                <div>
+                    <span>Completed Revenue</span>
+                    <strong>{{ total_revenue|floatformat:2 }}</strong>
+                    <small>Completed paid rentals</small>
+                </div>
+
+            </div>
+
+
+            <div class="payment-card pending-payment-card">
+
+                <div class="payment-icon">
+                    ⏳
+                </div>
+
+                <div>
+                    <span>Pending Payments</span>
+                    <strong>{{ pending_payment_count }}</strong>
+                    <small>Awaiting payment</small>
+                </div>
+
+            </div>
+
+
+            <div class="payment-card failed-payment-card">
+
+                <div class="payment-icon">
+                    !
+                </div>
+
+                <div>
+                    <span>Failed Payments</span>
+                    <strong>{{ failed_payment_count }}</strong>
+                    <small>Payment failures</small>
+                </div>
+
+            </div>
+
+
+            <div class="payment-card refunded-payment-card">
+
+                <div class="payment-icon">
+                    ↩
+                </div>
+
+                <div>
+                    <span>Refunded Payments</span>
+                    <strong>{{ refunded_payment_count }}</strong>
+                    <small>Refund transactions</small>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- PENDING PAYMENTS -->
+
+        <div class="panel full-width-panel">
+
+            <div class="panel-header">
+
+                <div>
+                    <span class="panel-label">PAYMENT QUEUE</span>
+                    <h3>Pending Payments</h3>
+                </div>
+
+                <span class="panel-count">
+                    {{ pending_payment_count }}
+                </span>
+
+            </div>
+
+
+            <div class="panel-body">
+
+                {% for booking in pending_payment_list %}
+
+                    <div class="payment-row">
+
+                        <div class="booking-avatar">
+                            {{ booking.user.username|first|upper }}
+                        </div>
+
+                        <div class="payment-info">
+
+                            <strong>
+                                {{ booking.user.get_full_name|default:booking.user.username }}
+                            </strong>
+
+                            <span>
+                                {{ booking.car.name }}
+                            </span>
+
+                            <small>
+                                Booking #{{ booking.id }}
+                            </small>
+
+                        </div>
+
+                        <strong class="payment-amount">
+                            {{ booking.total_price|floatformat:2 }}
+                        </strong>
+
+                        <span class="mini-status pending">
+                            Pending
+                        </span>
+
+                    </div>
+
+                {% empty %}
+
+                    <div class="empty-state">
+                        <span>✓</span>
+                        <p>No pending payments.</p>
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         POPULAR CAR
+    ====================================================== -->
+
+    <section class="section">
+
+        <div class="section-heading">
+
+            <div>
+                <p class="section-label">ANALYTICS</p>
+                <h3>Popular Vehicle</h3>
+            </div>
+
+        </div>
+
+
+        {% if popular_car %}
+
+            <div class="popular-car-card">
+
+                <div class="popular-car-image">
+
+                    {% if popular_car.image %}
+                        <img src="{{ popular_car.image.url }}"
+                             alt="{{ popular_car.name }}">
+                    {% else %}
+                        <div class="no-car-image">
+                            🚗
+                        </div>
+                    {% endif %}
+
+                </div>
+
+
+                <div class="popular-car-info">
+
+                    <span class="popular-label">
+                        MOST BOOKED VEHICLE
+                    </span>
+
+                    <h3>
+                        {{ popular_car.name }}
+                    </h3>
+
+                    {% if popular_car.model_year %}
+                        <p>
+                            Model year: {{ popular_car.model_year }}
+                        </p>
+                    {% endif %}
+
+                    <div class="popular-car-stats">
+
+                        <div>
+                            <strong>
+                                {{ popular_car.booking_count }}
+                            </strong>
+
+                            <span>
+                                Bookings
+                            </span>
+                        </div>
+
+                        <div>
+                            <strong>
+                                {{ popular_car.total_quantity }}
+                            </strong>
+
+                            <span>
+                                Fleet Units
+                            </span>
+                        </div>
+
+                        <div>
+                            <strong>
+                                {{ popular_car.available_quantity }}
+                            </strong>
+
+                            <span>
+                                Available
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% else %}
+
+            <div class="empty-large">
+                <span>🚗</span>
+                <h3>No vehicle data available</h3>
+                <p>Add vehicles and bookings to see analytics here.</p>
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- =====================================================
+         RECENT BOOKINGS
+    ====================================================== -->
+
+    <section class="section">
+
+        <div class="section-heading">
+
+            <div>
+                <p class="section-label">RECENT ACTIVITY</p>
+                <h3>Recent Bookings</h3>
+            </div>
+
+            <span class="section-summary">
+                Latest 10 bookings
+            </span>
+
+        </div>
+
+
+        <div class="table-panel">
+
+            <div class="table-wrapper">
+
+                <table class="dashboard-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Booking</th>
+                            <th>Customer</th>
+                            <th>Vehicle</th>
+                            <th>Pickup</th>
+                            <th>Return</th>
+                            <th>Status</th>
+                            <th>Payment</th>
+                            <th>Total</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for booking in recent_bookings %}
+
+                            <tr>
+
+                                <td>
+                                    <strong>
+                                        #{{ booking.id }}
+                                    </strong>
+                                </td>
+
+                                <td>
+
+                                    <div class="table-user">
+
+                                        <div class="table-avatar">
+                                            {{ booking.user.username|first|upper }}
+                                        </div>
+
+                                        <span>
+                                            {{ booking.user.get_full_name|default:booking.user.username }}
+                                        </span>
+
+                                    </div>
+
+                                </td>
+
+                                <td>
+                                    {{ booking.car.name }}
+                                </td>
+
+                                <td>
+                                    {{ booking.pickup_date|date:"M d, Y" }}
+                                </td>
+
+                                <td>
+                                    {{ booking.dropoff_date|date:"M d, Y" }}
+                                </td>
+
+                                <td>
+
+                                    {% if booking.status == "Pending" %}
+                                        <span class="table-status pending">
+                                            Pending
+                                        </span>
+
+                                    {% elif booking.status == "Approved" %}
+                                        <span class="table-status approved">
+                                            Approved
+                                        </span>
+
+                                    {% elif booking.status == "Active" %}
+                                        <span class="table-status active">
+                                            Active
+                                        </span>
+
+                                    {% elif booking.status == "Completed" %}
+                                        <span class="table-status completed">
+                                            Completed
+                                        </span>
+
+                                    {% elif booking.status == "Cancelled" %}
+                                        <span class="table-status cancelled">
+                                            Cancelled
+                                        </span>
+
+                                    {% elif booking.status == "Rejected" %}
+                                        <span class="table-status rejected">
+                                            Rejected
+                                        </span>
+
+                                    {% else %}
+                                        <span class="table-status">
+                                            {{ booking.status }}
+                                        </span>
+                                    {% endif %}
+
+                                </td>
+
+                                <td>
+
+                                    {% if booking.payment_status == "Paid" %}
+                                        <span class="table-status paid">
+                                            Paid
+                                        </span>
+
+                                    {% elif booking.payment_status == "Pending" %}
+                                        <span class="table-status pending">
+                                            Pending
+                                        </span>
+
+                                    {% elif booking.payment_status == "Failed" %}
+                                        <span class="table-status rejected">
+                                            Failed
+                                        </span>
+
+                                    {% elif booking.payment_status == "Refunded" %}
+                                        <span class="table-status cancelled">
+                                            Refunded
+                                        </span>
+
+                                    {% else %}
+                                        <span class="table-status">
+                                            {{ booking.payment_status }}
+                                        </span>
+                                    {% endif %}
+
+                                </td>
+
+                                <td>
+                                    <strong>
+                                        {{ booking.total_price|floatformat:2 }}
+                                    </strong>
+                                </td>
+
+                            </tr>
+
+                        {% empty %}
+
+                            <tr>
+
+                                <td colspan="8">
+
+                                    <div class="table-empty">
+                                        <span>📋</span>
+                                        <p>No bookings found.</p>
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PENDING BOOKINGS
+    ====================================================== -->
+
+    <section class="section">
+
+        <div class="section-heading">
+
+            <div>
+                <p class="section-label">ACTION REQUIRED</p>
+                <h3>Pending Bookings</h3>
+            </div>
+
+            <span class="section-summary">
+                {{ pending_bookings }} pending
+            </span>
+
+        </div>
+
+
+        <div class="pending-booking-list">
+
+            {% for booking in pending_booking_list %}
+
+                <div class="pending-booking-card">
+
+                    <div class="pending-booking-user">
+
+                        <div class="large-avatar">
+                            {{ booking.user.username|first|upper }}
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                {{ booking.user.get_full_name|default:booking.user.username }}
+                            </strong>
+
+                            <span>
+                                Booking #{{ booking.id }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="pending-booking-details">
+
+                        <div>
+                            <small>Vehicle</small>
+                            <strong>{{ booking.car.name }}</strong>
+                        </div>
+
+                        <div>
+                            <small>Pickup</small>
+                            <strong>
+                                {{ booking.pickup_date|date:"M d, Y" }}
+                            </strong>
+                        </div>
+
+                        <div>
+                            <small>Return</small>
+                            <strong>
+                                {{ booking.dropoff_date|date:"M d, Y" }}
+                            </strong>
+                        </div>
+
+                        <div>
+                            <small>Total</small>
+                            <strong>
+                                {{ booking.total_price|floatformat:2 }}
+                            </strong>
+                        </div>
+
+                    </div>
+
+
+                    <span class="pending-label">
+                        PENDING
+                    </span>
+
+                </div>
+
+            {% empty %}
+
+                <div class="empty-large">
+                    <span>✓</span>
+                    <h3>No pending bookings</h3>
+                    <p>All bookings are currently processed.</p>
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer class="dashboard-footer">
+
+        <div>
+            <strong>Smart Car Rental</strong>
+            <span>Administration Dashboard</span>
+        </div>
+
+        <span>
+            © {% now "Y" %} Smart Car Rental. All rights reserved.
+        </span>
+
+    </footer>
+
+</main>
+
+</body>
+</html>

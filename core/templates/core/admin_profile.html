@@ -1,0 +1,301 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}
+Administrator Profile | Smart Car Rental
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .profile-page {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+
+    .profile-card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 30px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e5e7eb;
+    }
+
+    .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding-bottom: 25px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: #1f2937;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        font-weight: bold;
+    }
+
+    .profile-header h1 {
+        margin: 0 0 8px;
+        font-size: 24px;
+        color: #111827;
+    }
+
+    .profile-header p {
+        margin: 0;
+        color: #6b7280;
+    }
+
+    .section {
+        margin-top: 30px;
+    }
+
+    .section h2 {
+        font-size: 18px;
+        margin-bottom: 20px;
+        color: #111827;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+    }
+
+    .info-item {
+        background: #f9fafb;
+        border-radius: 10px;
+        padding: 16px;
+        border: 1px solid #f3f4f6;
+    }
+
+    .info-label {
+        display: block;
+        font-size: 13px;
+        color: #6b7280;
+        margin-bottom: 6px;
+    }
+
+    .info-value {
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    .role {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 20px;
+        background: #e8f5e9;
+        color: #2e7d32;
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    .actions {
+        margin-top: 30px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .button {
+        display: inline-block;
+        padding: 11px 18px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .back-button {
+        background: #374151;
+        color: white;
+    }
+
+    .back-button:hover {
+        background: #1f2937;
+    }
+
+    .password-button {
+        background: #2563eb;
+        color: white;
+    }
+
+    .password-button:hover {
+        background: #1d4ed8;
+    }
+
+    @media (max-width: 650px) {
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .profile-header {
+            align-items: flex-start;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<main class="profile-page">
+
+    <div class="profile-card">
+
+        <div class="profile-header">
+
+            <div class="avatar">
+                {% if admin_user.first_name %}
+                    {{ admin_user.first_name|first|upper }}
+                {% else %}
+                    {{ admin_user.username|first|upper }}
+                {% endif %}
+            </div>
+
+            <div>
+                <h1>
+                    {% if admin_user.get_full_name %}
+                        {{ admin_user.get_full_name }}
+                    {% else %}
+                        {{ admin_user.username }}
+                    {% endif %}
+                </h1>
+
+                <p>
+                    {% if admin_user.is_superuser %}
+                        Super Administrator
+                    {% elif admin_user.is_staff %}
+                        Administrator
+                    {% else %}
+                        Staff
+                    {% endif %}
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="section">
+
+            <h2>Administrator Information</h2>
+
+            <div class="info-grid">
+
+                <div class="info-item">
+                    <span class="info-label">
+                        Username
+                    </span>
+
+                    <span class="info-value">
+                        {{ admin_user.username }}
+                    </span>
+                </div>
+
+
+                <div class="info-item">
+                    <span class="info-label">
+                        Full Name
+                    </span>
+
+                    <span class="info-value">
+                        {% if admin_user.get_full_name %}
+                            {{ admin_user.get_full_name }}
+                        {% else %}
+                            Not provided
+                        {% endif %}
+                    </span>
+                </div>
+
+
+                <div class="info-item">
+                    <span class="info-label">
+                        Email
+                    </span>
+
+                    <span class="info-value">
+                        {{ admin_user.email|default:"Not provided" }}
+                    </span>
+                </div>
+
+
+                <div class="info-item">
+                    <span class="info-label">
+                        Account Role
+                    </span>
+
+                    <span class="role">
+                        {% if admin_user.is_superuser %}
+                            Super Administrator
+                        {% elif admin_user.is_staff %}
+                            Administrator
+                        {% else %}
+                            Staff
+                        {% endif %}
+                    </span>
+                </div>
+
+
+                <div class="info-item">
+                    <span class="info-label">
+                        Staff Access
+                    </span>
+
+                    <span class="info-value">
+                        {% if admin_user.is_staff %}
+                            Enabled
+                        {% else %}
+                            Disabled
+                        {% endif %}
+                    </span>
+                </div>
+
+
+                <div class="info-item">
+                    <span class="info-label">
+                        Superuser Access
+                    </span>
+
+                    <span class="info-value">
+                        {% if admin_user.is_superuser %}
+                            Enabled
+                        {% else %}
+                            Disabled
+                        {% endif %}
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="actions">
+
+            <a
+                href="{% url 'admin_dashboard' %}"
+                class="button back-button"
+            >
+                ← Back to Dashboard
+            </a>
+
+            <a
+                href="{% url 'password_change' %}"
+                class="button password-button"
+            >
+                🔐 Change Password
+            </a>
+
+        </div>
+
+    </div>
+
+</main>
+
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}Rental Operations | Booking #{{ booking.id }}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'core/css/rental_operations.css' %}">{% endblock %}
+{% block content %}
+<div class="rental-ops-page">
+  <header class="ops-header">
+    <div><span class="eyebrow">OPERATIONS / RENTAL</span><h1>Booking #{{ booking.id }} — Rental Operations</h1><p>Record vehicle handover, return inspection, damage and additional charges.</p></div>
+    <a class="btn btn-secondary" href="{% url 'booking_management' %}">← Back to Bookings</a>
+  </header>
+
+  {% if messages %}<div class="messages">{% for message in messages %}<div class="message {{ message.tags }}">{{ message }}</div>{% endfor %}</div>{% endif %}
+
+  <section class="summary-grid">
+    <div><span>Customer</span><strong>{{ booking.first_name }} {{ booking.last_name }}</strong></div>
+    <div><span>Vehicle</span><strong>{% if booking.car %}{{ booking.car.name }}{% else %}{{ booking.car_type }}{% endif %}</strong></div>
+    <div><span>Status</span><strong>{{ booking.status }}</strong></div>
+    <div><span>Period</span><strong>{{ booking.pickup_date }} → {{ booking.dropoff_date }}</strong></div>
+  </section>
+
+  <div class="ops-grid">
+    {% if booking.status == "Approved" %}
+    <section class="ops-card"><h2>Pickup Inspection</h2><p class="hint">Record the vehicle condition before handing it to the customer.</p>
+      <form method="post">{% csrf_token %}<input type="hidden" name="action" value="pickup">
+        {% for field in pickup_form %}<div class="field">{{ field.label_tag }}{{ field }}{% if field.errors %}<div class="error">{{ field.errors|striptags }}</div>{% endif %}</div>{% endfor %}
+        <button class="btn btn-primary" type="submit">Complete Pickup & Start Rental</button>
+      </form>
+    </section>
+    {% endif %}
+
+    {% if booking.status == "Active" %}
+    <section class="ops-card"><h2>Return Inspection</h2><p class="hint">Record final mileage, fuel and any new damage. The rental is completed only after this step.</p>
+      <form method="post">{% csrf_token %}<input type="hidden" name="action" value="return">
+        {% for field in return_form %}<div class="field">{{ field.label_tag }}{{ field }}{% if field.errors %}<div class="error">{{ field.errors|striptags }}</div>{% endif %}</div>{% endfor %}
+        <h3>Optional Extra Charge</h3>
+        {% for field in charge_form %}<div class="field">{{ field.label_tag }}{{ field }}{% if field.errors %}<div class="error">{{ field.errors|striptags }}</div>{% endif %}</div>{% endfor %}
+        <button class="btn btn-primary" type="submit">Complete Return & Rental</button>
+      </form>
+    </section>
+    {% endif %}
+
+    <section class="ops-card"><h2>Inspection History</h2>
+      {% if inspections %}<div class="history">{% for item in inspections %}<article><strong>{{ item.inspection_type }} inspection</strong><span>{{ item.mileage }} km • {{ item.fuel_level }} • {{ item.created_at|date:"M d, Y H:i" }}</span>{% if item.damage_found %}<p><b>Damage:</b> {{ item.damage_description }}</p>{% endif %}{% if item.notes %}<p>{{ item.notes }}</p>{% endif %}</article>{% endfor %}</div>{% else %}<p class="empty">No inspection has been recorded yet.</p>{% endif %}
+    </section>
+
+    <section class="ops-card"><h2>Extra Charges</h2>
+      {% if extra_charges %}<div class="history">{% for charge in extra_charges %}<article><strong>{{ charge.charge_type }} — {{ charge.amount }}</strong><span>{{ charge.description }} • {{ charge.created_at|date:"M d, Y H:i" }}</span></article>{% endfor %}</div>{% else %}<p class="empty">No additional charges recorded.</p>{% endif %}
+    </section>
+  </div>
+</div>
+{% endblock %}

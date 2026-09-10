@@ -1,0 +1,379 @@
+{% extends "core/base.html" %}
+
+{% block title %}
+Customer Dashboard
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="customer-dashboard">
+
+
+<!-- HEADER -->
+
+<section class="dashboard-header">
+
+    <div>
+        <h1>
+            <i class="fa-solid fa-car"></i>
+            Welcome, {{ user.get_full_name|default:user.username }}
+        </h1>
+
+        <p>
+            Manage your rentals, bookings and account.
+        </p>
+    </div>
+
+
+    <a href="{% url 'cars' %}" class="primary-btn">
+
+        <i class="fa-solid fa-car-side"></i>
+        Browse Cars
+
+    </a>
+
+
+</section>
+
+
+
+
+
+<!-- QUICK STATS -->
+
+
+<section class="dashboard-stats">
+
+
+<div class="customer-stat">
+
+<i class="fa-solid fa-car"></i>
+
+<h2>
+{{ active_rentals }}
+</h2>
+
+<p>
+Active Rentals
+</p>
+
+</div>
+
+
+
+
+<div class="customer-stat">
+
+<i class="fa-solid fa-calendar-check"></i>
+
+<h2>
+{{ upcoming_bookings }}
+</h2>
+
+<p>
+Upcoming Bookings
+</p>
+
+</div>
+
+
+
+
+
+<div class="customer-stat">
+
+<i class="fa-solid fa-clock-rotate-left"></i>
+
+<h2>
+{{ completed_rentals }}
+</h2>
+
+<p>
+Completed Trips
+</p>
+
+</div>
+
+
+
+
+
+<div class="customer-stat danger">
+
+<i class="fa-solid fa-ban"></i>
+
+<h2>
+{{ cancelled_bookings }}
+</h2>
+
+<p>
+Cancelled
+</p>
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+
+<!-- QUICK ACTIONS -->
+
+
+<section class="quick-actions">
+
+
+<a href="{% url 'booking' %}">
+
+<i class="fa-solid fa-plus"></i>
+
+New Booking
+
+</a>
+
+
+
+<a href="{% url 'my_bookings' %}">
+
+<i class="fa-solid fa-list"></i>
+
+My Bookings
+
+</a>
+
+
+
+<a href="{% url 'profile' %}">
+
+<i class="fa-solid fa-user"></i>
+
+Profile
+
+</a>
+
+
+
+<a href="{% url 'account_settings' %}">
+
+<i class="fa-solid fa-gear"></i>
+
+Settings
+
+</a>
+
+
+</section>
+
+
+
+
+
+
+
+<!-- ACTIVE RENTALS -->
+
+
+<section class="dashboard-box">
+
+
+<h2>
+
+<i class="fa-solid fa-road"></i>
+
+Active Rentals
+
+</h2>
+
+
+
+{% for booking in active_bookings %}
+
+
+<div class="rental-card">
+
+
+<div>
+
+<h3>
+
+{{ booking.car }}
+
+</h3>
+
+
+<p>
+
+<i class="fa-solid fa-calendar"></i>
+
+Pickup:
+{{ booking.pickup_date }}
+
+</p>
+
+
+<p>
+
+<i class="fa-solid fa-calendar-check"></i>
+
+Return:
+{{ booking.dropoff_date }}
+
+</p>
+
+
+</div>
+
+
+
+<span class="status active">
+
+{{ booking.status }}
+
+</span>
+
+
+
+</div>
+
+
+{% empty %}
+
+
+
+<div class="empty-box">
+
+
+<i class="fa-solid fa-car"></i>
+
+
+<h3>
+No Active Rental
+</h3>
+
+
+<p>
+You currently don't have a rented vehicle.
+</p>
+
+
+</div>
+
+
+
+{% endfor %}
+
+
+
+</section>
+
+
+
+
+
+
+
+
+
+<!-- UPCOMING BOOKINGS -->
+
+
+<section class="dashboard-box">
+
+
+<h2>
+
+<i class="fa-solid fa-calendar-days"></i>
+
+Upcoming Bookings
+
+</h2>
+
+
+
+
+{% for booking in upcoming_bookings_list %}
+
+
+<div class="rental-card">
+
+
+<div>
+
+
+<h3>
+{{ booking.car }}
+</h3>
+
+
+<p>
+
+Pickup:
+{{ booking.pickup_date }}
+
+</p>
+
+
+<p>
+
+Return:
+{{ booking.dropoff_date }}
+
+</p>
+
+
+
+</div>
+
+
+
+<form method="post" action="{% url 'cancel_booking' booking.id %}" style="display:inline;">
+{% csrf_token %}
+<button type="submit" class="cancel-btn" style="border:none; background:none; cursor:pointer;" onclick="return confirm('Cancel this booking?');">
+<i class="fa-solid fa-xmark"></i>
+Cancel
+</button>
+</form>
+
+
+
+</div>
+
+
+
+{% empty %}
+
+
+<div class="empty-box">
+
+
+<i class="fa-solid fa-calendar-xmark"></i>
+
+
+<h3>
+No Upcoming Booking
+</h3>
+
+
+</div>
+
+
+{% endfor %}
+
+
+</section>
+
+
+
+
+
+
+</div>
+
+
+{% endblock %}

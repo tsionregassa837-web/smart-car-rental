@@ -1,0 +1,669 @@
+/* =========================================
+MY BOOKINGS PAGE
+========================================= */
+
+.my-bookings-page {
+
+
+max-width: 1200px;
+
+margin: 50px auto;
+
+padding: 20px;
+
+
+}
+
+/* =========================================
+PAGE HEADER
+========================================= */
+
+.page-header {
+
+
+text-align: center;
+
+margin-bottom: 40px;
+
+
+}
+
+.page-header h1 {
+
+
+color: var(--primary);
+
+font-size: 38px;
+
+margin-bottom: 10px;
+
+}
+
+.page-header p {
+
+
+color: var(--muted);
+
+
+}
+
+/* =========================================
+BOOKING GRID
+========================================= */
+
+.booking-grid {
+
+
+display: grid;
+
+grid-template-columns:
+    repeat(auto-fit, minmax(350px, 1fr));
+
+gap: 30px;
+
+
+}
+
+/* =========================================
+RENTAL CARD
+========================================= */
+
+.rental-card {
+
+
+background: white;
+
+border-radius: 18px;
+
+overflow: hidden;
+
+box-shadow: var(--shadow);
+
+transition: 0.3s;
+
+
+}
+
+.rental-card:hover {
+
+
+transform: translateY(-8px);
+
+
+}
+
+/* =========================================
+RENTAL HEADER
+========================================= */
+
+.rental-header {
+
+
+background: var(--primary);
+
+color: white;
+
+padding: 25px;
+
+display: flex;
+
+justify-content: space-between;
+
+align-items: center;
+
+gap: 15px;
+
+
+}
+
+.rental-header h2 {
+
+
+margin: 0;
+
+font-size: 24px;
+
+
+}
+
+.rental-header p {
+
+
+margin: 8px 0 0;
+
+opacity: 0.8;
+
+
+}
+
+/* =========================================
+STATUS BADGES
+========================================= */
+
+.status {
+
+
+padding: 8px 15px;
+
+border-radius: 30px;
+
+font-size: 14px;
+
+font-weight: bold;
+
+white-space: nowrap;
+
+}
+
+.status.approved {
+
+
+background: #2563eb;
+
+
+}
+
+.status.pending {
+
+
+background: #f59e0b;
+
+
+}
+
+.status.active {
+
+
+background: #16a34a;
+
+
+}
+
+.status.completed {
+
+
+background: #64748b;
+
+
+}
+
+.status.cancelled {
+
+
+background: #dc2626;
+
+}
+
+/* =========================================
+RENTAL BODY
+========================================= */
+
+.rental-body {
+
+
+padding: 25px;
+
+
+}
+
+/* =========================================
+RENTAL INFORMATION
+========================================= */
+
+.rental-info {
+
+
+display: flex;
+
+justify-content: space-between;
+
+gap: 15px;
+
+flex-wrap: wrap;
+
+
+}
+
+.rental-info div {
+
+
+flex: 1;
+
+min-width: 120px;
+
+
+}
+
+.rental-info i {
+
+
+color: var(--secondary);
+
+margin-right: 5px;
+
+
+}
+
+.rental-info strong {
+
+
+color: var(--primary);
+
+
+}
+
+.rental-info p {
+
+
+color: var(--muted);
+
+margin-top: 6px;
+
+
+}
+
+/* =========================================
+PAYMENT STATUS
+========================================= */
+
+.paid {
+
+
+color: #16a34a;
+
+font-weight: bold;
+
+
+}
+
+.unpaid {
+
+
+color: #f59e0b;
+
+font-weight: bold;
+
+
+}
+
+/* =========================================
+ACTION BUTTON CONTAINER
+========================================= */
+
+.rental-actions {
+
+
+margin-top: 25px;
+
+display: flex;
+
+gap: 15px;
+
+flex-wrap: wrap;
+
+
+}
+
+/* =========================================
+ALL ACTION BUTTONS
+========================================= */
+
+.view-btn,
+.payment-btn,
+.cancel-btn {
+
+padding: 12px 20px;
+
+border-radius: 10px;
+
+text-decoration: none;
+
+font-weight: bold;
+
+display: inline-flex;
+
+align-items: center;
+
+justify-content: center;
+
+gap: 8px;
+
+transition: 0.3s;
+
+border: none;
+
+cursor: pointer;
+
+min-height: 45px;
+
+box-sizing: border-box;
+
+
+}
+
+/* =========================================
+VIEW DETAILS BUTTON
+========================================= */
+
+.view-btn {
+
+
+background: #2563eb;
+
+color: white;
+
+
+}
+
+.view-btn:hover {
+
+
+background: #1d4ed8;
+
+color: white;
+
+transform: translateY(-2px);
+
+
+}
+
+/* =========================================
+MAKE PAYMENT BUTTON
+========================================= */
+
+.payment-btn {
+
+
+background: #16a34a;
+
+color: white;
+
+
+}
+
+.payment-btn:hover {
+
+
+background: #15803d;
+
+color: white;
+
+transform: translateY(-2px);
+
+
+}
+
+/* =========================================
+PAID STATUS
+========================================= */
+
+.paid-payment {
+
+
+padding: 12px 20px;
+
+border-radius: 10px;
+
+font-weight: bold;
+
+color: #16a34a;
+
+background: #dcfce7;
+
+display: inline-flex;
+
+align-items: center;
+
+justify-content: center;
+
+gap: 8px;
+
+min-height: 45px;
+
+box-sizing: border-box;
+
+
+}
+
+/* =========================================
+CANCEL BUTTON
+========================================= */
+
+.cancel-btn {
+
+
+background: #dc2626;
+
+color: white;
+
+
+}
+
+.cancel-btn:hover {
+
+
+background: #b91c1c;
+
+color: white;
+
+transform: translateY(-2px);
+
+
+}
+
+/* =========================================
+EMPTY BOOKINGS
+========================================= */
+
+.empty-booking {
+
+
+text-align: center;
+
+background: white;
+
+padding: 50px;
+
+border-radius: 18px;
+
+box-shadow: var(--shadow);
+
+
+}
+
+.empty-booking i {
+
+
+font-size: 60px;
+
+color: var(--secondary);
+
+margin-bottom: 20px;
+
+
+}
+
+.empty-booking h2 {
+
+
+margin-bottom: 10px;
+
+
+}
+
+.empty-booking p {
+
+
+color: var(--muted);
+
+margin-bottom: 25px;
+
+
+}
+
+/* =========================================
+BROWSE CARS BUTTON
+========================================= */
+
+.dashboard-btn {
+
+
+display: inline-flex;
+
+align-items: center;
+
+justify-content: center;
+
+padding: 12px 25px;
+
+border-radius: 10px;
+
+background: #2563eb;
+
+color: white;
+
+text-decoration: none;
+
+font-weight: bold;
+
+transition: 0.3s;
+
+}
+
+.dashboard-btn:hover {
+
+
+background: #1d4ed8;
+
+color: white;
+
+transform: translateY(-2px);
+
+
+}
+
+/* =========================================
+MOBILE RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+
+
+.my-bookings-page {
+
+    margin: 25px auto;
+
+    padding: 15px;
+
+}
+
+.page-header h1 {
+
+    font-size: 30px;
+
+}
+
+.booking-grid {
+
+    grid-template-columns: 1fr;
+
+}
+
+.rental-header {
+
+    padding: 20px;
+
+    align-items: flex-start;
+
+    flex-direction: column;
+
+}
+
+.rental-body {
+
+    padding: 20px;
+
+}
+
+.rental-info {
+
+    flex-direction: column;
+
+    gap: 20px;
+
+}
+
+.rental-info div {
+
+    width: 100%;
+
+}
+
+.rental-actions {
+
+    flex-direction: column;
+
+}
+
+.view-btn,
+.payment-btn,
+.cancel-btn,
+.paid-payment {
+
+    width: 100%;
+
+}
+
+
+}
+
+/* =========================================
+SMALL MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+
+
+.my-bookings-page {
+
+    padding: 10px;
+
+}
+
+.page-header h1 {
+
+    font-size: 26px;
+
+}
+
+.rental-card {
+
+    border-radius: 14px;
+
+}
+
+.rental-header h2 {
+
+    font-size: 20px;
+
+}
+
+.status {
+
+    font-size: 13px;
+
+    padding: 7px 12px;
+
+}
+
+}
+.cancel-form {
+    display: inline;
+    margin: 0;
+}
+
+.cancel-btn {
+    border: none;
+    cursor: pointer;
+    font: inherit;
+}

@@ -1,0 +1,800 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ page_title }} | Smart Car Rental</title>
+
+    <link rel="stylesheet"
+          href="{% static 'core/css/fleet_vehicle_form.css' %}">
+</head>
+
+<body>
+
+<div class="fleet-page">
+
+    <!-- =====================================================
+         TOP NAVIGATION
+    ====================================================== -->
+    <header class="fleet-header">
+
+        <div class="header-left">
+            <a href="{% url 'fleet_management' %}" class="back-link">
+                <span class="back-icon">←</span>
+                <span>Back to Fleet</span>
+            </a>
+        </div>
+
+        <div class="header-brand">
+            <span class="brand-name">SMART CAR RENTAL</span>
+            <span class="brand-section">FLEET MANAGEMENT</span>
+        </div>
+
+        <div class="header-right">
+            <span class="staff-badge">
+                Staff Access
+            </span>
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+    <main class="page-container">
+
+        <!-- PAGE HEADER -->
+        <section class="page-heading">
+
+            <div>
+
+                <div class="eyebrow">
+                    FLEET OPERATIONS
+                </div>
+
+                <h1>{{ page_title }}</h1>
+
+                <p>
+                    {% if car %}
+                        Update the vehicle's information, specifications,
+                        fleet status and maintenance details.
+                    {% else %}
+                        Add a new vehicle to your rental fleet and configure
+                        its operational information.
+                    {% endif %}
+                </p>
+
+            </div>
+
+            {% if car %}
+                <div class="vehicle-reference">
+                    <span>Vehicle ID</span>
+                    <strong>#{{ car.id }}</strong>
+                </div>
+            {% endif %}
+
+        </section>
+
+
+        <!-- =================================================
+             FORM
+        ================================================== -->
+        <form method="post"
+              enctype="multipart/form-data"
+              class="vehicle-form">
+
+            {% csrf_token %}
+
+
+            <!-- =============================================
+                 NON FIELD ERRORS
+            ============================================== -->
+            {% if form.non_field_errors %}
+                <div class="alert alert-error">
+
+                    <div class="alert-icon">!</div>
+
+                    <div>
+                        <strong>
+                            Unable to save vehicle
+                        </strong>
+
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+
+                </div>
+            {% endif %}
+
+
+            <!-- =================================================
+                 SECTION 01 — BASIC VEHICLE INFORMATION
+            ================================================== -->
+            <section class="form-card">
+
+                <div class="section-header">
+
+                    <div class="section-number">
+                        01
+                    </div>
+
+                    <div>
+                        <h2>Vehicle Information</h2>
+
+                        <p>
+                            Basic identification, model and pricing
+                            information for this vehicle.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="form-grid">
+
+                    <!-- Vehicle Name -->
+                    <div class="field-group field-wide">
+
+                        <label for="{{ form.name.id_for_label }}">
+                            Vehicle Name
+                            {% if form.name.field.required %}
+                                <span>*</span>
+                            {% endif %}
+                        </label>
+
+                        {{ form.name }}
+
+                        {% if form.name.help_text %}
+                            <small>
+                                {{ form.name.help_text }}
+                            </small>
+                        {% endif %}
+
+                        {% for error in form.name.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Model Year -->
+                    <div class="field-group">
+
+                        <label for="{{ form.model_year.id_for_label }}">
+                            Model Year
+                            {% if form.model_year.field.required %}
+                                <span>*</span>
+                            {% endif %}
+                        </label>
+
+                        {{ form.model_year }}
+
+                        {% if form.model_year.help_text %}
+                            <small>
+                                {{ form.model_year.help_text }}
+                            </small>
+                        {% endif %}
+
+                        {% for error in form.model_year.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Price -->
+                    <div class="field-group">
+
+                        <label for="{{ form.price_per_day.id_for_label }}">
+                            Price Per Day
+                            {% if form.price_per_day.field.required %}
+                                <span>*</span>
+                            {% endif %}
+                        </label>
+
+                        <div class="input-with-prefix">
+                            <span>ETB</span>
+                            {{ form.price_per_day }}
+                        </div>
+
+                        {% if form.price_per_day.help_text %}
+                            <small>
+                                {{ form.price_per_day.help_text }}
+                            </small>
+                        {% endif %}
+
+                        {% for error in form.price_per_day.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Plate Number -->
+                    <div class="field-group">
+
+                        <label for="{{ form.plate_number.id_for_label }}">
+                            Plate Number
+                            {% if form.plate_number.field.required %}
+                                <span>*</span>
+                            {% endif %}
+                        </label>
+
+                        {{ form.plate_number }}
+
+                        {% if form.plate_number.help_text %}
+                            <small>
+                                {{ form.plate_number.help_text }}
+                            </small>
+                        {% endif %}
+
+                        {% for error in form.plate_number.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 SECTION 02 — VEHICLE SPECIFICATIONS
+            ================================================== -->
+            <section class="form-card">
+
+                <div class="section-header">
+
+                    <div class="section-number">
+                        02
+                    </div>
+
+                    <div>
+                        <h2>Vehicle Specifications</h2>
+
+                        <p>
+                            Configure the specifications customers will
+                            see when viewing this vehicle.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="form-grid">
+
+                    <!-- Transmission -->
+                    <div class="field-group">
+
+                        <label for="{{ form.transmission.id_for_label }}">
+                            Transmission
+                            {% if form.transmission.field.required %}
+                                <span>*</span>
+                            {% endif %}
+                        </label>
+
+                        {{ form.transmission }}
+
+                        {% if form.transmission.help_text %}
+                            <small>
+                                {{ form.transmission.help_text }}
+                            </small>
+                        {% endif %}
+
+                        {% for error in form.transmission.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Fuel Type -->
+                    <div class="field-group">
+
+                        <label for="{{ form.fuel_type.id_for_label }}">
+                            Fuel Type
+                            {% if form.fuel_type.field.required %}
+                                <span>*</span>
+                            {% endif %}
+                        </label>
+
+                        {{ form.fuel_type }}
+
+                        {% if form.fuel_type.help_text %}
+                            <small>
+                                {{ form.fuel_type.help_text }}
+                            </small>
+                        {% endif %}
+
+                        {% for error in form.fuel_type.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Seats -->
+                    <div class="field-group">
+
+                        <label for="{{ form.seats.id_for_label }}">
+                            Seats
+                            {% if form.seats.field.required %}
+                                <span>*</span>
+                            {% endif %}
+                        </label>
+
+                        {{ form.seats }}
+
+                        {% if form.seats.help_text %}
+                            <small>
+                                {{ form.seats.help_text }}
+                            </small>
+                        {% endif %}
+
+                        {% for error in form.seats.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Doors -->
+                    <div class="field-group">
+
+                        <label for="{{ form.doors.id_for_label }}">
+                            Doors
+                            {% if form.doors.field.required %}
+                                <span>*</span>
+                            {% endif %}
+                        </label>
+
+                        {{ form.doors }}
+
+                        {% if form.doors.help_text %}
+                            <small>
+                                {{ form.doors.help_text }}
+                            </small>
+                        {% endif %}
+
+                        {% for error in form.doors.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Luggage Capacity -->
+                    <div class="field-group">
+
+                        <label for="{{ form.luggage_capacity.id_for_label }}">
+                            Luggage Capacity
+                            {% if form.luggage_capacity.field.required %}
+                                <span>*</span>
+                            {% endif %}
+                        </label>
+
+                        {{ form.luggage_capacity }}
+
+                        {% if form.luggage_capacity.help_text %}
+                            <small>
+                                {{ form.luggage_capacity.help_text }}
+                            </small>
+                        {% endif %}
+
+                        {% for error in form.luggage_capacity.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Air Conditioning -->
+                    <div class="field-group checkbox-field">
+
+                        <label class="checkbox-label"
+                               for="{{ form.air_conditioning.id_for_label }}">
+
+                            {{ form.air_conditioning }}
+
+                            <span class="checkbox-custom"></span>
+
+                            <span class="checkbox-text">
+                                <strong>Air Conditioning</strong>
+
+                                <small>
+                                    Vehicle has air conditioning.
+                                </small>
+                            </span>
+
+                        </label>
+
+                        {% for error in form.air_conditioning.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Features -->
+                    <div class="field-group field-wide">
+
+                        <label for="{{ form.features.id_for_label }}">
+                            Features
+                            {% if form.features.field.required %}
+                                <span>*</span>
+                            {% endif %}
+                        </label>
+
+                        {{ form.features }}
+
+                        {% if form.features.help_text %}
+                            <small>
+                                {{ form.features.help_text }}
+                            </small>
+                        {% endif %}
+
+                        {% for error in form.features.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 SECTION 03 — FLEET MANAGEMENT
+            ================================================== -->
+            <section class="form-card">
+
+                <div class="section-header">
+
+                    <div class="section-number">
+                        03
+                    </div>
+
+                    <div>
+                        <h2>Fleet Management</h2>
+
+                        <p>
+                            Configure fleet capacity and operational
+                            availability.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="form-grid">
+
+                    <!-- Total Quantity -->
+                    <div class="field-group">
+
+                        <label for="{{ form.total_quantity.id_for_label }}">
+                            Total Quantity
+                            {% if form.total_quantity.field.required %}
+                                <span>*</span>
+                            {% endif %}
+                        </label>
+
+                        {{ form.total_quantity }}
+
+                        {% if form.total_quantity.help_text %}
+                            <small>
+                                {{ form.total_quantity.help_text }}
+                            </small>
+                        {% endif %}
+
+                        {% for error in form.total_quantity.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Fleet Status -->
+                    <div class="field-group">
+
+                        <label for="{{ form.fleet_status.id_for_label }}">
+                            Fleet Status
+                            {% if form.fleet_status.field.required %}
+                                <span>*</span>
+                            {% endif %}
+                        </label>
+
+                        {{ form.fleet_status }}
+
+                        {% if form.fleet_status.help_text %}
+                            <small>
+                                {{ form.fleet_status.help_text }}
+                            </small>
+                        {% endif %}
+
+                        {% for error in form.fleet_status.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 SECTION 04 — MAINTENANCE
+            ================================================== -->
+            <section class="form-card">
+
+                <div class="section-header">
+
+                    <div class="section-number">
+                        04
+                    </div>
+
+                    <div>
+                        <h2>Maintenance Information</h2>
+
+                        <p>
+                            Record units currently unavailable because
+                            of maintenance or service.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="form-grid">
+
+                    <!-- Maintenance Count -->
+                    <div class="field-group">
+
+                        <label for="{{ form.maintenance_count.id_for_label }}">
+                            Maintenance Units
+                            {% if form.maintenance_count.field.required %}
+                                <span>*</span>
+                            {% endif %}
+                        </label>
+
+                        {{ form.maintenance_count }}
+
+                        {% if form.maintenance_count.help_text %}
+                            <small>
+                                {{ form.maintenance_count.help_text }}
+                            </small>
+                        {% endif %}
+
+                        {% for error in form.maintenance_count.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Maintenance Reason -->
+                    <div class="field-group field-wide">
+
+                        <label for="{{ form.maintenance_reason.id_for_label }}">
+                            Maintenance Reason
+                            {% if form.maintenance_reason.field.required %}
+                                <span>*</span>
+                            {% endif %}
+                        </label>
+
+                        {{ form.maintenance_reason }}
+
+                        {% if form.maintenance_reason.help_text %}
+                            <small>
+                                {{ form.maintenance_reason.help_text }}
+                            </small>
+                        {% endif %}
+
+                        {% for error in form.maintenance_reason.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 SECTION 05 — VEHICLE IMAGE
+            ================================================== -->
+            <section class="form-card">
+
+                <div class="section-header">
+
+                    <div class="section-number">
+                        05
+                    </div>
+
+                    <div>
+                        <h2>Vehicle Image</h2>
+
+                        <p>
+                            Upload a clear professional image of the
+                            vehicle.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="image-upload-area">
+
+                    {% if car and car.image %}
+
+                        <div class="current-image">
+
+                            <div class="image-preview">
+                                <img src="{{ car.image.url }}"
+                                     alt="{{ car.name }}">
+                            </div>
+
+                            <div class="current-image-info">
+
+                                <span class="image-label">
+                                    CURRENT VEHICLE IMAGE
+                                </span>
+
+                                <strong>
+                                    {{ car.name }}
+                                </strong>
+
+                                <small>
+                                    Upload a new image below to replace
+                                    the current image.
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <div class="upload-box">
+
+                        <div class="upload-icon">
+                            ↑
+                        </div>
+
+                        <div class="upload-content">
+
+                            <label for="{{ form.image.id_for_label }}"
+                                   class="upload-button">
+                                Choose Vehicle Image
+                            </label>
+
+                            {{ form.image }}
+
+                            <p>
+                                JPG, JPEG, PNG or WEBP
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    {% for error in form.image.errors %}
+                        <div class="field-error">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 FORM ACTIONS
+            ================================================== -->
+            <div class="form-actions">
+
+                <a href="{% url 'fleet_management' %}"
+                   class="button button-secondary">
+                    Cancel
+                </a>
+
+                <button type="submit"
+                        class="button button-primary">
+
+                    <span>✓</span>
+
+                    {{ submit_text }}
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </main>
+
+</div>
+
+
+<!-- =========================================================
+     FILE UPLOAD ENHANCEMENT
+========================================================== -->
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const fileInput = document.querySelector(
+        'input[type="file"]'
+    );
+
+    const uploadButton = document.querySelector(
+        ".upload-button"
+    );
+
+    if (fileInput && uploadButton) {
+
+        fileInput.addEventListener("change", function () {
+
+            if (this.files.length > 0) {
+
+                uploadButton.textContent =
+                    this.files[0].name;
+
+            } else {
+
+                uploadButton.textContent =
+                    "Choose Vehicle Image";
+
+            }
+
+        });
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>

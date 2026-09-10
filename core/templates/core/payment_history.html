@@ -1,0 +1,103 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/payment_history.css' %}">
+{% endblock %}
+
+{% block title %}Payment History{% endblock %}
+
+{% block content %}
+
+
+<section class="payment-history-page">
+  <div class="history-hero" style="display: flex; justify-content: space-between; align-items: center;">
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <div class="history-hero-icon"><i class="fa-solid fa-receipt"></i></div>
+      <div>
+        <p class="history-eyebrow">ACCOUNT ACTIVITY</p>
+        <h1>Payment History</h1>
+        <p>View all payments for your car rental bookings.</p>
+      </div>
+    </div>
+
+    <div>
+      {% if request.user.is_staff %}
+        <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary" style="background: #e2e8f0; color: #1e293b; text-decoration: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+          <span>←</span> Dashboard
+        </a>
+      {% else %}
+        <a href="{% url 'customer_dashboard' %}" class="btn btn-secondary" style="background: #e2e8f0; color: #1e293b; text-decoration: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+          <span>←</span> Dashboard
+        </a>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if payments %}
+  <div class="payment-history-card">
+    <div class="history-card-title">
+      <h2>Payment records</h2>
+      <span>{{ payments|length }} payment{{ payments|length|pluralize }}</span>
+    </div>
+
+    <div class="payment-table-container">
+      <table class="payment-table">
+        <thead>
+          <tr>
+            <th>Car</th><th>Rental Dates</th><th>Total</th><th>Method</th>
+            <th>Reference</th><th>Status</th><th>Payment Date</th><th>Receipt</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for payment in payments %}
+          <tr>
+            <td>
+              <div class="vehicle-cell">
+                <i class="fa-solid fa-car"></i>
+                <strong>{% if payment.car %}{{ payment.car.name }}{% else %}Car Removed{% endif %}</strong>
+              </div>
+            </td>
+            <td>{{ payment.pickup_date }}<br>to<br>{{ payment.dropoff_date }}</td>
+            <td>${{ payment.total_price }}</td>
+            <td>{{ payment.payment_method|default:"-" }}</td>
+            <td>{{ payment.payment_reference|default:"-" }}</td>
+            <td>
+              {% if payment.payment_status == "Paid" %}
+                <span class="status-badge status-approved">Paid</span>
+              {% elif payment.payment_status == "Pending" %}
+                <span class="status-badge status-pending">Pending</span>
+              {% elif payment.payment_status == "Failed" %}
+                <span class="status-badge status-cancelled">Failed</span>
+              {% elif payment.payment_status == "Refunded" %}
+                <span class="status-badge status-active">Refunded</span>
+              {% else %}
+                <span class="status-badge">-</span>
+              {% endif %}
+            </td>
+            <td>{% if payment.payment_date %}{{ payment.payment_date|date:"M d, Y H:i" }}{% else %}-{% endif %}</td>
+            <td>
+              {% if payment.payment_status == "Paid" %}
+                <a href="{% url 'payment_receipt' payment.id %}" class="view-receipt">
+                  <i class="fa-solid fa-file-invoice"></i>View receipt
+                </a>
+              {% else %}-{% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {% else %}
+  <div class="history-empty">
+    <div><i class="fa-solid fa-credit-card"></i></div>
+    <h2>No Payments Yet</h2>
+    <p>You haven't made any payments yet.</p>
+    <a href="{% url 'cars' %}" class="history-button">Browse Cars</a>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}
